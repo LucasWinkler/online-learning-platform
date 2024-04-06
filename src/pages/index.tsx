@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { buttonVariants } from "~/components/ui/button";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Image from "next/image";
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
@@ -23,20 +24,22 @@ export default function Home() {
             </h1>
             <div>
               {user.picture && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.picture} alt={user.name ?? "User picture"} />
+                <Image
+                  width="96"
+                  height="96"
+                  src={user.picture}
+                  alt={user.name ?? "User picture"}
+                />
               )}
               <h2>Welcome {user.name}!</h2>
               <p>{user.email}</p>
-              {
-                // eslint-disable-next-line @next/next/no-html-link-for-pages
-                <a
-                  href="/api/auth/logout"
-                  className={buttonVariants({ variant: "destructive" })}
-                >
-                  Logout
-                </a>
-              }
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+              <a
+                href="/api/auth/logout"
+                className={buttonVariants({ variant: "destructive" })}
+              >
+                Logout
+              </a>
             </div>
           </div>
         </header>

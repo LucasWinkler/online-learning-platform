@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import * as defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
   darkMode: ["class"],
@@ -66,6 +67,16 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        interVariable: [
+          ["InterVariable", ...defaultTheme.fontFamily.sans],
+          { fontFeatureSettings: '"liga" 1, "calt" 1, "ss03" 1' },
+        ],
+        inter: [
+          ["Inter", ...defaultTheme.fontFamily.sans],
+          { fontFeatureSettings: '"liga" 1, "calt" 1, "ss03" 1' },
+        ],
       },
     },
   },
