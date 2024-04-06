@@ -3,21 +3,21 @@ import { buttonVariants } from "~/components/ui/button";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
 import { db } from "~/server/db";
-import { type Post } from "@prisma/client";
 import {
   type InferGetServerSidePropsType,
   type GetServerSideProps,
 } from "next";
+import { type User } from "@prisma/client";
 
 export default function Home({
-  posts,
+  users,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { user, error, isLoading } = useUser();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
-  console.log(posts);
+  console.log(users);
 
   if (user) {
     return (
@@ -75,11 +75,11 @@ export default function Home({
 // Example getServerSideProps:
 // The page will infer: export default function Home({ posts, }: InferGetServerSidePropsType<typeof getServerSideProps>)
 export const getServerSideProps = (async () => {
-  const posts = await db.post.findMany();
+  const users = await db.user.findMany();
 
-  console.log("Fetching posts with Prisma & Neon:", posts);
+  console.log("Fetching posts with Prisma & Neon:", users);
 
   return {
-    props: { posts },
+    props: { users },
   };
-}) satisfies GetServerSideProps<{ posts: Post[] }>;
+}) satisfies GetServerSideProps<{ users: User[] }>;
