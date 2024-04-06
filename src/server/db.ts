@@ -1,16 +1,21 @@
+import "dotenv/config";
+import { Pool, neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-
 import { env } from "~/env";
+import ws from "ws";
+
+neonConfig.webSocketConstructor = ws;
+const connectionString = `${env.DATABASE_URL}?pgbouncer=true&connect_timeout=10&pool_timeout=10`;
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaNeon(pool);
 
 const createPrismaClient = () =>
   new PrismaClient({
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-    datasources: {
-      db: {
-        url: `${env.DATABASE_URL}?pgbouncer=true&connect_timeout=10&pool_timeout=10`,
-      },
-    },
+    adapter: adapter,
   });
 
 const globalForPrisma = globalThis as unknown as {
