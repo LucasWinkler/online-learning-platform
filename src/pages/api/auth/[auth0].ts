@@ -29,9 +29,15 @@ const afterCallback: AfterCallbackPageRoute = async (
   state,
 ) => {
   try {
-    const { email, name, picture } = session.user;
+    const { email, name, picture, email_verified } = session.user;
+    console.log(session.user);
 
-    await createUser(email as string, name as string, picture as string);
+    await createUser(
+      email as string,
+      name as string,
+      picture as string,
+      email_verified as boolean,
+    );
   } catch (error) {
     console.error(error);
   }
