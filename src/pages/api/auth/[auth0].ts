@@ -1,12 +1,12 @@
 import { handleAuth, handleLogin } from "@auth0/nextjs-auth0";
 import { HandlerError } from "@auth0/nextjs-auth0";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { env } from "~/env";
 
 export default handleAuth({
   async login(req: NextApiRequest, res: NextApiResponse) {
-    // req.host could be 'foo.domain.com' or 'bar.domain.com'
-    // you can set `BASE_URL` to https://foo.domain.com or https://bar.domain.com
-    const redirectUri = `https://${req.headers.host}/api/auth/callback`;
+    const redirectUri = `${env.NODE_ENV === "development" ? "http" : "https"}://${req.headers.host}/api/auth/callback`;
+
     try {
       await handleLogin(req, res, {
         authorizationParams: {
