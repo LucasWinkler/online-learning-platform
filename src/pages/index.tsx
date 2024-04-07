@@ -2,22 +2,23 @@ import Head from "next/head";
 import { buttonVariants } from "~/components/ui/button";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
-import { db } from "~/server/db";
-import {
-  type InferGetServerSidePropsType,
-  type GetServerSideProps,
-} from "next";
-import { type User } from "@prisma/client";
 
-export default function Home({
-  users,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home() {
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+  if (isLoading)
+    return (
+      <div className="container flex min-h-screen items-center justify-center">
+        <div
+          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-blue-600 motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        >
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
 
-  console.log(users);
+  if (error) return <div>{error.message}</div>;
 
   if (user) {
     return (
@@ -59,27 +60,27 @@ export default function Home({
 
   return (
     <>
-      {
-        // eslint-disable-next-line @next/next/no-html-link-for-pages
-        <a
-          href="/api/auth/login"
-          className={buttonVariants({ variant: "default" })}
-        >
-          Login
-        </a>
-      }
+      <Head>
+        <title>Online Learning Platform</title>
+        <meta name="description" content="Online Learning Platform" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <header className="flex min-h-screen flex-col items-center justify-center">
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+          <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+            Online Learning Platform
+          </h1>
+          {
+            // eslint-disable-next-line @next/next/no-html-link-for-pages
+            <a
+              href="/api/auth/login"
+              className={buttonVariants({ variant: "default" })}
+            >
+              Login
+            </a>
+          }
+        </div>
+      </header>
     </>
   );
 }
-
-// Example getServerSideProps:
-// The page will infer: export default function Home({ posts, }: InferGetServerSidePropsType<typeof getServerSideProps>)
-export const getServerSideProps = (async () => {
-  const users = await db.user.findMany();
-
-  console.log("Fetching posts with Prisma & Neon:", users);
-
-  return {
-    props: { users },
-  };
-}) satisfies GetServerSideProps<{ users: User[] }>;

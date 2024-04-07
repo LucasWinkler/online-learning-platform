@@ -1,4 +1,5 @@
 import {
+  type AfterCallbackPageRoute,
   handleAuth,
   handleCallback,
   handleLogin,
@@ -6,6 +7,7 @@ import {
 } from "@auth0/nextjs-auth0";
 import { HandlerError } from "@auth0/nextjs-auth0";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createUser } from "~/server/mutations/user";
 
 function getUrls(req: NextApiRequest) {
   const host = req.headers.host;
@@ -19,6 +21,24 @@ function getUrls(req: NextApiRequest) {
   };
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const afterCallback: AfterCallbackPageRoute = async (
+  req,
+  res,
+  session,
+  state,
+) => {
+  try {
+    const { email, name, picture } = session.user;
+
+    await createUser(email as string, name as string, picture as string);
+  } catch (error) {
+    console.error(error);
+  }
+
+  return session;
+};
+
 export default handleAuth({
   async callback(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -26,6 +46,7 @@ export default handleAuth({
 
       await handleCallback(req, res, {
         redirectUri: redirectUri,
+        afterCallback,
       });
     } catch (error: unknown) {
       if (error instanceof HandlerError) {
