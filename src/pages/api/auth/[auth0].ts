@@ -30,7 +30,6 @@ const afterCallback: AfterCallbackPageRoute = async (
 ) => {
   try {
     const { email, name, picture, email_verified } = session.user;
-    console.log(session.user);
 
     await createUser(
       email as string,
