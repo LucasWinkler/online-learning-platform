@@ -8,7 +8,7 @@ export default function Home() {
 
   if (isLoading)
     return (
-      <div className="container flex min-h-screen items-center justify-center">
+      <div className="container flex min-h-dvh items-center justify-center">
         <div
           className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-blue-600 motion-reduce:animate-[spin_1.5s_linear_infinite]"
           role="status"
@@ -28,7 +28,7 @@ export default function Home() {
           <meta name="description" content="Online Learning Platform" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <header className="flex min-h-screen flex-col items-center justify-center">
+        <header className="flex min-h-dvh flex-col items-center justify-center">
           <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
             <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
               Online Learning Platform
@@ -65,7 +65,7 @@ export default function Home() {
         <meta name="description" content="Online Learning Platform" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="flex min-h-screen flex-col items-center justify-center">
+      <header className="flex min-h-dvh flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Online Learning Platform
