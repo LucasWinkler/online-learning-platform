@@ -1,15 +1,21 @@
 import { type AppType } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import Head from "next/head";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <UserProvider>
-      {/* <main> */}
-      <Component {...pageProps} />
-      {/* </main> */}
-    </UserProvider>
+    <>
+      <Head>
+        <title>Online Learning Platform</title>
+        <meta name="description" content="Online Learning Platform" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
+    </>
   );
 };
 

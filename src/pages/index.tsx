@@ -1,57 +1,34 @@
-import Head from "next/head";
 import { buttonVariants } from "~/components/ui/button";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import Image from "next/image";
+import { type UserProfile } from "@auth0/nextjs-auth0/client";
+import getBase64 from "~/lib/getLocalBase64";
+import {
+  type GetServerSideProps,
+  type InferGetServerSidePropsType,
+} from "next";
+import { getSession } from "@auth0/nextjs-auth0";
+import { DynamicPlaceholderImage } from "~/components/ui/dynamic-placeholder-image";
 
-export default function Home() {
-  const { user, error, isLoading } = useUser();
-
-  if (isLoading)
-    return (
-      <div className="container flex min-h-dvh items-center justify-center">
-        <div
-          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-blue-600 motion-reduce:animate-[spin_1.5s_linear_infinite]"
-          role="status"
-        >
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
-    );
-
-  if (error) return <div>{error.message}</div>;
-
-  if (user) {
+export default function Home({
+  user,
+  blurDataURL,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!user) {
     return (
       <>
-        <Head>
-          <title>Online Learning Platform</title>
-          <meta name="description" content="Online Learning Platform" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <header className="flex min-h-dvh flex-col items-center justify-center">
           <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
             <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
               Online Learning Platform
             </h1>
-            <div>
-              {user.picture && (
-                <Image
-                  width="96"
-                  height="96"
-                  src={user.picture}
-                  alt={user.name ?? "User picture"}
-                />
-              )}
-              <h2>Welcome {user.name}!</h2>
-              <p>{user.email}</p>
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            {
+              // eslint-disable-next-line @next/next/no-html-link-for-pages
               <a
-                href="/api/auth/logout"
-                className={buttonVariants({ variant: "destructive" })}
+                href="/api/auth/login"
+                className={buttonVariants({ variant: "default" })}
               >
-                Logout
+                Login
               </a>
-            </div>
+            }
           </div>
         </header>
       </>
@@ -60,27 +37,58 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Online Learning Platform</title>
-        <meta name="description" content="Online Learning Platform" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <header className="flex min-h-dvh flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Online Learning Platform
           </h1>
-          {
-            // eslint-disable-next-line @next/next/no-html-link-for-pages
+          <div>
+            {user.picture && (
+              <DynamicPlaceholderImage
+                width="96"
+                height="96"
+                src={user.picture}
+                alt={`${user.name} icon`}
+                blurDataURL={blurDataURL}
+              />
+            )}
+            <h2>Welcome {user.name}!</h2>
+            <p>{user.email}</p>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
-              href="/api/auth/login"
-              className={buttonVariants({ variant: "default" })}
+              href="/api/auth/logout"
+              className={buttonVariants({ variant: "destructive" })}
             >
-              Login
+              Logout
             </a>
-          }
+          </div>
         </div>
       </header>
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<{
+  user?: UserProfile;
+  blurDataURL?: string;
+}> = async (context) => {
+  const { req, res } = context;
+  const session = await getSession(req, res);
+
+  try {
+    if (session?.user) {
+      const user = session.user as UserProfile;
+      const blurDataURL = await getBase64(user.picture ?? "");
+
+      return {
+        props: { user, blurDataURL },
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching user session:", error);
+  }
+
+  return {
+    props: {},
+  };
+};

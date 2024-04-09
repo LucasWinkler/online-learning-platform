@@ -24,7 +24,5 @@ export const createUser = async (
     where: { email },
   });
 
-  console.log("verified", user.isVerified);
-
   return user;
 };

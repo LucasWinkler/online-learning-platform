@@ -5,12 +5,13 @@ export default function Document() {
   return (
     <Html
       lang="en"
-      className="supports-[font-variation-settings:normal]:font-interVariable font-inter"
+      className="font-inter supports-[font-variation-settings:normal]:font-interVariable"
     >
       <Head>
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css"></link>
       </Head>
+
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
         <Main />
         <NextScript />
