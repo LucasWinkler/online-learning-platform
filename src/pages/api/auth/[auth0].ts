@@ -21,13 +21,7 @@ function getUrls(req: NextApiRequest) {
   };
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-const afterCallback: AfterCallbackPageRoute = async (
-  req,
-  res,
-  session,
-  state,
-) => {
+const afterCallback: AfterCallbackPageRoute = async (req, res, session) => {
   try {
     const { email, name, picture, email_verified } = session.user;
 

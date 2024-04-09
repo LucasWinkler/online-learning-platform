@@ -6,7 +6,7 @@ import {
   type InferGetServerSidePropsType,
 } from "next";
 import { getSession } from "@auth0/nextjs-auth0";
-import { DynamicPlaceholderImage } from "~/components/ui/dynamic-placeholder-image";
+import Image from "next/image";
 
 export default function Home({
   user,
@@ -44,11 +44,12 @@ export default function Home({
           </h1>
           <div>
             {user.picture && (
-              <DynamicPlaceholderImage
+              <Image
                 width="96"
                 height="96"
                 src={user.picture}
                 alt={`${user.name} icon`}
+                placeholder="blur"
                 blurDataURL={blurDataURL}
               />
             )}
