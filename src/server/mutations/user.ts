@@ -6,8 +6,6 @@ export const createUser = async (
   picture: string,
   email_verified: boolean,
 ) => {
-  // Choosing to update on each login since it's a small app
-  // with low db calls and I want to keep their data up-to-date.
   const user = await db.user.upsert({
     create: {
       email,
@@ -15,12 +13,7 @@ export const createUser = async (
       image: picture,
       isVerified: email_verified,
     },
-    update: {
-      email,
-      name,
-      image: picture,
-      isVerified: email_verified,
-    },
+    update: {},
     where: { email },
   });
 
