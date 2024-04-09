@@ -1,13 +1,19 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
-  - Made the column `name` on table `User` required. This step will fail if there are existing NULL values in that column.
-  - Made the column `image` on table `User` required. This step will fail if there are existing NULL values in that column.
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-*/
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "name" SET NOT NULL,
-ALTER COLUMN "image" SET NOT NULL;
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Course" (
@@ -91,6 +97,9 @@ CREATE TABLE "CourseEnrollment" (
 
     CONSTRAINT "CourseEnrollment_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Course_slug_key" ON "Course"("slug");
