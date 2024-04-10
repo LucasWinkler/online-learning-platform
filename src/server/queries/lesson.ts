@@ -4,7 +4,7 @@ export async function getLessonLengthInSeconds(
   lessonId: number,
 ): Promise<number | null> {
   try {
-    const lessonContent = await db.lessonContent.findFirst({
+    const lessonContent = await db.lessonContent.findUnique({
       where: {
         id: lessonId,
       },
