@@ -25,7 +25,7 @@ model User {
   updatedAt  DateTime @updatedAt
 
   courses          Course[]
-  CourseEnrollment CourseEnrollment[]
+  courseEnrollment CourseEnrollment[]
 }
 
 model Course {
@@ -43,7 +43,7 @@ model Course {
   updatedAt    DateTime  @updatedAt
 
   chapters         Chapter[]
-  CourseEnrollment CourseEnrollment[]
+  courseEnrollment CourseEnrollment[]
 }
 
 model Discount {
@@ -57,10 +57,12 @@ model Discount {
 }
 
 model Chapter {
-  id       Int    @id @default(autoincrement())
-  title    String
-  course   Course @relation(fields: [courseId], references: [id])
-  courseId Int
+  id        Int      @id @default(autoincrement())
+  title     String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   lessons Lesson[]
 }
@@ -74,6 +76,8 @@ model Lesson {
   lessonContentId Int
   chapter         Chapter       @relation(fields: [chapterId], references: [id])
   chapterId       Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model LessonContent {
@@ -82,29 +86,38 @@ model LessonContent {
   textContentId  Int?
   video          VideoContent? @relation(fields: [videoContentId], references: [id])
   videoContentId Int?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
-  Lesson Lesson[]
+  lesson Lesson[]
 }
 
 model TextContent {
-  id   Int    @id @default(autoincrement())
-  body String
+  id        Int      @id @default(autoincrement())
+  body      String
+  length    Int // Length in seconds
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  LessonContent LessonContent[]
+  lessonContent LessonContent[]
 }
 
 model VideoContent {
-  id     Int    @id @default(autoincrement())
-  url    String
-  length Int // Video length in seconds
+  id        Int      @id @default(autoincrement())
+  url       String
+  length    Int // Length in seconds
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  LessonContent LessonContent[]
+  lessonContent LessonContent[]
 }
 
 model CourseEnrollment {
-  id        Int    @id @default(autoincrement())
-  student   User   @relation(fields: [studentId], references: [id])
+  id        Int      @id @default(autoincrement())
+  student   User     @relation(fields: [studentId], references: [id])
   studentId Int
-  course    Course @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
   courseId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
