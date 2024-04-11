@@ -6,16 +6,21 @@ export const createUser = async (
   picture: string,
   email_verified: boolean,
 ) => {
-  const user = await db.user.upsert({
-    create: {
-      email,
-      name,
-      image: picture,
-      isVerified: email_verified,
-    },
-    update: {},
-    where: { email },
-  });
+  try {
+    const user = await db.user.upsert({
+      create: {
+        email,
+        name,
+        image: picture,
+        isVerified: email_verified,
+      },
+      update: {},
+      where: { email },
+    });
 
-  return user;
+    return user;
+  } catch (error: unknown) {
+    console.error("Error creating user", error);
+    throw new Error("Failed to create user");
+  }
 };

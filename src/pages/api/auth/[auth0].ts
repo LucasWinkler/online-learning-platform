@@ -9,6 +9,14 @@ import { HandlerError } from "@auth0/nextjs-auth0";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createUser } from "~/server/mutations/user";
 
+/**
+ * Grabs the correct redirectUri and returnTo url based on
+ * project environment.
+ * This is to solve auth0 not working in vercel preview
+ * deployments due to dynamically generated deploy urls.
+ * @param req NextApiRequest
+ * @returns redirectUri, returnTo
+ */
 function getUrls(req: NextApiRequest) {
   const host = req.headers.host;
   const protocol = process.env.VERCEL_URL ? "https" : "http";
@@ -32,7 +40,8 @@ const afterCallback: AfterCallbackPageRoute = async (req, res, session) => {
       email_verified as boolean,
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error occurred during user creation:", error);
+    throw error;
   }
 
   return session;
@@ -48,11 +57,12 @@ export default handleAuth({
         afterCallback,
       });
     } catch (error: unknown) {
+      console.error("Error in handleAuth callback:", error);
       if (error instanceof HandlerError) {
         res.status(error.status ?? 500).end(error.message);
       }
 
-      res.status(500).end("Error in /api/auth/[auth0].ts -> callback()");
+      res.status(500).end("An error occurred during authentication callback");
     }
   },
 
@@ -68,19 +78,27 @@ export default handleAuth({
         returnTo: returnTo,
       });
     } catch (error: unknown) {
+      console.error("Error in handleAuth login:", error);
+
       if (error instanceof HandlerError) {
-        res.status(error.status ?? 400).end(error.message);
+        if (error.status) {
+          res.status(error.status).end(error.message);
+        }
       }
 
-      res.status(400).end("Error in /api/auth/[auth0].ts -> login()");
+      res.status(400).end("An error occurred during login");
     }
   },
 
   async logout(req: NextApiRequest, res: NextApiResponse) {
     const { returnTo } = getUrls(req);
-
-    await handleLogout(req, res, {
-      returnTo: returnTo,
-    });
+    try {
+      await handleLogout(req, res, {
+        returnTo: returnTo,
+      });
+    } catch (error: unknown) {
+      console.error("Error in handleAuth logout:", error);
+      res.status(500).end("An error occurred during logout");
+    }
   },
 });
