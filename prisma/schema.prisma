@@ -59,12 +59,16 @@ model Discount {
 model Chapter {
   id        Int      @id @default(autoincrement())
   title     String
+  slug      String   @unique
   course    Course   @relation(fields: [courseId], references: [id])
   courseId  Int
+  order     Int /// The order a chapter should be displayed
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   lessons Lesson[]
+
+  @@unique([courseId, order])
 }
 
 model Lesson {
@@ -76,8 +80,11 @@ model Lesson {
   lessonContentId Int
   chapter         Chapter       @relation(fields: [chapterId], references: [id])
   chapterId       Int
+  order           Int /// The order a lesson should be displayed
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+
+  @@unique([chapterId, order])
 }
 
 model LessonContent {
@@ -95,7 +102,7 @@ model LessonContent {
 model TextContent {
   id        Int      @id @default(autoincrement())
   body      String
-  length    Int // Length in seconds
+  length    Int /// Length in seconds
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -105,7 +112,7 @@ model TextContent {
 model VideoContent {
   id        Int      @id @default(autoincrement())
   url       String
-  length    Int // Length in seconds
+  length    Int /// Length in seconds
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
