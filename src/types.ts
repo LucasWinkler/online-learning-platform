@@ -6,3 +6,5 @@ export type CreateCourseInput = {
   thumbnail: string;
   instructorId: number;
 };
+
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
