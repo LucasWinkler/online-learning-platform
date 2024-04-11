@@ -59,7 +59,7 @@ model Discount {
 model Chapter {
   id        Int      @id @default(autoincrement())
   title     String
-  slug      String   @unique
+  slug      String
   course    Course   @relation(fields: [courseId], references: [id])
   courseId  Int
   order     Int /// The order a chapter should be displayed
@@ -69,12 +69,13 @@ model Chapter {
   lessons Lesson[]
 
   @@unique([courseId, order])
+  @@unique([courseId, slug])
 }
 
 model Lesson {
   id              Int           @id @default(autoincrement())
   title           String
-  slug            String        @unique
+  slug            String
   description     String
   content         LessonContent @relation(fields: [lessonContentId], references: [id])
   lessonContentId Int
@@ -85,6 +86,7 @@ model Lesson {
   updatedAt       DateTime      @updatedAt
 
   @@unique([chapterId, order])
+  @@unique([chapterId, slug])
 }
 
 model LessonContent {
