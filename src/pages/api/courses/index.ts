@@ -1,15 +1,18 @@
+import { getSession } from "@auth0/nextjs-auth0";
 import { type NextApiRequest, type NextApiResponse } from "next/types";
+import { handleInvalidMethod } from "~/lib/api";
 import { db } from "~/server/db";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { method } = req;
+  handleInvalidMethod(req, res, "GET");
 
-  if (req.method !== "GET") {
-    return res.status(405).json({
-      message: `Method ${method} Not Allowed on path ${req.url}`,
+  const session = await getSession(req, res);
+  if (!session) {
+    return res.status(401).json({
+      message: "Unauthorized: Please log in to access this resource",
     });
   }
 

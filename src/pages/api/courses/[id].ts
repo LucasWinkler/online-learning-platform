@@ -2,6 +2,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { db } from "~/server/db";
 import { type Course } from "@prisma/client";
 import { handleInvalidMethod } from "~/lib/api";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,8 +11,14 @@ export default async function handler(
   try {
     handleInvalidMethod(req, res, "GET");
 
-    const courseId = req.query.id as string;
+    const session = await getSession(req, res);
+    if (!session) {
+      return res.status(401).json({
+        message: "Unauthorized: Please log in to access this resource",
+      });
+    }
 
+    const courseId = req.query.id as string;
     const course = await db.course.findUnique({
       where: {
         id: parseInt(courseId),

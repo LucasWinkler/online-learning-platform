@@ -14,7 +14,11 @@ export const createUser = async (
         image: picture,
         isVerified: email_verified,
       },
-      update: {},
+      update: {
+        name,
+        image: picture,
+        isVerified: email_verified,
+      },
       where: { email },
     });
 
