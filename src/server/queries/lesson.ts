@@ -4,23 +4,20 @@ export async function getLessonLengthInSeconds(
   lessonId: number,
 ): Promise<number | null> {
   try {
-    const lessonContent = await db.lessonContent.findUnique({
+    const lesson = await db.lesson.findUnique({
       where: {
         id: lessonId,
       },
       select: {
-        text: true,
-        video: true,
+        length: true,
       },
     });
 
-    if (!lessonContent) {
-      throw new Error("Lesson content not found");
+    if (!lesson) {
+      throw new Error("Lesson not found");
     }
 
-    const { text, video } = lessonContent;
-
-    return text?.length ?? video?.length ?? null;
+    return lesson.length;
   } catch (error) {
     console.error("Error fetching lesson length:", error);
     return null;
