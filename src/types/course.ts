@@ -6,6 +6,7 @@ export type CreateCourseInput = Prisma.CourseGetPayload<{
   select: {
     title: true;
     slug: true;
+    instructorId: true;
   };
 }>;
 
