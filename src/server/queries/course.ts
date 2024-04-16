@@ -1,5 +1,68 @@
+import { CourseSelectForCoursesPage } from "~/lib/prisma/validators";
+
 import { db } from "../db";
 import { getChapterTotalLengthInSeconds } from "./chapter";
+
+const lessonPublishedAndChapterPublished = {
+  isPublished: true,
+  chapter: { isPublished: true },
+};
+
+/**
+ * Find all published courses that have at least one published
+ * chapter that also has at least one published lesson.
+ *
+ * Select required fields for the frontend including custom
+ * fields such as the number of enrollments, number of
+ * lessons and the total length of the course in seconds.
+ * @returns courses
+ */
+export const getCoursesForHome = async () => {
+  const courses = await db.course.findMany({
+    where: {
+      isPublished: true,
+      chapters: {
+        some: {
+          isPublished: true,
+          lessons: {
+            some: {
+              ...lessonPublishedAndChapterPublished,
+            },
+          },
+        },
+      },
+    },
+    select: {
+      ...CourseSelectForCoursesPage,
+      id: true,
+      _count: {
+        select: {
+          courseEnrollments: true,
+        },
+      },
+      lessons: {
+        where: {
+          ...lessonPublishedAndChapterPublished,
+        },
+        select: {
+          length: true,
+        },
+      },
+    },
+    orderBy: [
+      {
+        courseEnrollments: {
+          _count: "desc",
+        },
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
+  });
+
+  return courses;
+};
 
 export async function getEnrollmentCount(
   courseId: number,
