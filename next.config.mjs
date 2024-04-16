@@ -28,7 +28,13 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "*.fakeimg.pl",
+        hostname: "fakeimg.pl",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.imgur.com",
         port: "",
         pathname: "**",
       },
