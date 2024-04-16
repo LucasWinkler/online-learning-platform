@@ -63,6 +63,16 @@ export const getServerSideProps = (async () => {
         },
       },
     },
+    orderBy: [
+      {
+        courseEnrollments: {
+          _count: "desc",
+        },
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
   });
 
   const publishedCourses: CoursesPagePayload[] = courses.map((course) => {
