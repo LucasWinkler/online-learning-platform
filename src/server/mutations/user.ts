@@ -12,12 +12,12 @@ export const createUser = async (
         email,
         name,
         image: picture,
-        isVerified: email_verified,
+        emailVerified: email_verified,
       },
       update: {
         name,
         image: picture,
-        isVerified: email_verified,
+        emailVerified: email_verified,
       },
       where: { email },
     });
