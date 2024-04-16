@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+
 import * as defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
@@ -14,6 +15,10 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        xs: "475px",
+        ...defaultTheme.screens,
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -39,6 +44,10 @@ const config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

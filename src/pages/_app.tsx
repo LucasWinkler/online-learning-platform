@@ -1,5 +1,5 @@
-import { type AppType } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { type AppType } from "next/app";
 import Head from "next/head";
 
 import "~/styles/globals.css";
