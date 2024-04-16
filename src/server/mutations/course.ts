@@ -1,6 +1,6 @@
 import { db } from "../db";
 import type { Course } from "@prisma/client";
-import type { CreateCourseInput } from "~/types";
+import type { CreateCourseInput } from "~/types/course";
 
 export const createCourse = async ({
   title,
