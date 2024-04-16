@@ -1,4 +1,4 @@
-import type { CourseSelectForCoursesPage } from "~/lib/prisma/validators";
+import type { CourseSelectForCoursesPage } from "~/lib/prisma";
 
 import { type Prisma } from "@prisma/client";
 

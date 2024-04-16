@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 
 import { env } from "~/env";
-import getBase64 from "~/lib/getLocalBase64";
+import getBase64 from "~/lib/plaiceholder";
 import { db } from "~/server/db";
 
 const placeholderImageUrl1 = "https://i.imgur.com/cONzcMV.png";

@@ -1,12 +1,13 @@
-import { buttonVariants } from "~/components/ui/button";
+import { getSession } from "@auth0/nextjs-auth0";
 import { type UserProfile } from "@auth0/nextjs-auth0/client";
-import getBase64 from "~/lib/getLocalBase64";
 import {
   type GetServerSideProps,
   type InferGetServerSidePropsType,
 } from "next";
-import { getSession } from "@auth0/nextjs-auth0";
 import Image from "next/image";
+
+import { buttonVariants } from "~/components/ui/button";
+import getBase64 from "~/lib/plaiceholder";
 
 export default function Home({
   user,

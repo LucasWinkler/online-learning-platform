@@ -1,4 +1,4 @@
-import { CourseSelectForCoursesPage } from "~/lib/prisma/validators";
+import { CourseSelectForCoursesPage } from "~/lib/prisma";
 
 import { db } from "../db";
 import { getChapterTotalLengthInSeconds } from "./chapter";
