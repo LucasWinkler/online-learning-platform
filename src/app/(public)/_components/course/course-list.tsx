@@ -1,6 +1,6 @@
 import type { CoursesPagePayload } from "~/types/course";
 
-import CourseListItem from "./CourseListItem";
+import CourseListItem from "./course-list-item";
 
 type CourseListProps = {
   courses: CoursesPagePayload[];
