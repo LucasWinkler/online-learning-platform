@@ -17,3 +17,17 @@ export const calculateCourseLengthInSeconds = (
 
   return totalLengthInSeconds;
 };
+
+export const formatCourseLength = (lengthInSeconds: number): string => {
+  const lengthInHours = lengthInSeconds / 3600;
+  const hours = Math.floor(lengthInHours);
+  const minutes = Math.floor((lengthInHours - hours) * 60);
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours}h ${minutes}m`;
+  } else if (hours > 0) {
+    return `${hours}h`;
+  } else {
+    return `${minutes}m`;
+  }
+};

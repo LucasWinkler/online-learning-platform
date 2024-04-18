@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "~/components/ui/badge";
+import { formatCourseLength } from "~/lib/utils";
 
 type CourseListItemProps = {
   course: CoursesPagePayload;
@@ -31,10 +32,10 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
     if (discountedPrice != null && course.price != null) {
       return (
         <>
-          <span className="sm:text-base text-sm font-semibold">
+          <span className="text-sm font-semibold sm:text-base">
             ${discountedPrice.toFixed(2)}
           </span>
-          <span className="text-gray-500 line-through dark:text-gray-400 sm:text-sm text-xs">
+          <span className="text-xs text-gray-500 line-through dark:text-gray-400 sm:text-sm">
             ${course.price.toFixed(2)}
           </span>
         </>
@@ -52,24 +53,10 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
     );
   };
 
-  const formatLength = (lengthInSeconds: number): string => {
-    const lengthInHours = lengthInSeconds / 3600;
-    const hours = Math.floor(lengthInHours);
-    const minutes = Math.floor((lengthInHours - hours) * 60);
-
-    if (hours > 0 && minutes > 0) {
-      return `${hours}h ${minutes}m`;
-    } else if (hours > 0) {
-      return `${hours}h`;
-    } else {
-      return `${minutes}m`;
-    }
-  };
-
   return (
-    <li className="border border-neutral-200 hover:bg-neutral-50 transition-colors ">
+    <li className="border border-neutral-200 transition-colors hover:bg-neutral-50">
       <Link className="flex flex-col gap-4 p-4 xs:flex-row" href={courseLink}>
-        <div className="relative aspect-video w-full h-full xs:w-1/2 md:w-1/2">
+        <div className="relative aspect-video h-full w-full xs:w-1/2 md:w-1/2">
           <Image
             className="select-none object-cover"
             draggable={false}
@@ -83,21 +70,21 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
           />
         </div>
         <div className="w-full xs:w-1/2 md:w-2/3">
-          <h3 className="line-clamp-2 sm:line-clamp-1 mb-0 text-base xs:leading-snug xs:text-base font-bold sm:text-xl leading-snug sm:leading-normal">
+          <h3 className="mb-0 line-clamp-2 text-base font-bold leading-snug xs:text-base xs:leading-snug sm:line-clamp-1 sm:text-xl sm:leading-normal">
             {course.title}
           </h3>
-          <p className="mb-1 sm:mb-2 text-sm text-neutral-500">
+          <p className="mb-1 text-sm text-neutral-500 sm:mb-2">
             with {course.instructor.name}
           </p>
-          <p className="sm:line-clamp-2 md:line-clamp-3 mb-2 max-w-[60ch] text-sm leading-normal sr-only sm:not-sr-only sm:mb-2">
+          <p className="sr-only mb-2 max-w-[60ch] text-sm leading-normal sm:not-sr-only sm:mb-2 sm:line-clamp-2 md:line-clamp-3">
             {course.description}
           </p>
           <div className="mb-1 flex items-baseline gap-1">{renderPrice()}</div>
-          <div className="mb-1 text-sm flex items-center justify-between">
+          <div className="mb-1 flex items-center justify-between text-sm">
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="flex items-center gap-1.5">
                 <ClockIcon className="h-4 w-4 text-yellow-500" />
-                {formatLength(course.lengthInSeconds)}
+                {formatCourseLength(course.lengthInSeconds)}
               </span>
               <span className="flex items-center gap-1.5">
                 <BookIcon className="h-4 w-4 text-blue-500" />

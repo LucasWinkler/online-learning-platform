@@ -42,7 +42,7 @@ const config = {
   },
   experimental: {
     swcPlugins: [["next-superjson-plugin", {}]],
-    typedRoutes: true,
+    // typedRoutes: true,
   },
 };
 
