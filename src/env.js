@@ -14,13 +14,6 @@ export const env = createEnv({
         (str) => !str.includes("YOUR_POOLED_POSTGRESQL_URL_HERE"),
         "You forgot to change the default URL",
       ),
-    DATABASE_URL_UNPOOLED: z
-      .string()
-      .url()
-      .refine(
-        (str) => !str.includes("YOUR_UNPOOLED_POSTGRESQL_URL_HERE"),
-        "You forgot to change the default URL",
-      ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -46,7 +39,6 @@ export const env = createEnv({
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
-    DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     NODE_ENV: process.env.NODE_ENV,
     AUTH0_SECRET: process.env.AUTH0_SECRET,
     AUTH0_BASE_URL: process.env.AUTH0_BASE_URL,

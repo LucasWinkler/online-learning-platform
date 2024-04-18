@@ -1,7 +1,5 @@
 // TODO:
-// Rethink schema. Add more optional fields for a good UX
 // Track users course progress 
-// 
 
 generator client {
   provider        = "prisma-client-js"
@@ -9,9 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -19,19 +16,13 @@ enum Role {
   ADMIN
 }
 
-/// Not using and forcing only videos until more progress has been done
-// enum ContentType {
-//   TEXT
-//   VIDEO
-// }
-
 model User {
-  id            Int     @id @default(autoincrement())
-  name          String
-  email         String  @unique
-  emailVerified Boolean @default(false)
-  image         String? @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
-  role          Role    @default(USER)
+  id              Int      @id @default(autoincrement())
+  name            String
+  email           String   @unique
+  isEmailVerified Boolean? @default(false)
+  image           String?  @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
+  role            Role     @default(USER)
 
   enrolledCourses  CourseEnrollment[]
   createdCourses   Course[]

@@ -1,4 +1,5 @@
 import { type NextApiRequest, type NextApiResponse } from "next/types";
+
 import { type HttpMethod } from "~/types/api";
 
 export const handleInvalidMethod = (

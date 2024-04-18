@@ -1,9 +1,10 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import { type NextApiRequest, type NextApiResponse } from "next/types";
-import { db } from "~/server/db";
-import { z } from "zod";
 import { Role } from "@prisma/client";
+import { type NextApiRequest, type NextApiResponse } from "next/types";
+import { z } from "zod";
+
 import { handleInvalidMethod } from "~/lib/api";
+import { db } from "~/server/db";
 
 const bodySchema = z.object({
   title: z.string(),

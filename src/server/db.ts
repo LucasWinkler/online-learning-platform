@@ -1,12 +1,14 @@
 import "dotenv/config";
-import { Pool, neonConfig } from "@neondatabase/serverless";
+
+import { neonConfig, Pool } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import { env } from "~/env";
 import ws from "ws";
 
+import { env } from "~/env";
+
 neonConfig.webSocketConstructor = ws;
-const connectionString = `${env.DATABASE_URL}?pgbouncer=true&connect_timeout=10&pool_timeout=10`;
+const connectionString = `${env.DATABASE_URL}`;
 
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);
