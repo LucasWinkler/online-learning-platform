@@ -1,6 +1,11 @@
+// TODO:
+// Rethink schema. Add more optional fields for a good UX
+// Track users course progress 
+// 
+
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters", "relationJoins"]
 }
 
 datasource db {
@@ -14,101 +19,111 @@ enum Role {
   ADMIN
 }
 
-enum ContentType {
-  TEXT
-  VIDEO
-}
+/// Not using and forcing only videos until more progress has been done
+// enum ContentType {
+//   TEXT
+//   VIDEO
+// }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  role       Role     @default(USER)
-  isVerified Boolean  @default(false)
-  image      String?  @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            Int     @id @default(autoincrement())
+  name          String
+  email         String  @unique
+  emailVerified Boolean @default(false)
+  image         String? @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
+  role          Role    @default(USER)
 
   enrolledCourses  CourseEnrollment[]
   createdCourses   Course[]
   createdDiscounts Discount[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Discount {
-  id           Int      @id @default(autoincrement())
-  name         String
-  percentage   Float
-  instructor   User     @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  instructorId Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id         Int    @id @default(autoincrement())
+  name       String
+  percentage Float
 
+  instructor        User     @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  instructorId      Int
   discountedCourses Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Course {
-  id           Int       @id @default(autoincrement())
-  title        String
-  slug         String    @unique
-  description  String
-  price        Float
-  thumbnail    String?   @default("https://fakeimg.pl/300x170?text=Thumbnail&font=bebas")
-  discount     Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
-  discountId   Int?
-  instructor   User      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  instructorId Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id               Int     @id @default(autoincrement())
+  title            String
+  slug             String  @unique
+  description      String?
+  price            Float?
+  imageUrl         String?
+  imageBlurDataUrl String?
+  isPublished      Boolean @default(false)
 
+  discount          Discount?          @relation(fields: [discountId], references: [id], onDelete: SetNull)
+  discountId        Int?
+  instructor        User               @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  instructorId      Int
   chapters          Chapter[]
   lessons           Lesson[]
   courseEnrollments CourseEnrollment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Chapter {
-  id        Int      @id @default(autoincrement())
-  title     String
-  slug      String
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int
-  order     Int /// The order a chapter should be displayed in
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String
+  order       Int /// The order a chapter should be displayed in
+  isPublished Boolean @default(false)
+
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int
+  lessons  Lesson[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  lessons Lesson[]
 
   @@unique([courseId, order])
   @@unique([courseId, slug])
 }
 
 model Lesson {
-  id           Int         @id @default(autoincrement())
-  title        String
-  slug         String
-  description  String
-  contentType  ContentType
-  textContent  String? /// Markdown
-  videoContent String? /// Video URL
-  length       Int /// Lesson length in seconds
-  order        Int /// The order a lesson should be displayed
-  course       Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId     Int
-  chapter      Chapter     @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId    Int
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String
+  description String?
+  videoUrl    String?
+  length      Int? /// Lesson length in seconds
+  order       Int /// The order a lesson should be displayed in
+  isPublished Boolean @default(false)
+
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  Int
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([chapterId, order])
   @@unique([chapterId, slug])
-  @@unique([textContent, videoContent, chapterId])
 }
 
 model CourseEnrollment {
-  id        Int      @id @default(autoincrement())
-  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId  Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@id([studentId, courseId])
 }
