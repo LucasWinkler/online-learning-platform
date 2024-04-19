@@ -4,15 +4,15 @@ import { env } from "~/env";
 import getBase64 from "~/lib/plaiceholder";
 import { db } from "~/server/db";
 
-const placeholderImageUrl1 = "https://i.imgur.com/cONzcMV.png";
-const placeholderImageUrl2 = "https://i.imgur.com/SHhokT4.png";
-
 async function main() {
   if (env.NODE_ENV === "production") {
     throw new Error("Error: Can not seed the production database");
   }
 
   console.log("Seed: Starting up...");
+
+  const placeholderImageUrl1 = "https://i.imgur.com/cONzcMV.png";
+  const placeholderImageUrl2 = "https://i.imgur.com/SHhokT4.png";
 
   await db.user.deleteMany();
   await db.discount.deleteMany();
@@ -146,11 +146,13 @@ async function main() {
     },
   });
 
-  console.log("Seed: Finishing up...");
+  console.log("Seed: Finished.");
 }
 
 main()
   .then(async () => {
+    console.log("Seed: Disconnecting database connection...");
+
     await db.$disconnect();
   })
   .catch(async (e) => {
