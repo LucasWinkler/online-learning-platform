@@ -1,4 +1,4 @@
-import type { CourseSelectForCoursesPage } from "~/lib/prisma";
+import type { CourseSelectForHome } from "~/lib/validators";
 
 import { type Prisma } from "@prisma/client";
 
@@ -10,10 +10,9 @@ export type CreateCourseInput = Prisma.CourseGetPayload<{
   };
 }>;
 
-export type CoursesPagePayload = Prisma.CourseGetPayload<{
-  select: typeof CourseSelectForCoursesPage;
+export type CourseForHome = Prisma.CourseGetPayload<{
+  select: typeof CourseSelectForHome;
 }> & {
-  _count: { courseEnrollments: number };
   lengthInSeconds: number;
   numberOfLessons: number;
 };

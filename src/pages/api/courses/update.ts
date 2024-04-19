@@ -3,7 +3,7 @@ import { Role } from "@prisma/client";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { z } from "zod";
 
-import { handleInvalidMethod } from "~/lib/api";
+import { validateRequestMethod } from "~/lib/api";
 import { db } from "~/server/db";
 
 const bodySchema = z.object({
@@ -19,7 +19,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    handleInvalidMethod(req, res, "PUT");
+    validateRequestMethod(req, res, "PUT");
 
     const session = await getSession(req, res);
     if (!session) {

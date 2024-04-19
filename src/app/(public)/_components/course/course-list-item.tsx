@@ -1,4 +1,4 @@
-import type { CoursesPagePayload } from "~/types/course";
+import type { CourseForHome } from "~/types/course";
 
 import { BookIcon, ClockIcon, UsersRound } from "lucide-react";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { Badge } from "~/components/ui/badge";
 import { formatCourseLength } from "~/lib/utils";
 
 type CourseListItemProps = {
-  course: CoursesPagePayload;
+  course: CourseForHome;
 };
 
 export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
@@ -55,8 +55,8 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
 
   return (
     <li className="border border-neutral-200 transition-colors hover:bg-neutral-50">
-      <Link className="flex flex-col gap-4 p-4 xs:flex-row" href={courseLink}>
-        <div className="relative aspect-video h-full w-full xs:w-1/2 md:w-1/2">
+      <Link className="flex flex-col gap-4 p-4 xs:flex-row " href={courseLink}>
+        <div className="relative aspect-video h-full w-full xs:w-1/2 md:max-h-[12.5em] md:w-[22.125em]">
           <Image
             className="select-none object-cover"
             draggable={false}
