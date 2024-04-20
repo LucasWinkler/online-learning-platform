@@ -3,9 +3,13 @@ import type { CourseForHome } from "~/types/course";
 import { BookIcon, ClockIcon, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import tailwindConfig from "tailwind.config";
+import resolveConfig from "tailwindcss/resolveConfig";
 
 import { Badge } from "~/components/ui/badge";
 import { formatCourseLength } from "~/lib/utils";
+
+const fullConfig = resolveConfig(tailwindConfig);
 
 type CourseListItemProps = {
   course: CourseForHome;
@@ -53,6 +57,10 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
     );
   };
 
+  const smBreakpoint = fullConfig.theme.screens.sm;
+  const mdBreakpoint = fullConfig.theme.screens.md;
+  const imageSizeAttribute = `(max-width: ${smBreakpoint}) 80vw, (max-width: ${mdBreakpoint}) 50vw, 33vw`;
+
   return (
     <li className="border border-neutral-200 transition-colors hover:bg-neutral-50">
       <Link className="flex flex-col gap-4 p-4 xs:flex-row " href={courseLink}>
@@ -67,6 +75,7 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
               course.imageBlurDataUrl ? course.imageBlurDataUrl : undefined
             }
             alt=""
+            sizes={imageSizeAttribute}
           />
         </div>
         <div className="w-full xs:w-1/2 md:w-2/3">

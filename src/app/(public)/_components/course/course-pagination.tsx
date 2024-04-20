@@ -77,7 +77,7 @@ const CoursePagination = ({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              href={page > 1 ? handleButtonClick(page - 1) : undefined}
+              href={handleButtonClick(page > 1 ? page - 1 : 1)}
               aria-disabled={page <= 1}
               tabIndex={page <= 1 ? -1 : undefined}
               className={
@@ -88,7 +88,9 @@ const CoursePagination = ({
           {renderPageNumbers()}
           <PaginationItem>
             <PaginationNext
-              href={page < totalPages ? handleButtonClick(page + 1) : undefined}
+              href={handleButtonClick(
+                page < totalPages ? page + 1 : totalPages,
+              )}
               aria-disabled={page >= totalPages}
               tabIndex={page >= totalPages ? -1 : undefined}
               className={
