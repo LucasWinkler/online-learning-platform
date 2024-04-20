@@ -4,15 +4,15 @@ import { env } from "~/env";
 import getBase64 from "~/lib/plaiceholder";
 import { db } from "~/server/db";
 
-const placeholderImageUrl1 = "https://i.imgur.com/cONzcMV.png";
-const placeholderImageUrl2 = "https://i.imgur.com/SHhokT4.png";
-
 async function main() {
   if (env.NODE_ENV === "production") {
     throw new Error("Error: Can not seed the production database");
   }
 
   console.log("Seed: Starting up...");
+
+  const placeholderImageUrl =
+    "https://fakeimg.pl/1200x703?text=Thumbnail&font=bebas";
 
   await db.user.deleteMany();
   await db.discount.deleteMany();
@@ -27,130 +27,106 @@ async function main() {
   await db.$executeRaw`ALTER SEQUENCE "Chapter_id_seq" RESTART WITH 1;`;
   await db.$executeRaw`ALTER SEQUENCE "Lesson_id_seq" RESTART WITH 1;`;
 
+  const users = [];
   const adminUser = await db.user.create({
     data: {
-      id: 1,
       name: "Lucas Winkler",
       email: "lucaswinkler@gmail.com",
       role: Role.ADMIN,
     },
   });
+  users.push(adminUser);
 
-  const discount1 = await db.discount.create({
-    data: {
-      name: "75% Off",
-      percentage: 75,
-      instructorId: 1,
-    },
-  });
-
-  const discount2 = await db.discount.create({
-    data: {
-      name: "40% off Launch Discount",
-      percentage: 40,
-      instructorId: 1,
-    },
-  });
-
-  const placeholderBlurDataImageUrl1 = await getBase64(placeholderImageUrl1);
-  const placeholderBlurDataImageUrl2 = await getBase64(placeholderImageUrl2);
-
-  const course1 = await db.course.create({
-    data: {
-      title: "JavaScript Fundamentals",
-      slug: "javascript-fundamentals",
-      description:
-        "Master the fundamentals of JavaScript, covering variables, functions, conditionals, and loops. Build a solid foundation for web development and start creating interactive and dynamic web applications.",
-      price: 99.99,
-      imageUrl: placeholderImageUrl1,
-      imageBlurDataUrl: placeholderBlurDataImageUrl1,
-      instructorId: adminUser.id,
-      isPublished: true,
-      discountId: discount1.id,
-    },
-  });
-
-  const course2 = await db.course.create({
-    data: {
-      title: "Advanced JavaScript",
-      slug: "advanced-javascript",
-      description:
-        "Deepen your understanding of JavaScript with advanced topics like closures, prototypes, and asynchronous programming. Explore modern frameworks and tools to develop sophisticated web applications and enhance your JavaScript expertise for professional-level projects.",
-      price: 129.99,
-      imageUrl: placeholderImageUrl2,
-      imageBlurDataUrl: placeholderBlurDataImageUrl2,
-      instructorId: adminUser.id,
-      isPublished: true,
-      discountId: discount2.id,
-    },
-  });
-
-  for (let i = 1; i <= 2; i++) {
-    const chapter1 = await db.chapter.create({
+  // Create additional fake users
+  for (let i = 1; i <= 4; i++) {
+    const user = await db.user.create({
       data: {
-        title: `Chapter ${i} for Course 1`,
-        slug: `chapter-${i}-course-1`,
-        courseId: course1.id,
-        order: i,
-        isPublished: true,
+        name: `Fake User ${i}`,
+        email: `fakeuser${i}@gmail.com`,
+        role: Role.USER,
+      },
+    });
+    users.push(user);
+  }
+
+  const placeholderBlurDataImageUrl = await getBase64(placeholderImageUrl);
+
+  for (let i = 1; i <= 12; i++) {
+    const discount = await db.discount.create({
+      data: {
+        name: `${i * 5}% Off`,
+        percentage: i * 5,
+        instructorId: adminUser.id,
       },
     });
 
-    const chapter2 = await db.chapter.create({
+    const course = await db.course.create({
       data: {
-        title: `Chapter ${i} for Course 2`,
-        slug: `chapter-${i}-course-2`,
-        courseId: course2.id,
-        order: i,
+        title: `Course Title ${i}`,
+        slug: `course-title-${i}`,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+        price: Math.floor(Math.random() * 100) + 50,
+        imageUrl: placeholderImageUrl,
+        imageBlurDataUrl: placeholderBlurDataImageUrl,
+        instructorId: adminUser.id,
         isPublished: true,
+        discountId: discount.id,
       },
     });
 
-    for (let j = 1; j <= 6; j++) {
-      await db.lesson.create({
-        data: {
-          title: `Lesson ${j} for Chapter ${i} of Course 1`,
-          slug: `lesson-${j}-chapter-${i}-course-1`,
-          description: `Description for Lesson ${j} of Chapter ${i} for Course 1`,
-          videoUrl: "https://www.example.com/video",
-          length: Math.floor(Math.random() * 900) + 240,
-          order: j,
-          courseId: course1.id,
-          chapterId: chapter1.id,
-          isPublished: true,
-        },
-      });
+    const randomEnrollments = Math.floor(Math.random() * users.length);
+    const shuffledUsers = users.sort(() => 0.5 - Math.random());
+    for (let e = 0; e < randomEnrollments; e++) {
+      const user = shuffledUsers[e];
+      if (user) {
+        await db.courseEnrollment.create({
+          data: {
+            courseId: course.id,
+            studentId: user.id,
+          },
+        });
+      }
     }
 
-    for (let j = 1; j <= 8; j++) {
-      await db.lesson.create({
+    const chapterCount = Math.floor(Math.random() * 5) + 1; // Ensure at least 1 chapter, up to 5
+    for (let j = 1; j <= chapterCount; j++) {
+      const chapter = await db.chapter.create({
         data: {
-          title: `Lesson ${j} for Chapter ${i} of Course 2`,
-          slug: `lesson-${j}-chapter-${i}-course-2`,
-          description: `Description for Lesson ${j} of Chapter ${i} for Course 2`,
-          videoUrl: "https://www.example.com/video",
-          length: Math.floor(Math.random() * 900) + 240,
+          title: `Chapter ${j} for Course ${i}`,
+          slug: `chapter-${j}-course-${i}`,
+          courseId: course.id,
           order: j,
-          courseId: course2.id,
-          chapterId: chapter2.id,
           isPublished: true,
         },
       });
+
+      const lessonCount = Math.floor(Math.random() * 5) + 1; // Ensure at least 1 lesson, up to 5
+      for (let k = 1; k <= lessonCount; k++) {
+        await db.lesson.create({
+          data: {
+            title: `Lesson ${k} for Chapter ${j} of Course ${i}`,
+            slug: `lesson-${k}-chapter-${j}-course-${i}`,
+            description: `Description for Lesson ${k} of Chapter ${j} for Course ${i}`,
+            videoUrl: "https://www.example.com/video",
+            length: Math.floor(Math.random() * 900) + 240,
+            order: k,
+            courseId: course.id,
+            chapterId: chapter.id,
+            isPublished: true,
+          },
+        });
+      }
     }
   }
 
-  await db.courseEnrollment.create({
-    data: {
-      studentId: adminUser.id,
-      courseId: course1.id,
-    },
-  });
-
-  console.log("Seed: Finishing up...");
+  console.log("Seed: Finished.");
 }
 
 main()
   .then(async () => {
+    console.log("Seed: Disconnecting database connection...");
+
     await db.$disconnect();
   })
   .catch(async (e) => {

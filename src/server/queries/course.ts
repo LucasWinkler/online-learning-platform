@@ -1,12 +1,7 @@
-import { CourseSelectForCoursesPage } from "~/lib/prisma";
+import { CourseSelectForHome } from "~/lib/validators";
 
 import { db } from "../db";
 import { getChapterTotalLengthInSeconds } from "./chapter";
-
-const lessonPublishedAndChapterPublished = {
-  isPublished: true,
-  chapter: { isPublished: true },
-};
 
 /**
  * Find all published courses that have at least one published
@@ -26,28 +21,14 @@ export const getCoursesForHome = async () => {
           isPublished: true,
           lessons: {
             some: {
-              ...lessonPublishedAndChapterPublished,
+              isPublished: true,
             },
           },
         },
       },
     },
     select: {
-      ...CourseSelectForCoursesPage,
-      id: true,
-      _count: {
-        select: {
-          courseEnrollments: true,
-        },
-      },
-      lessons: {
-        where: {
-          ...lessonPublishedAndChapterPublished,
-        },
-        select: {
-          length: true,
-        },
-      },
+      ...CourseSelectForHome,
     },
     orderBy: [
       {
@@ -61,7 +42,14 @@ export const getCoursesForHome = async () => {
     ],
   });
 
-  return courses;
+  return courses.map((course) => ({
+    ...course,
+    numberOfLessons: course.lessons.length,
+    lengthInSeconds: course.lessons.reduce(
+      (acc, lesson) => acc + (lesson.length ?? 0),
+      0,
+    ),
+  }));
 };
 
 export async function getEnrollmentCount(

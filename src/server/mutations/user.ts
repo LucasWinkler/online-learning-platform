@@ -1,6 +1,6 @@
 import { db } from "../db";
 
-export const createUser = async (
+export const createUserFromAuth0 = async (
   email: string,
   name: string,
   picture: string,
@@ -12,12 +12,12 @@ export const createUser = async (
         email,
         name,
         image: picture,
-        emailVerified: email_verified,
+        isEmailVerified: email_verified,
       },
       update: {
         name,
         image: picture,
-        emailVerified: email_verified,
+        isEmailVerified: email_verified,
       },
       where: { email },
     });

@@ -10,13 +10,8 @@ export const mainNavigationLinks: NavigationLinks[] = [
     href: "/",
   },
   {
-    title: "Course",
-    href: "/course",
-  },
-  {
-    title: "Google",
-    href: "https://www.google.com/",
-    target: "_blank",
+    title: "FAQ",
+    href: "/faq",
   },
 ];
 

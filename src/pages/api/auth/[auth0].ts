@@ -1,13 +1,15 @@
+import type { AfterCallbackPageRoute } from "@auth0/nextjs-auth0";
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import {
-  type AfterCallbackPageRoute,
   handleAuth,
   handleCallback,
   handleLogin,
   handleLogout,
+  HandlerError,
 } from "@auth0/nextjs-auth0";
-import { HandlerError } from "@auth0/nextjs-auth0";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { createUser } from "~/server/mutations/user";
+
+import { createUserFromAuth0 } from "~/server/mutations/user";
 
 /**
  * Grabs the correct redirectUri and returnTo url based on
@@ -33,7 +35,7 @@ const afterCallback: AfterCallbackPageRoute = async (req, res, session) => {
   try {
     const { email, name, picture, email_verified } = session.user;
 
-    await createUser(
+    await createUserFromAuth0(
       email as string,
       name as string,
       picture as string,

@@ -1,15 +1,16 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
-import { db } from "~/server/db";
-import { type Course } from "@prisma/client";
-import { handleInvalidMethod } from "~/lib/api";
 import { getSession } from "@auth0/nextjs-auth0";
+import { type Course } from "@prisma/client";
+import { type NextApiRequest, type NextApiResponse } from "next";
+
+import { validateRequestMethod } from "~/lib/api";
+import { db } from "~/server/db";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Course | { message: string }>,
 ) {
   try {
-    handleInvalidMethod(req, res, "GET");
+    validateRequestMethod(req, res, "GET");
 
     const session = await getSession(req, res);
     if (!session) {

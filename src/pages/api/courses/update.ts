@@ -1,9 +1,10 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import { type NextApiRequest, type NextApiResponse } from "next";
-import { db } from "~/server/db";
 import { Role } from "@prisma/client";
-import { handleInvalidMethod } from "~/lib/api";
+import { type NextApiRequest, type NextApiResponse } from "next";
 import { z } from "zod";
+
+import { validateRequestMethod } from "~/lib/api";
+import { db } from "~/server/db";
 
 const bodySchema = z.object({
   title: z.string(),
@@ -18,7 +19,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    handleInvalidMethod(req, res, "PUT");
+    validateRequestMethod(req, res, "PUT");
 
     const session = await getSession(req, res);
     if (!session) {

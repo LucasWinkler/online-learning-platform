@@ -1,7 +1,10 @@
+import { getSession } from "@auth0/nextjs-auth0";
+import { redirect } from "next/navigation";
 import { type NextApiRequest, type NextApiResponse } from "next/types";
+
 import { type HttpMethod } from "~/types/api";
 
-export const handleInvalidMethod = (
+export const validateRequestMethod = (
   req: NextApiRequest,
   res: NextApiResponse,
   method: HttpMethod,
@@ -11,4 +14,17 @@ export const handleInvalidMethod = (
       message: `Method ${req.method} Not Allowed on path ${req.url}`,
     });
   }
+};
+
+export const requireUserSession = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await getSession(req, res);
+
+  if (!session?.user) {
+    redirect("/api/auth/login");
+  }
+
+  return session;
 };
