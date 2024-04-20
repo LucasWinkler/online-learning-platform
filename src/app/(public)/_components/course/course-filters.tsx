@@ -14,14 +14,15 @@ import {
 } from "~/components/ui/select";
 import { Toggle } from "~/components/ui/toggle";
 
-const CourseFilters = () => {
+type CourseFiltersProps = {
+  sort: string;
+  order: string;
+};
+
+const CourseFilters = ({ sort, order }: CourseFiltersProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-
-  const currentSortCriteria =
-    searchParams?.get("sort")?.toString() ?? "popular";
-  const currentSortOrder = searchParams?.get("order")?.toString() ?? "desc";
 
   const handleSortCriteria = (value: CourseSortCriteria) => {
     const params = new URLSearchParams(searchParams ? searchParams : undefined);
@@ -32,9 +33,8 @@ const CourseFilters = () => {
 
   const handleSortOrder = () => {
     const params = new URLSearchParams(searchParams ? searchParams : undefined);
-    const order = currentSortOrder === "asc" ? "desc" : "asc";
 
-    params.set("order", order);
+    params.set("order", order === "asc" ? "desc" : "asc");
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -44,7 +44,7 @@ const CourseFilters = () => {
         onValueChange={(value) =>
           handleSortCriteria(value as CourseSortCriteria)
         }
-        defaultValue={currentSortCriteria}
+        defaultValue={sort}
       >
         <SelectTrigger>
           <SelectValue placeholder="Sort by" />
@@ -58,10 +58,10 @@ const CourseFilters = () => {
       <Toggle
         variant="outline"
         aria-label="Toggle sort order"
-        pressed={currentSortOrder === "desc"}
+        pressed={order === "desc"}
         onPressedChange={handleSortOrder}
       >
-        {currentSortOrder === "asc" ? (
+        {order === "asc" ? (
           <ArrowUpIcon className="h-4 w-4" />
         ) : (
           <ArrowDownIcon className="h-4 w-4" />

@@ -29,9 +29,7 @@ export default async function GetCoursesForHome({
   sort = "popular",
   order = "desc",
 }: CourseSearchParams) {
-  const pageNumber = page;
-  const limitNumber = limit;
-  const skipNumber = (pageNumber - 1) * limitNumber;
+  const skipNumber = (page - 1) * limit;
 
   const courses = await db.course.findMany({
     where: {
@@ -69,7 +67,7 @@ export default async function GetCoursesForHome({
               updatedAt: order,
             },
     skip: skipNumber,
-    take: limitNumber,
+    take: limit,
   });
 
   const totalCourses = await db.course.count({
@@ -102,7 +100,9 @@ export default async function GetCoursesForHome({
       ),
     })),
     total: totalCourses,
-    page: pageNumber,
-    limit: limitNumber,
+    page,
+    limit,
+    sort,
+    order,
   };
 }
