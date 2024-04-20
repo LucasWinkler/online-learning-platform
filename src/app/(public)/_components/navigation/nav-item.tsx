@@ -18,15 +18,20 @@ const NavItem: React.FC<PropsWithChildren<NavItemProps>> = ({
   children,
 }) => {
   return (
-    <ActiveLink
-      href={href}
-      className={cn("p-2 hover:underline hover:underline-offset-2", className)}
-      activeClassName="bg-primary text-primary-foreground"
-      target={target}
-    >
-      <span className="text-lg">{children}</span>
-      {(href.startsWith("http") || target === "_blank") && "^"}
-    </ActiveLink>
+    <li className={cn("", className)}>
+      <ActiveLink
+        href={href}
+        className={cn(
+          "p-2 hover:underline hover:underline-offset-2",
+          className,
+        )}
+        activeClassName="bg-primary text-primary-foreground"
+        target={target}
+      >
+        <span className="text-lg">{children}</span>
+        {(href.startsWith("http") || target === "_blank") && "^"}
+      </ActiveLink>
+    </li>
   );
 };
 export default NavItem;

@@ -92,6 +92,23 @@ export default handleAuth({
     }
   },
 
+  async signup(req: NextApiRequest, res: NextApiResponse) {
+    try {
+      await handleLogin(req, res, {
+        authorizationParams: {
+          screen_hint: "signup",
+        },
+      });
+    } catch (error: unknown) {
+      console.error("Error in handleAuth signup:", error);
+      if (error instanceof HandlerError) {
+        res.status(error.status ?? 500).end(error.message);
+      }
+
+      res.status(500).end("An error occurred during signup");
+    }
+  },
+
   async logout(req: NextApiRequest, res: NextApiResponse) {
     const { returnTo } = getUrls(req);
     try {

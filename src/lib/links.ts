@@ -10,8 +10,20 @@ export const mainNavigationLinks: NavigationLinks[] = [
     href: "/",
   },
   {
-    title: "FAQ",
-    href: "/faq",
+    title: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    title: "Login",
+    href: "/api/auth/login",
+  },
+  {
+    title: "Sign Up",
+    href: "/api/auth/signup",
+  },
+  {
+    title: "Logout",
+    href: "/api/auth/logout",
   },
 ];
 

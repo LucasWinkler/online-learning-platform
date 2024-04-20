@@ -46,7 +46,7 @@ const CourseFilters = ({ sort, order }: CourseFiltersProps) => {
         }
         defaultValue={sort}
       >
-        <SelectTrigger>
+        <SelectTrigger aria-label="Sort by">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
         <SelectContent>

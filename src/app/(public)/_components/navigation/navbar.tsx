@@ -7,7 +7,7 @@ import NavItem from "./nav-item";
 const Navbar = () => {
   return (
     <nav className="" aria-label="Main">
-      <ul className="">
+      <ul className="flex flex-wrap gap-2">
         {mainNavigationLinks.map(({ title, href, target }) => (
           <NavItem key={title} href={href} target={target}>
             {title}
