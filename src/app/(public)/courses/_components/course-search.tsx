@@ -36,7 +36,7 @@ const CourseSearch = ({ className }: CourseSearchProps) => {
 
     params.delete("page");
     router.replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 500);
 
   return (
     <Input

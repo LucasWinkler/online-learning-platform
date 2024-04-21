@@ -7,8 +7,5 @@ export default withMiddlewareAuthRequired({
 });
 
 export const config = {
-  matcher: [
-    "/course/:courseSlug/:chapterSlug/:lessonSlug*",
-    "/dashboard/:path*",
-  ],
+  matcher: ["/app/:path*", "/admin/:path*"],
 };

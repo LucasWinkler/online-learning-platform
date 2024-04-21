@@ -1,5 +1,9 @@
 import { db } from "../db";
 
+// Currently always upserts user, but may change in the future
+// to allow changing certain fields from a settings page.
+// Right now this allows a user to go through their provider
+// to change their picture or name etc...
 export const createUserFromAuth0 = async (
   email: string,
   name: string,

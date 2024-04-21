@@ -10,8 +10,16 @@ export const mainNavigationLinks: NavigationLinks[] = [
     href: "/",
   },
   {
-    title: "Dashboard",
-    href: "/dashboard",
+    title: "Courses",
+    href: "/courses",
+  },
+  {
+    title: "User Dashboard",
+    href: "/app",
+  },
+  {
+    title: "Admin Dashboard",
+    href: "/admin",
   },
   {
     title: "Login",
