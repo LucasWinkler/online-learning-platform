@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-type AuthWrapper = {
+type AuthWrapperProps = {
   children: React.ReactNode;
   title: string;
   description: string;
@@ -19,7 +19,7 @@ type AuthWrapper = {
   altActionText: string;
   showSocialList?: boolean;
   socialListPosition?: "top" | "bottom";
-};
+} & React.ComponentProps<typeof Card>;
 
 export const AuthWrapper = ({
   children,
@@ -29,9 +29,10 @@ export const AuthWrapper = ({
   altActionText,
   showSocialList,
   socialListPosition = "bottom",
-}: AuthWrapper) => {
+  ...props
+}: AuthWrapperProps) => {
   return (
-    <Card className="w-[400px] shadow-md">
+    <Card className="w-[400px] shadow-md" {...props}>
       <CardHeader className="text-center">
         <CardTitle className="text-xl xs:text-2xl">{title}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">

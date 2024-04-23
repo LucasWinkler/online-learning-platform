@@ -7,7 +7,6 @@ export const LoginForm = () => {
       description="Enter your details to start learning today!"
       altActionText="New here? Create an account"
       altActionHref="/auth/register"
-      socialListPosition="bottom"
       showSocialList
     >
       Login Form
