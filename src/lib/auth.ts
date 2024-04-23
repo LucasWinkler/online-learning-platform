@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "~/server/db";
 
-export async function checkAuth() {
+export async function checkAdmin() {
   const session = await getSession();
 
   if (!session?.user) {
@@ -17,11 +17,9 @@ export async function checkAuth() {
     },
   });
 
-  if (user?.role === Role.ADMIN) {
-    return;
+  if (user?.role !== Role.ADMIN) {
+    redirect("/unauthorized");
   }
 
-  return redirect("/unauthorized");
+  return;
 }
-
-export default checkAuth;

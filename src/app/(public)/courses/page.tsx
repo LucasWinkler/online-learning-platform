@@ -1,11 +1,7 @@
-import type { CourseSearchParams } from "~/server/actions/course";
 import type { Metadata } from "next";
+import type { CourseSearchParams } from "../_actions/course";
 
-import { Suspense } from "react";
-
-import GetCoursesForHome from "~/server/actions/course";
-
-import Loading from "../loading";
+import GetCoursesForHome from "../_actions/course";
 import CourseFilters from "./_components/course-filters";
 import CourseList from "./_components/course-list";
 import CoursePagination from "./_components/course-pagination";
