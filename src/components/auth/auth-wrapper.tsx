@@ -32,7 +32,7 @@ export const AuthWrapper = ({
   ...props
 }: AuthWrapperProps) => {
   return (
-    <Card className="w-[400px] shadow-md" {...props}>
+    <Card className="mt-10 w-[400px] shadow-md" {...props}>
       <CardHeader className="text-center">
         <CardTitle className="text-xl xs:text-2xl">{title}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">

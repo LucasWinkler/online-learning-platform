@@ -32,7 +32,7 @@ export const SocialList = ({
           }}
         >
           <GoogleIcon className="h-5 w-5" />
-          <span className="xxs:inline ml-2 hidden">Continue with Google</span>
+          <span className="ml-2">Continue with Google</span>
         </Button>
         <Button
           variant="outline"
@@ -43,7 +43,7 @@ export const SocialList = ({
           }}
         >
           <GitHubIcon className="h-5 w-5" />
-          <span className="xxs:inline ml-2 hidden">Continue with GitHub</span>
+          <span className="ml-2">Continue with GitHub</span>
         </Button>
       </div>
       {socialListPosition === "top" && renderSeparator()}
