@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { UserProvider } from "@auth0/nextjs-auth0/client";
-
 import "~/styles/globals.css";
 
 import { Toaster } from "~/components/ui/sonner";
@@ -30,7 +28,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
-        <UserProvider>{children}</UserProvider>
+        {children}
         <Toaster richColors />
       </body>
     </html>
