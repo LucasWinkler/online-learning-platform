@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -20,23 +20,31 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { loginSchema } from "~/schemas";
+import { LoginSchema } from "~/schemas";
 import { login } from "~/server/actions/login";
 
 export const LoginForm = () => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const loginForm = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const loginForm = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    startTransition(() => {
-      login(values);
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      await login(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
     });
   };
 
@@ -87,8 +95,8 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message="" />
-          <FormSuccess message="" />
+          <FormError message={error} />
+          <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending ? (
               <Loader2Icon className="h-5 w-5 animate-spin" />
