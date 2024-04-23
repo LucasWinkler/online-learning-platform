@@ -20,28 +20,29 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { LoginSchema } from "~/schemas";
-import { login } from "~/server/actions/login";
+import { RegisterSchema } from "~/schemas";
+import { register } from "~/server/actions/register";
 
-export const LoginForm = () => {
+export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const loginForm = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const registerForm = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      await login(values).then((data) => {
+      await register(values).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });
@@ -50,17 +51,37 @@ export const LoginForm = () => {
 
   return (
     <AuthWrapper
-      title="Welcome back"
+      title="Create account"
       description="Enter your details to start learning today!"
-      altActionText="New here? Create an account"
-      altActionHref="/auth/register"
+      altActionText="Have an account? Login"
+      altActionHref="/auth/login"
       showSocialList
     >
-      <Form {...loginForm}>
-        <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-6">
+      <Form {...registerForm}>
+        <form
+          onSubmit={registerForm.handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <div className="space-y-4">
             <FormField
-              control={loginForm.control}
+              control={registerForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full name</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      placeholder="Your Name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={registerForm.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -68,7 +89,7 @@ export const LoginForm = () => {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="your.email@domain.com"
+                      placeholder="your.name@domain.com"
                       disabled={isPending}
                       {...field}
                     />
@@ -78,7 +99,7 @@ export const LoginForm = () => {
               )}
             />
             <FormField
-              control={loginForm.control}
+              control={registerForm.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -86,8 +107,8 @@ export const LoginForm = () => {
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={isPending}
                       placeholder="********"
+                      disabled={isPending}
                       {...field}
                     />
                   </FormControl>
@@ -102,7 +123,7 @@ export const LoginForm = () => {
             {isPending ? (
               <Loader2Icon className="h-5 w-5 animate-spin" />
             ) : (
-              "Login"
+              "Register"
             )}
           </Button>
         </form>

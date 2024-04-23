@@ -14,3 +14,21 @@ export const LoginSchema = z.object({
     message: "Password is required",
   }),
 });
+
+export const RegisterSchema = z.object({
+  name: z.string().trim().min(1, {
+    message: "Name is required",
+  }),
+  email: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "Email is required",
+    })
+    .email({
+      message: "Invalid email format",
+    }),
+  password: z.string().trim().min(8, {
+    message: "Password must be at least 8 characters",
+  }),
+});
