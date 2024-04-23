@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef } from "react";
 
 import { usePathname } from "next/navigation";
 
-import Link from "~/components/link";
+import { Link } from "~/components/link";
 import { cn } from "~/lib/utils";
 
 type ActiveLinkProps = ComponentPropsWithoutRef<typeof Link> & {

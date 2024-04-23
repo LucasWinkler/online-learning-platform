@@ -4,6 +4,8 @@ import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 import "~/styles/globals.css";
 
+import { Toaster } from "~/components/ui/sonner";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Acme",
@@ -29,6 +31,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
         <UserProvider>{children}</UserProvider>
+        <Toaster richColors />
       </body>
     </html>
   );
