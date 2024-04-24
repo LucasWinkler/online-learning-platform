@@ -1,7 +1,7 @@
 import { db } from "../db";
 
 export async function getLessonLengthInSeconds(
-  lessonId: number,
+  lessonId: string,
 ): Promise<number | null> {
   try {
     const lesson = await db.lesson.findUnique({

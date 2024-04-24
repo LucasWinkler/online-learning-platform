@@ -14,11 +14,6 @@ export const CourseSelectForHome = Prisma.validator<Prisma.CourseSelect>()({
       name: true,
     },
   },
-  discount: {
-    select: {
-      percentage: true,
-    },
-  },
   lessons: {
     where: {
       isPublished: true,

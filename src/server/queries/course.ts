@@ -53,7 +53,7 @@ export const getCoursesForHome = async () => {
 };
 
 export async function getEnrollmentCount(
-  courseId: number,
+  courseId: string,
 ): Promise<number | null> {
   try {
     const count = await db.courseEnrollment.count({
@@ -69,7 +69,7 @@ export async function getEnrollmentCount(
 }
 
 export async function getCourseTotalLengthInSeconds(
-  courseId: number,
+  courseId: string,
 ): Promise<number | null> {
   try {
     const course = await db.course.findUnique({

@@ -1,7 +1,5 @@
 "use client";
 
-import type { CourseSortCriteria } from "~/server/actions/course";
-
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -13,6 +11,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Toggle } from "~/components/ui/toggle";
+import { type CourseSortCriteria } from "~/server/actions/course";
 
 type CourseFiltersProps = {
   sort: string;

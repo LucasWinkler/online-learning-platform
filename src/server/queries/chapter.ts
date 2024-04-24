@@ -2,7 +2,7 @@ import { db } from "../db";
 import { getLessonLengthInSeconds } from "./lesson";
 
 export async function getChapterTotalLengthInSeconds(
-  chapterId: number,
+  chapterId: string,
 ): Promise<number | null> {
   try {
     const lessons = await db.lesson.findMany({

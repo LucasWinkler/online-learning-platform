@@ -20,35 +20,10 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({ course }) => {
   const coursePlaceholderImageUrl =
     "https://fakeimg.pl/300x170?text=Thumbnail&font=bebas";
 
-  const calculateDiscountedPrice = (): number | null => {
-    const courseDiscount = course.discount?.percentage;
-
-    if (course.price != null && courseDiscount != null) {
-      return course.price - (course.price * courseDiscount) / 100;
-    }
-
-    return null;
-  };
-
   const renderPrice = (): JSX.Element => {
-    const discountedPrice = calculateDiscountedPrice();
-
-    if (discountedPrice != null && course.price != null) {
-      return (
-        <>
-          <span className="text-sm font-semibold sm:text-base">
-            ${discountedPrice.toFixed(2)}
-          </span>
-          <span className="text-xs text-gray-500 line-through dark:text-gray-400 sm:text-sm">
-            ${course.price.toFixed(2)}
-          </span>
-        </>
-      );
-    }
-
     return (
       <>
-        {course.price ? (
+        {course.price ?? course.price === 0 ? (
           <span className="text-base font-semibold">${course.price}</span>
         ) : (
           <Badge>Free</Badge>

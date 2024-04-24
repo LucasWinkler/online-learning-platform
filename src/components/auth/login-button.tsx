@@ -11,6 +11,7 @@ type LoginButtonProps = {
 export const LoginButton = ({
   children,
   type = "redirect",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   asChild,
 }: LoginButtonProps) => {
   const router = useRouter();

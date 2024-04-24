@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import type { CourseSearchParams } from "../_actions/course";
+import type { CourseSearchParams } from "../../../server/actions/course";
 
-import GetCoursesForHome from "../_actions/course";
+import GetCoursesForHome from "../../../server/actions/course";
 import CourseFilters from "./_components/course-filters";
 import CourseList from "./_components/course-list";
 import CoursePagination from "./_components/course-pagination";
