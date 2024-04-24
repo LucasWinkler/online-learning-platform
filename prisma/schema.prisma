@@ -22,6 +22,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime?
+  password      String?
   image         String?   @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
   role          Role      @default(USER)
 
