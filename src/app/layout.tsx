@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
+import { SessionProvider } from "next-auth/react";
+
 import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -28,7 +30,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
-        {children}
+        <SessionProvider>{children}</SessionProvider>
         <Toaster richColors />
       </body>
     </html>
