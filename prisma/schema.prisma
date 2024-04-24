@@ -1,5 +1,6 @@
 // TODO:
 // Track users course progress 
+// Remake discounts/coupons
 
 generator client {
   provider        = "prisma-client-js"
@@ -17,36 +18,44 @@ enum Role {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  name            String
-  email           String   @unique
-  isEmailVerified Boolean? @default(false)
-  image           String?  @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
-  role            Role     @default(USER)
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?   @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
+  role          Role      @default(USER)
 
-  enrolledCourses  CourseEnrollment[]
-  createdCourses   Course[]
-  createdDiscounts Discount[]
+  accounts        Account[]
+  enrolledCourses CourseEnrollment[]
+  createdCourses  Course[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Discount {
-  id         Int    @id @default(autoincrement())
-  name       String
-  percentage Float
-
-  instructor        User     @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  instructorId      Int
-  discountedCourses Course[]
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refreshToken      String? @map("refreshToken")
+  accessToken       String? @map("accessToken")
+  expiresAt         Int?    @map("expiresAt")
+  tokenType         String? @map("tokenType")
+  scope             String?
+  id_token          String? @map("idToken")
+  session_state     String? @map("sessionState")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
 }
 
 model Course {
-  id               Int     @id @default(autoincrement())
+  id               String  @id @default(cuid())
   title            String
   slug             String  @unique
   description      String?
@@ -55,10 +64,8 @@ model Course {
   imageBlurDataUrl String?
   isPublished      Boolean @default(false)
 
-  discount          Discount?          @relation(fields: [discountId], references: [id], onDelete: SetNull)
-  discountId        Int?
   instructor        User               @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  instructorId      Int
+  instructorId      String
   chapters          Chapter[]
   lessons           Lesson[]
   courseEnrollments CourseEnrollment[]
@@ -68,25 +75,23 @@ model Course {
 }
 
 model Chapter {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(cuid())
   title       String
-  slug        String
   order       Int /// The order a chapter should be displayed in
   isPublished Boolean @default(false)
 
   course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId Int
+  courseId String
   lessons  Lesson[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([courseId, order])
-  @@unique([courseId, slug])
 }
 
 model Lesson {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(cuid())
   title       String
   slug        String
   description String?
@@ -96,9 +101,9 @@ model Lesson {
   isPublished Boolean @default(false)
 
   course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int
+  courseId  String
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId Int
+  chapterId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,9 +114,9 @@ model Lesson {
 
 model CourseEnrollment {
   student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId Int
+  studentId String
   course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int
+  courseId  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
