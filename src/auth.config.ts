@@ -6,7 +6,7 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { env } from "~/env";
-import { LoginSchema } from "~/schemas";
+import { LoginSchema } from "~/schemas/auth";
 
 import { findUserByEmail } from "./server/data-access/user";
 

@@ -1,54 +1,47 @@
 "use client";
 
-import { GitHubIcon, GoogleIcon } from "~/components/icons";
-import { Button } from "~/components/ui/button";
+import type { SocialListLayoutType, SocialListPosition } from "~/types/auth";
+
+import { SocialButton } from "~/components/auth/social-button";
 import { Separator } from "~/components/ui/separator";
+import { socialListProviders } from "~/lib/links";
 
 type SocialListProps = {
-  socialListPosition?: "top" | "bottom";
+  separatorPosition?: SocialListPosition;
+  layoutType?: SocialListLayoutType;
 };
 
+const SocialListSeparator = () => (
+  <div className="my-4 flex items-center justify-center">
+    <Separator className="shrink" />
+    <span className="px-4 text-sm uppercase text-muted-foreground">Or</span>
+    <Separator className="shrink" />
+  </div>
+);
+
 export const SocialList = ({
-  socialListPosition = "bottom",
+  separatorPosition = "bottom",
+  layoutType = "icon-full-text",
 }: SocialListProps) => {
-  const renderSeparator = () => (
-    <div className="my-4 flex items-center justify-center">
-      <Separator className="shrink" />
-      <span className="px-4 text-sm uppercase text-muted-foreground">Or</span>
-      <Separator className="shrink" />
-    </div>
-  );
+  const classNames = {
+    "icon-full-text": "w-full space-y-2",
+    "icon-name-only": "flex gap-2 flex-wrap xxs:flex-nowrap",
+    "icon-only": "flex gap-2",
+  };
 
   return (
     <>
-      {socialListPosition === "bottom" && renderSeparator()}
-      <div className="w-full space-y-2">
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full"
-          onClick={() => {
-            console.log("Google");
-          }}
-        >
-          <GoogleIcon className="h-5 w-5" />
-          <span className="ml-2">Continue with Google</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full"
-          onClick={() => {
-            console.log("GitHub");
-          }}
-        >
-          <GitHubIcon className="h-5 w-5" />
-          <span className="ml-2">Continue with GitHub</span>
-        </Button>
+      {separatorPosition === "bottom" && <SocialListSeparator />}
+      <div className={classNames[layoutType]}>
+        {socialListProviders.map((social) => (
+          <SocialButton
+            key={social.provider}
+            layoutType={layoutType}
+            social={social}
+          />
+        ))}
       </div>
-      {socialListPosition === "top" && renderSeparator()}
+      {separatorPosition === "top" && <SocialListSeparator />}
     </>
   );
 };
-
-export default SocialList;

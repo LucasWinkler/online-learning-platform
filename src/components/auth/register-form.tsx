@@ -34,6 +34,7 @@ export const RegisterForm = () => {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -54,8 +55,10 @@ export const RegisterForm = () => {
       title="Create account"
       description="Enter your details to start learning today!"
       altActionText="Have an account? Login"
-      altActionHref="/auth/login"
+      altActionHref="/login"
       showSocialList
+      socialListPosition="top"
+      socialListLayoutType="icon-name-only"
     >
       <Form {...registerForm}>
         <form
@@ -104,6 +107,24 @@ export const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="********"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={registerForm.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"

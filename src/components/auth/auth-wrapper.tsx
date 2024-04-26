@@ -1,14 +1,15 @@
 "use client";
 
+import type { SocialListLayoutType, SocialListPosition } from "~/types/auth";
+
 import { AltActionLink } from "~/components/auth/alt-action-link";
-import SocialList from "~/components/auth/social-list";
+import { AuthHeader } from "~/components/auth/auth-header";
+import { SocialList } from "~/components/auth/social-list";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "~/components/ui/card";
 
 type AuthWrapperProps = {
@@ -18,7 +19,8 @@ type AuthWrapperProps = {
   altActionHref: string;
   altActionText: string;
   showSocialList?: boolean;
-  socialListPosition?: "top" | "bottom";
+  socialListPosition?: SocialListPosition;
+  socialListLayoutType?: SocialListLayoutType;
 } & React.ComponentProps<typeof Card>;
 
 export const AuthWrapper = ({
@@ -29,23 +31,30 @@ export const AuthWrapper = ({
   altActionText,
   showSocialList,
   socialListPosition = "bottom",
+  socialListLayoutType = "icon-full-text",
   ...props
 }: AuthWrapperProps) => {
   return (
-    <Card className="mt-10 w-[400px] shadow-md" {...props}>
-      <CardHeader className="text-center">
-        <CardTitle className="text-xl xs:text-2xl">{title}</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">
-          {description}
-        </CardDescription>
+    <Card
+      className="mx-auto h-full w-full max-w-[400px] rounded-none border-0 shadow-none xs:mt-10 xs:h-auto xs:rounded-lg xs:border xs:shadow-md"
+      {...props}
+    >
+      <CardHeader>
+        <AuthHeader title={title} description={description} />
       </CardHeader>
       <CardContent>
         {showSocialList && socialListPosition === "top" && (
-          <SocialList socialListPosition={socialListPosition} />
+          <SocialList
+            layoutType={socialListLayoutType}
+            separatorPosition={socialListPosition}
+          />
         )}
         {children}
         {showSocialList && socialListPosition === "bottom" && (
-          <SocialList socialListPosition={socialListPosition} />
+          <SocialList
+            layoutType={socialListLayoutType}
+            separatorPosition={socialListPosition}
+          />
         )}
       </CardContent>
       <CardFooter>

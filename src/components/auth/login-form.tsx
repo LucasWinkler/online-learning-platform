@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AuthWrapper } from "~/components/auth/auth-wrapper";
@@ -24,9 +25,14 @@ import { LoginSchema } from "~/schemas";
 import { login } from "~/server/actions/login";
 
 export const LoginForm = () => {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Please sign in using your original login method to continue."
+      : "";
 
   const loginForm = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -37,8 +43,8 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    setError("");
-    setSuccess("");
+    setError(undefined);
+    setSuccess(undefined);
 
     startTransition(async () => {
       await login(values).then((data) => {
@@ -53,8 +59,10 @@ export const LoginForm = () => {
       title="Welcome back"
       description="Enter your details to start learning today!"
       altActionText="New here? Create an account"
-      altActionHref="/auth/register"
+      altActionHref="/register"
       showSocialList
+      socialListPosition="top"
+      socialListLayoutType="icon-name-only"
     >
       <Form {...loginForm}>
         <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-6">
@@ -96,7 +104,7 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending ? (
