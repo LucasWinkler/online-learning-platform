@@ -3,6 +3,7 @@ import { Role } from "@prisma/client";
 import { env } from "~/env";
 import getBase64 from "~/lib/plaiceholder";
 import { db } from "~/server/db";
+import { hashPassword } from "~/server/use-cases/user";
 
 async function main() {
   console.log("Seed: Starting up...");
@@ -25,8 +26,9 @@ async function main() {
   const users = [];
   const adminUser = await db.user.create({
     data: {
-      name: "Lucas Winkler",
-      email: "lucaswinkler@gmail.com",
+      name: "Admin",
+      email: "admin@admin.com",
+      password: await hashPassword("password"),
       role: Role.ADMIN,
     },
   });
@@ -56,7 +58,7 @@ async function main() {
         imageUrl: placeholderImageUrl,
         imageBlurDataUrl: placeholderBlurDataImageUrl,
         instructorId: adminUser.id,
-        isPublished: true,
+        publishedAt: new Date(),
       },
     });
 
@@ -81,7 +83,7 @@ async function main() {
           title: `Chapter ${j} for Course ${i}`,
           courseId: course.id,
           order: j,
-          isPublished: true,
+          publishedAt: new Date(),
         },
       });
 
@@ -97,7 +99,7 @@ async function main() {
             order: k,
             courseId: course.id,
             chapterId: chapter.id,
-            isPublished: true,
+            publishedAt: new Date(),
           },
         });
       }
