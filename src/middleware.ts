@@ -1,15 +1,8 @@
-import NextAuth from "next-auth";
+export { auth as middleware } from "~/server/auth";
 
-import authConfig from "~/auth.config";
-import {
-  apiAuthPrefix,
-  authRoutes,
-  DEFAULT_LOGIN_REDIRECT,
-  publicRoutes,
-} from "~/routes";
-
-const { auth } = NextAuth(authConfig);
-
+/**
+ * import { auth } from "@/auth"
+ 
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
@@ -35,8 +28,10 @@ export default auth((req) => {
   }
 
   return;
-});
+})
 
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
+ * 
+ */
