@@ -7,8 +7,7 @@ import Google from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { LoginSchema } from "~/schemas/auth";
-
-import { findUserByEmail } from "./server/data-access/user";
+import { findUserByEmail } from "~/server/data-access/user";
 
 export default {
   providers: [

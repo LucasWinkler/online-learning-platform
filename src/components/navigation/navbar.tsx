@@ -1,8 +1,7 @@
 "use client";
 
+import NavItem from "~/components/navigation/nav-item";
 import { mainNavigationLinks } from "~/lib/links";
-
-import NavItem from "./nav-item";
 
 const Navbar = () => {
   return (

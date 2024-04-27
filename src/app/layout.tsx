@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
+import NextTopLoader from "nextjs-toploader";
+
 import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -29,6 +31,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
         {/* <SessionProvider> */}
+        <NextTopLoader />
         {children}
         <Toaster richColors />
         {/* </SessionProvider> */}

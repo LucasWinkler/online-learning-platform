@@ -1,11 +1,9 @@
 "use client";
 
-import type { CourseForHome } from "~/types/course";
-
 import CourseListItem from "./course-list-item";
 
 type CourseListProps = {
-  courses: CourseForHome[];
+  courses: unknown;
 };
 
 const NoCoursesFound = () => (
