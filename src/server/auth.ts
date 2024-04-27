@@ -4,8 +4,7 @@ import NextAuth from "next-auth";
 import authConfig from "~/auth.config";
 import { findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
-
-import { verifyEmailOnAccountLink } from "./use-cases/user";
+import { updateUserEmailVerified } from "~/server/use-cases/user";
 
 export const {
   handlers: { GET, POST },
@@ -14,12 +13,12 @@ export const {
   signOut,
 } = NextAuth({
   pages: {
-    signIn: "/login",
-    error: "/auth-error",
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {
-      await verifyEmailOnAccountLink(user.id!, new Date());
+      await updateUserEmailVerified(user.id!);
     },
   },
   callbacks: {

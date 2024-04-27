@@ -5,6 +5,7 @@ import type { z } from "zod";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
+import { sendVerificationEmail } from "~/lib/mail";
 import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
@@ -38,7 +39,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       existingUser.email,
     );
 
-    return { success: "Verification email sent." };
+    await sendVerificationEmail(
+      verificationToken.identifier,
+      verificationToken.token,
+    );
+
+    return { success: "Confirmation email sent." };
   }
 
   try {

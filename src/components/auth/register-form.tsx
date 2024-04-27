@@ -54,8 +54,9 @@ export const RegisterForm = () => {
     <AuthWrapper
       title="Create account"
       description="Enter your details to start learning today!"
-      altActionText="Have an account? Login"
-      altActionHref="/login"
+      altActionText="Have an account? Please:"
+      altActionLinkText="Login"
+      altActionHref="/auth/login"
       showSocialList
       socialListPosition="top"
       socialListLayoutType="icon-name-only"

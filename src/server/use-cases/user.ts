@@ -2,13 +2,16 @@ import type { RegisterUser } from "~/types/user";
 
 import bcrypt from "bcryptjs";
 
+import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
   createUser,
   deleteUserById,
   doesUserExistById,
+  findUserByEmail,
   isUserEmailTaken,
   updateUser,
 } from "~/server/data-access/user";
+import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
 
 export const hashPassword = async (password: string) => {
   return await bcrypt.hash(password, 10);
@@ -47,18 +50,38 @@ export const changeUserPassword = async (
   return await updateUser(userId, { password: hashedPassword });
 };
 
-export const verifyEmailOnAccountLink = async (
-  userId: string,
-  emailVerified: Date,
-) => {
+export const updateUserEmailVerified = async (userId: string) => {
   const user = await doesUserExistById(userId);
   if (!user) {
-    throw new Error(
-      "linkAccount email verification failed: User does not exist",
-    );
+    return { error: "User does not exist" };
   }
 
-  return await updateUser(userId, { emailVerified });
+  return await updateUser(userId, { emailVerified: new Date() });
+};
+
+export const verifyUserEmail = async (
+  token: string,
+): Promise<{ error?: string } | undefined> => {
+  const existingToken = await getVerificationTokenByToken(token);
+  if (!existingToken) {
+    return { error: "Invalid token" };
+  }
+
+  const hasExpired = new Date(existingToken.expires) < new Date();
+  if (hasExpired) {
+    return { error: "Token has expired" };
+  }
+
+  const existingUser = await findUserByEmail(existingToken.identifier);
+  if (!existingUser) {
+    return { error: "Invalid email address" };
+  }
+
+  return await verifyUserEmailTransaction(
+    existingUser.id,
+    existingUser.email,
+    existingToken.token,
+  );
 };
 
 export const deleteOwnAccount = async (
@@ -66,7 +89,7 @@ export const deleteOwnAccount = async (
   userToDeleteId: string,
 ) => {
   if (userId !== userToDeleteId) {
-    throw new Error("Unauthorized: You can only delete your own account");
+    return { error: "Unauthorized: You can only delete your own account" };
   }
 
   await deleteUserById(userId);

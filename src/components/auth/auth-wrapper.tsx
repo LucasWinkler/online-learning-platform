@@ -16,8 +16,9 @@ type AuthWrapperProps = {
   children: React.ReactNode;
   title: string;
   description: string;
-  altActionHref: string;
-  altActionText: string;
+  altActionHref?: string;
+  altActionText?: string;
+  altActionLinkText?: string;
   showSocialList?: boolean;
   socialListPosition?: SocialListPosition;
   socialListLayoutType?: SocialListLayoutType;
@@ -29,6 +30,7 @@ export const AuthWrapper = ({
   description,
   altActionHref,
   altActionText,
+  altActionLinkText,
   showSocialList,
   socialListPosition = "bottom",
   socialListLayoutType = "icon-full-text",
@@ -58,7 +60,11 @@ export const AuthWrapper = ({
         )}
       </CardContent>
       <CardFooter>
-        <AltActionLink href={altActionHref} text={altActionText} />
+        <AltActionLink
+          href={altActionHref}
+          text={altActionText}
+          linkText={altActionLinkText}
+        />
       </CardFooter>
     </Card>
   );

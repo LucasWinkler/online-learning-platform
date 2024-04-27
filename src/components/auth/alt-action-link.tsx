@@ -5,20 +5,30 @@ import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 type AltActionLinkProps = {
-  href: string;
-  text: string;
+  href?: string;
+  text?: string;
+  linkText?: string;
 };
 
-export const AltActionLink = ({ href, text }: AltActionLinkProps) => {
+export const AltActionLink = ({ href, text, linkText }: AltActionLinkProps) => {
+  if (!href ?? !text ?? !linkText) {
+    return null;
+  }
+
   return (
-    <Link
-      className={cn(
-        buttonVariants({ variant: "link", size: "sm" }),
-        "w-full font-normal",
+    <p className="w-full space-x-1 text-center">
+      {text && <span className="text-xs font-medium">{text}</span>}
+      {href && linkText && (
+        <Link
+          className={cn(
+            buttonVariants({ variant: "link", size: "xs" }),
+            "font-normal",
+          )}
+          href={href}
+        >
+          {linkText}
+        </Link>
       )}
-      href={href}
-    >
-      {text}
-    </Link>
+    </p>
   );
 };

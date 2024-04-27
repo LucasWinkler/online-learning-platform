@@ -2,6 +2,7 @@
 
 import { type z } from "zod";
 
+import { sendVerificationEmail } from "~/lib/mail";
 import { RegisterSchema } from "~/schemas/auth";
 import { registerUser } from "~/server/use-cases/user";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
@@ -24,8 +25,10 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   }
 
   const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(
+    verificationToken.identifier,
+    verificationToken.token,
+  );
 
-  // TODO: Send verification email
-
-  return { success: "Verification email sent." };
+  return { success: "Confirmation email sent." };
 };

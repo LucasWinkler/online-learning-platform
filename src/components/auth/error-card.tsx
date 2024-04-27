@@ -8,7 +8,7 @@ export const ErrorCard = () => {
       <AuthWrapper
         title="Uh oh..."
         description="An has error occurred"
-        altActionHref="/login"
+        altActionHref="/auth/login"
         altActionText="Back to login"
       >
         <ExclamationTriangleIcon className="h-6 w-6 text-destructive" />

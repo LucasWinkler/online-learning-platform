@@ -58,8 +58,9 @@ export const LoginForm = () => {
     <AuthWrapper
       title="Welcome back"
       description="Enter your details to start learning today!"
-      altActionText="New here? Create an account"
-      altActionHref="/register"
+      altActionText="New here? Please:"
+      altActionLinkText="Register"
+      altActionHref="/auth/register"
       showSocialList
       socialListPosition="top"
       socialListLayoutType="icon-name-only"
