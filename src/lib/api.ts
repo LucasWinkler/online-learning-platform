@@ -1,5 +1,3 @@
-import { getSession } from "@auth0/nextjs-auth0";
-import { redirect } from "next/navigation";
 import { type NextApiRequest, type NextApiResponse } from "next/types";
 
 import { type HttpMethod } from "~/types/api";
@@ -16,15 +14,15 @@ export const validateRequestMethod = (
   }
 };
 
-export const requireUserSession = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-) => {
-  const session = await getSession(req, res);
+// export const requireUserSession = async (
+//   req: NextApiRequest,
+//   res: NextApiResponse,
+// ) => {
+//   const session = await getSession(req, res);
 
-  if (!session?.user) {
-    redirect("/api/auth/login");
-  }
+//   if (!session?.user) {
+//     redirect("/api/auth/login");
+//   }
 
-  return session;
-};
+//   return session;
+// };

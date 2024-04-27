@@ -1,35 +1,34 @@
 import { Prisma } from "@prisma/client";
 
-export const CourseSelectForHome = Prisma.validator<Prisma.CourseSelect>()({
-  title: true,
-  description: true,
-  price: true,
-  slug: true,
-  imageUrl: true,
-  imageBlurDataUrl: true,
-  createdAt: true,
-  updatedAt: true,
-  instructor: {
-    select: {
-      name: true,
+// select type for courses that will be used in the public /courses route and /app/courses route
+export const FilteredPublishedCoursesSelect =
+  Prisma.validator<Prisma.CourseSelect>()({
+    title: true,
+    description: true,
+    price: true,
+    slug: true,
+    imageUrl: true,
+    imageBlurDataUrl: true,
+    createdAt: true,
+    updatedAt: true,
+    instructor: {
+      select: {
+        name: true,
+      },
     },
-  },
-  discount: {
-    select: {
-      percentage: true,
+    lessons: {
+      where: {
+        publishedAt: {
+          not: null,
+        },
+      },
+      select: {
+        length: true,
+      },
     },
-  },
-  lessons: {
-    where: {
-      isPublished: true,
+    _count: {
+      select: {
+        courseEnrollments: true,
+      },
     },
-    select: {
-      length: true,
-    },
-  },
-  _count: {
-    select: {
-      courseEnrollments: true,
-    },
-  },
-});
+  });
