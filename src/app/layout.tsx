@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
+import NextTopLoader from "nextjs-toploader";
+
+import { Toaster } from "~/components/ui/sonner";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Acme",
@@ -26,7 +30,11 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
+        {/* <SessionProvider> */}
+        <NextTopLoader />
         {children}
+        <Toaster richColors />
+        {/* </SessionProvider> */}
       </body>
     </html>
   );

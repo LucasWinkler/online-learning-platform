@@ -1,3 +1,5 @@
+import { GitHubIcon, GoogleIcon } from "~/components/icons";
+
 export type NavigationLinks = {
   title: string;
   href: string;
@@ -10,21 +12,36 @@ export const mainNavigationLinks: NavigationLinks[] = [
     href: "/",
   },
   {
-    title: "Dashboard",
-    href: "/dashboard",
+    title: "Courses",
+    href: "/courses",
   },
   {
-    title: "Login",
-    href: "/api/auth/login",
+    title: "User Dashboard",
+    href: "/app",
   },
   {
-    title: "Sign Up",
-    href: "/api/auth/signup",
-  },
-  {
-    title: "Logout",
-    href: "/api/auth/logout",
+    title: "Admin Dashboard",
+    href: "/admin",
   },
 ];
 
 export const mobileMenuLinks: NavigationLinks[] = [];
+
+export type SocialListProvidersType = {
+  provider: "google" | "github";
+  displayName: "Google" | "GitHub";
+  Icon: (props: React.ComponentPropsWithoutRef<"svg">) => JSX.Element;
+};
+
+export const socialListProviders: SocialListProvidersType[] = [
+  {
+    provider: "google",
+    displayName: "Google",
+    Icon: GoogleIcon,
+  },
+  {
+    provider: "github",
+    displayName: "GitHub",
+    Icon: GitHubIcon,
+  },
+];

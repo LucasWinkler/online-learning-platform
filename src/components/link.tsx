@@ -8,7 +8,7 @@ type LinkProps = Omit<ComponentPropsWithoutRef<typeof NextLink>, "href"> & {
   href?: string;
 };
 
-const Link: React.FC<LinkProps> = ({ children, href, ...props }) => {
+export const Link: React.FC<LinkProps> = ({ children, href, ...props }) => {
   if (!href || href.toString().startsWith("http")) {
     return (
       <a href={href} {...props}>
@@ -23,5 +23,3 @@ const Link: React.FC<LinkProps> = ({ children, href, ...props }) => {
     </NextLink>
   );
 };
-
-export default Link;
