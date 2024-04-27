@@ -26,7 +26,10 @@ export const env = createEnv({
     AUTH_GOOGLE_ID: z.string(),
     AUTH_GOOGLE_SECRET: z.string(),
     RESEND_API_KEY: z.string(),
-    VERCEL_URL: z.string().url().optional(),
+    VERCEL_URL: z.preprocess(
+      (str) => process.env.VERCEL_URL ?? str,
+      process.env.VERCEL ? z.string() : z.string().optional(),
+    ),
   },
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
