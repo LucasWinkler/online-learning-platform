@@ -21,6 +21,7 @@ export const env = createEnv({
         ? z.string().url()
         : z.string().optional(),
     ),
+    AUTH_TRUST_HOST: z.string().optional(),
     AUTH_GITHUB_ID: z.string(),
     AUTH_GITHUB_SECRET: z.string(),
     AUTH_GOOGLE_ID: z.string(),
@@ -40,6 +41,7 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
     AUTH_REDIRECT_PROXY_URL: process.env.AUTH_REDIRECT_PROXY_URL,
+    AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
     AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
