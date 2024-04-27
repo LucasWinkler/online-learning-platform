@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import bcrypt from "bcryptjs";
+import { compareSync } from "bcrypt-edge";
 import { AuthError } from "next-auth";
 
 import { sendVerificationEmail } from "~/lib/mail";
@@ -26,10 +26,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     return { error: "Invalid email or password." };
   }
 
-  const isPasswordCorrect = await bcrypt.compare(
-    password,
-    existingUser.password,
-  );
+  const isPasswordCorrect = compareSync(password, existingUser.password);
   if (!isPasswordCorrect) {
     return { error: "Invalid email or password." };
   }

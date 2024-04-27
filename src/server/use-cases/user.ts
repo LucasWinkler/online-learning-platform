@@ -1,6 +1,6 @@
 import type { RegisterUser } from "~/types/user";
 
-import bcrypt from "bcryptjs";
+import { hashSync } from "bcrypt-edge";
 
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
@@ -14,7 +14,7 @@ import {
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
 
 export const hashPassword = async (password: string) => {
-  return await bcrypt.hash(password, 10);
+  return hashSync(password, 10);
 };
 
 export const registerUser = async (data: RegisterUser) => {
