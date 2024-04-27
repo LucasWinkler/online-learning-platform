@@ -56,12 +56,11 @@ model Account {
 }
 
 model VerificationToken {
-  id      String   @id @default(cuid())
-  email   String
-  token   String   @unique
-  expires DateTime
+  identifier String /// The user's email
+  token      String
+  expires    DateTime
 
-  @@unique([email, token])
+  @@id([identifier, token])
 }
 
 model Course {

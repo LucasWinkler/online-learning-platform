@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { LoginSchema } from "~/schemas";
+import { LoginSchema } from "~/schemas/auth";
 import { login } from "~/server/actions/login";
 
 export const LoginForm = () => {

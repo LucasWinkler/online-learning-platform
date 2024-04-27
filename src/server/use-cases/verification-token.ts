@@ -7,7 +7,8 @@ import {
 export const generateVerificationToken = async (email: string) => {
   const existingVerificationToken = await getVerificationTokenByEmail(email);
   if (existingVerificationToken) {
-    await deleteVerificationToken(existingVerificationToken.id);
+    const { identifier, token } = existingVerificationToken;
+    await deleteVerificationToken(identifier, token);
   }
 
   return await createVerificationToken(email);

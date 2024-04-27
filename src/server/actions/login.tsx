@@ -2,20 +2,44 @@
 
 import type { z } from "zod";
 
+import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
 import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
+import { findUserByEmail } from "~/server/data-access/user";
+import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid email or password" };
+    return { error: "Invalid email or password." };
   }
 
   const { email, password } = validatedFields.data;
+
+  const existingUser = await findUserByEmail(email);
+  if (!existingUser?.email || !existingUser?.password) {
+    return { error: "Invalid email or password." };
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    existingUser.password,
+  );
+  if (!isPasswordCorrect) {
+    return { error: "Invalid email or password." };
+  }
+
+  if (!existingUser?.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email,
+    );
+
+    return { success: "Verification email sent." };
+  }
 
   try {
     await signIn("credentials", {
