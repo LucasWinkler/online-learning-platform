@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { env } from "process";
-
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Role } from "@prisma/client";
 import { compareSync } from "bcrypt-edge";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
+import { env } from "~/env";
 import { LoginSchema } from "~/schemas/auth";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
@@ -31,7 +30,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
 
             const isPasswordCorrect = compareSync(password, user.password);
-
             if (isPasswordCorrect) {
               return user;
             }
@@ -46,10 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: "jwt",
-  },
-  pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
   },
   callbacks: {
     async signIn({ user, account }) {
@@ -76,24 +70,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token, user, account }) {
       if (!token.sub) {
         return token;
       }
 
-      const existingUser = await findUserById(token.sub);
-      if (!existingUser) {
-        return token;
+      if (account?.provider === "credentials" && user !== undefined) {
+        token.role = user.role;
       }
 
-      token.role = existingUser.role;
+      if (account?.provider !== "credentials" && user !== undefined) {
+        token.role = user.role;
+      }
+
+      if (!token.role) {
+        token.role = Role.USER;
+      }
+
       return token;
     },
+  },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {
       await updateUserEmailVerified(user.id!);
     },
   },
-  debug: true,
+  debug: env.NODE_ENV !== "production",
 });
