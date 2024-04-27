@@ -11,7 +11,11 @@ type AltActionLinkProps = {
 };
 
 export const AltActionLink = ({ href, text, linkText }: AltActionLinkProps) => {
-  if (!href ?? !text ?? !linkText) {
+  if (!href && !text && !linkText) {
+    return null;
+  }
+
+  if (!href && !linkText) {
     return null;
   }
 
