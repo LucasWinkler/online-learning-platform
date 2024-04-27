@@ -99,5 +99,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       await updateUserEmailVerified(user.id!);
     },
   },
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        path: '/',
+        secure: true
+      }
+    }
+  },
   debug: env.NODE_ENV !== "production",
 });
