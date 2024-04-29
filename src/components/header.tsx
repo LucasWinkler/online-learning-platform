@@ -23,7 +23,6 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import { logout } from "~/server/actions/logout";
-import { signOut } from "~/server/auth";
 
 import { Logo } from "./logo";
 import { Button } from "./ui/button";

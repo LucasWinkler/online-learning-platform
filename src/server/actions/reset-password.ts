@@ -2,6 +2,8 @@
 
 import type { z } from "zod";
 
+import { createId } from "@paralleldrive/cuid2";
+
 import { sendPasswordResetEmail } from "~/lib/mail";
 import { ResetSchema } from "~/schemas/auth";
 import { createPasswordResetToken } from "~/server/data-access/password-reset-token";
@@ -21,7 +23,14 @@ export const resetPassword = async (values: z.infer<typeof ResetSchema>) => {
       return { error: "Email not found" };
     }
 
-    const passwordResetToken = await createPasswordResetToken(email);
+    const token = createId();
+    const expiresIn20Minutes = new Date(Date.now() + 20 * 60 * 1000);
+
+    const passwordResetToken = await createPasswordResetToken(
+      email,
+      token,
+      expiresIn20Minutes,
+    );
     await sendPasswordResetEmail(
       passwordResetToken.identifier,
       passwordResetToken.token,
