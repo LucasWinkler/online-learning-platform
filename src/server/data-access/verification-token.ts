@@ -9,7 +9,7 @@ export const createVerificationToken = async (email: string) => {
     data: {
       identifier: email,
       token: createId(),
-      expires: expiresIn24Hours,
+      expiresAt: expiresIn24Hours,
     },
   });
 };

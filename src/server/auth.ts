@@ -1,12 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Role } from "@prisma/client";
 import { compareSync } from "bcrypt-edge";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-import { env } from "~/env";
 import { LoginSchema } from "~/schemas/auth";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
@@ -61,30 +59,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async session({ token, session }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
+      if (!token.sub) {
+        return session;
       }
-      if (token.role && session.user) {
+
+      if (session.user) {
+        session.user.id = token.sub;
         session.user.role = token.role;
       }
 
       return session;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (!token.sub) {
         return token;
       }
 
-      if (account?.provider === "credentials" && user !== undefined) {
+      if (user) {
         token.role = user.role;
-      }
-
-      if (account?.provider !== "credentials" && user !== undefined) {
-        token.role = user.role;
-      }
-
-      if (!token.role) {
-        token.role = Role.USER;
       }
 
       return token;
@@ -99,16 +91,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       await updateUserEmailVerified(user.id!);
     },
   },
-  cookies: {
-    pkceCodeVerifier: {
-      name: 'next-auth.pkce.code_verifier',
-      options: {
-        httpOnly: true,
-        sameSite: 'none',
-        path: '/',
-        secure: true
-      }
-    }
-  },
-  debug: env.NODE_ENV !== "production",
+  // debug: env.NODE_ENV !== "production",
 });

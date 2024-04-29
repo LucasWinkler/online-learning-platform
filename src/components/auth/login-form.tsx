@@ -9,18 +9,13 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AuthWrapper } from "~/components/auth/auth-wrapper";
+import { FloatingLabelInput } from "~/components/floating-label-input";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
-import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import { Link } from "~/components/link";
+import { Button, buttonVariants } from "~/components/ui/button";
+import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { cn } from "~/lib/utils";
 import { LoginSchema } from "~/schemas/auth";
 import { login } from "~/server/actions/login";
 
@@ -58,8 +53,8 @@ export const LoginForm = () => {
     <AuthWrapper
       title="Welcome back"
       description="Enter your details to start learning today!"
-      altActionText="New here? Please:"
-      altActionLinkText="Register"
+      altActionText="New here?"
+      altActionLinkText="Create account"
       altActionHref="/auth/register"
       showSocialList
       socialListPosition="top"
@@ -72,17 +67,13 @@ export const LoginForm = () => {
               control={loginForm.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="your.email@domain.com"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Email"
+                    disabled={isPending}
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -90,17 +81,23 @@ export const LoginForm = () => {
               control={loginForm.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      disabled={isPending}
-                      placeholder="********"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Password"
+                    disabled={isPending}
+                    type="password"
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
+                  <Link
+                    href="/auth/reset"
+                    className={cn(
+                      buttonVariants({ variant: "link", size: "sm" }),
+                      "mt-2 h-auto px-0 ",
+                    )}
+                  >
+                    Forgot password?
+                  </Link>
                 </FormItem>
               )}
             />

@@ -8,11 +8,7 @@ export const metadata: Metadata = {
 };
 
 const RegisterPage = () => {
-  return (
-    <>
-      <RegisterForm />
-    </>
-  );
+  return <RegisterForm />;
 };
 
 export default RegisterPage;

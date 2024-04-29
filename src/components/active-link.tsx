@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 import { Link } from "~/components/link";
 import { cn } from "~/lib/utils";
 
-type ActiveLinkProps = ComponentPropsWithoutRef<typeof Link> & {
+type ActiveLinkProps = {
   activeClassName?: string;
-};
+  target?: string;
+} & ComponentPropsWithoutRef<typeof Link>;
 
 const ActiveLink: React.FC<ActiveLinkProps> = ({
   href = "",

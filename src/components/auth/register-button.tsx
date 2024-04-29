@@ -2,22 +2,22 @@
 
 import { useRouter } from "next/navigation";
 
-type LoginButtonProps = {
+type RegisterButtonProps = {
   children: React.ReactNode;
   type?: "modal" | "redirect";
   asChild?: boolean;
 };
 
-export const LoginButton = ({
+export const RegisterButton = ({
   children,
   type = "redirect",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   asChild,
-}: LoginButtonProps) => {
+}: RegisterButtonProps) => {
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/login");
+    router.push("/auth/register");
   };
 
   if (type === "modal") {

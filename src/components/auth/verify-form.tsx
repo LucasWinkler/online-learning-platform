@@ -51,15 +51,15 @@ export const VerifyForm = () => {
             ? "An error occurred while verifying your email. Please login again and check your email."
             : "Your email address is being verified."
       }
-      altActionHref={!success && !error ? undefined : "/login"}
+      altActionHref={!success && !error ? "/login" : "/login"}
       altActionText={
         success
           ? "You're all set to:"
           : error
             ? "Please go back to:"
-            : "Back to:"
+            : "Taking too long?"
       }
-      altActionLinkText={success ? "Login" : "Login"}
+      altActionLinkText={!success && !error ? "Go to login" : "login"}
     >
       <div className="flex w-full items-center justify-center">
         {!success && !error && (

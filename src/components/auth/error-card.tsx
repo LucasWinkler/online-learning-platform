@@ -12,7 +12,7 @@ export const ErrorCard = () => {
         altActionText="Back to:"
         altActionLinkText="login"
       >
-        <ExclamationTriangleIcon className="h-6 w-6 text-destructive" />
+        <ExclamationTriangleIcon className="animate-shake mx-auto size-8 text-destructive" />
       </AuthWrapper>
     </>
   );

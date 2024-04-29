@@ -21,30 +21,30 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password } = validatedFields.data;
 
-  const existingUser = await findUserByEmail(email);
-  if (!existingUser?.email || !existingUser?.password) {
-    return { error: "Invalid email or password." };
-  }
-
-  const isPasswordCorrect = compareSync(password, existingUser.password);
-  if (!isPasswordCorrect) {
-    return { error: "Invalid email or password." };
-  }
-
-  if (!existingUser?.emailVerified) {
-    const verificationToken = await generateVerificationToken(
-      existingUser.email,
-    );
-
-    await sendVerificationEmail(
-      verificationToken.identifier,
-      verificationToken.token,
-    );
-
-    return { success: "Confirmation email sent." };
-  }
-
   try {
+    const existingUser = await findUserByEmail(email);
+    if (!existingUser?.email || !existingUser?.password) {
+      return { error: "Invalid email or password." };
+    }
+
+    const isPasswordCorrect = compareSync(password, existingUser.password);
+    if (!isPasswordCorrect) {
+      return { error: "Invalid email or password." };
+    }
+
+    if (!existingUser?.emailVerified) {
+      const verificationToken = await generateVerificationToken(
+        existingUser.email,
+      );
+
+      await sendVerificationEmail(
+        verificationToken.identifier,
+        verificationToken.token,
+      );
+
+      return { success: "Confirmation email sent." };
+    }
+
     await signIn("credentials", {
       email,
       password,

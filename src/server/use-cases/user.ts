@@ -13,6 +13,8 @@ import {
 } from "~/server/data-access/user";
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
 
+import { getPasswordResetTokenByToken } from "../data-access/password-reset-token";
+
 export const hashPassword = async (password: string) => {
   return hashSync(password, 10);
 };
@@ -41,13 +43,38 @@ export const updateUserProfile = async (
   return await updateUser(userId, data);
 };
 
-export const changeUserPassword = async (
+export const updateUserPassword = async (
   userId: string,
   newPassword: string,
 ) => {
   const hashedPassword = await hashPassword(newPassword);
 
   return await updateUser(userId, { password: hashedPassword });
+};
+
+export const updateUserPasswordWithToken = async (
+  newPassword: string,
+  token: string,
+) => {
+  const existingToken = await getPasswordResetTokenByToken(token);
+  if (!existingToken) {
+    return { error: "Invalid token" };
+  }
+
+  const hasTokenExpired = new Date(existingToken.expiresAt) < new Date();
+  if (hasTokenExpired) {
+    return { error: "Token has expired" };
+  }
+
+  const existingUser = await findUserByEmail(existingToken.identifier);
+  if (!existingUser) {
+    return { error: "User not found" };
+  }
+
+  const hashedPassword = await hashPassword(newPassword);
+  await updateUser(existingUser.id, { password: hashedPassword });
+
+  return { success: "Password successfully changed" };
 };
 
 export const updateUserEmailVerified = async (userId: string) => {
@@ -67,7 +94,7 @@ export const verifyUserEmail = async (
     return { error: "Invalid token" };
   }
 
-  const hasExpired = new Date(existingToken.expires) < new Date();
+  const hasExpired = new Date(existingToken.expiresAt) < new Date();
   if (hasExpired) {
     return { error: "Token has expired" };
   }
