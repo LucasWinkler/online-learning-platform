@@ -1,15 +1,15 @@
-import { createId } from "@paralleldrive/cuid2";
-
 import { db } from "~/server/db";
 
-export const createVerificationToken = async (email: string) => {
-  const expiresIn24Hours = new Date(Date.now() + 3600 * 1000 * 24);
-
+export const createVerificationToken = async (
+  email: string,
+  token: string,
+  expiresAt: Date,
+) => {
   return await db.verificationToken.create({
     data: {
       identifier: email,
-      token: createId(),
-      expiresAt: expiresIn24Hours,
+      token,
+      expiresAt,
     },
   });
 };

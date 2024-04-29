@@ -77,7 +77,7 @@ model PasswordResetToken {
   @@id([identifier, token])
 }
 
-model TwoFactorAuthenticationToken {
+model TwoFactorToken {
   identifier String /// The user's email
   token      String
 

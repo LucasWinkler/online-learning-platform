@@ -11,7 +11,6 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 import { LoginButton } from "~/components/auth/login-button";
-import { RegisterButton } from "~/components/auth/register-button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
@@ -23,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
+import { logout } from "~/server/actions/logout";
+import { signOut } from "~/server/auth";
 
 import { Logo } from "./logo";
 import { Button } from "./ui/button";
@@ -74,8 +75,15 @@ const UserMenu = ({ fullName, email, role, avatarImage }: UserMenuProps) => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <Link href="/api/auth/signout">Log out</Link>
+        <DropdownMenuItem className="cursor-pointer">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await logout();
+            }}
+          >
+            <button type="submit">Log out</button>
+          </form>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

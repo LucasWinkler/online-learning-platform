@@ -1,3 +1,5 @@
+import { createId } from "@paralleldrive/cuid2";
+
 import {
   createPasswordResetToken,
   deletePasswordResetToken,
@@ -11,5 +13,8 @@ export const generatePasswordResetToken = async (email: string) => {
     await deletePasswordResetToken(identifier, token);
   }
 
-  return await createPasswordResetToken(email);
+  const token = createId();
+  const expiresIn20Minutes = new Date(Date.now() + 20 * 60 * 1000);
+
+  return await createPasswordResetToken(email, token, expiresIn20Minutes);
 };

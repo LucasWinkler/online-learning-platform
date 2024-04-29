@@ -21,6 +21,7 @@ const confirmPassword = z.string().trim().min(1, {
 export const LoginSchema = z.object({
   email: email,
   password: password,
+  code: z.optional(z.string()),
 });
 
 export const RegisterSchema = z

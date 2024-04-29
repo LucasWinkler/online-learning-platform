@@ -6,6 +6,10 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { LoginSchema } from "~/schemas/auth";
+import {
+  deleteTwoFactorConfirmation,
+  getTwoFactorConfirmationByUserId,
+} from "~/server/data-access/2fa-confirmation";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
@@ -54,7 +58,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false;
       }
 
-      // Check 2FA
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          user.id!,
+        );
+
+        if (!twoFactorConfirmation) {
+          return false;
+        }
+
+        await deleteTwoFactorConfirmation(user.id!);
+      }
 
       return true;
     },

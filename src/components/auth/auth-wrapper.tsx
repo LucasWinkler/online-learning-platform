@@ -19,6 +19,7 @@ type AuthWrapperProps = {
   altActionHref?: string;
   altActionText?: string;
   altActionLinkText?: string;
+  altActionOnClick?: () => void;
   showSocialList?: boolean;
   socialListPosition?: SocialListPosition;
   socialListLayoutType?: SocialListLayoutType;
@@ -31,6 +32,7 @@ export const AuthWrapper = ({
   altActionHref,
   altActionText,
   altActionLinkText,
+  altActionOnClick,
   showSocialList,
   socialListPosition = "bottom",
   socialListLayoutType = "icon-full-text",
@@ -64,6 +66,7 @@ export const AuthWrapper = ({
           href={altActionHref}
           text={altActionText}
           linkText={altActionLinkText}
+          onClick={altActionOnClick}
         />
       </CardFooter>
     </Card>

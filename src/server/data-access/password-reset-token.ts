@@ -1,19 +1,17 @@
 import type { Prisma } from "@prisma/client";
 
-import { createId } from "@paralleldrive/cuid2";
-
 import { db } from "~/server/db";
 
 export const createPasswordResetToken = async (
   email: string,
+  token: string,
+  expiresAt: Date,
 ): Promise<Prisma.PasswordResetTokenCreateInput> => {
-  const expiresIn20Minutes = new Date(Date.now() + 20 * 60 * 1000);
-
   return await db.passwordResetToken.create({
     data: {
       identifier: email,
-      token: createId(),
-      expiresAt: expiresIn20Minutes,
+      token,
+      expiresAt,
     },
   });
 };
