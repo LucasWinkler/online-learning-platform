@@ -1,3 +1,5 @@
+import { createId } from "@paralleldrive/cuid2";
+
 import {
   createVerificationToken,
   deleteVerificationToken,
@@ -11,5 +13,8 @@ export const generateVerificationToken = async (email: string) => {
     await deleteVerificationToken(identifier, token);
   }
 
-  return await createVerificationToken(email);
+  const token = createId();
+  const expiresIn24Hours = new Date(Date.now() + 3600 * 1000 * 24);
+
+  return await createVerificationToken(email, token, expiresIn24Hours);
 };

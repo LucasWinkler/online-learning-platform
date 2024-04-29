@@ -14,7 +14,7 @@ async function main() {
   }
 
   const placeholderImageUrl =
-    "https://fakeimg.pl/1200x703?text=Thumbnail&font=bebas";
+    "https://fakeimg.pl/1200x703?text=COURSE&font=bebas";
 
   await db.user.deleteMany();
   await db.account.deleteMany();
@@ -55,8 +55,8 @@ async function main() {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
         price: Math.floor(Math.random() * 100) + 50,
-        imageUrl: placeholderImageUrl,
-        imageBlurDataUrl: placeholderBlurDataImageUrl,
+        image: placeholderImageUrl,
+        imageBlurData: placeholderBlurDataImageUrl,
         instructorId: adminUser.id,
         publishedAt: new Date(),
       },
@@ -94,7 +94,7 @@ async function main() {
             title: `Lesson ${k} for Chapter ${j} of Course ${i}`,
             slug: `lesson-${k}-chapter-${j}-course-${i}`,
             description: `Description for Lesson ${k} of Chapter ${j} for Course ${i}`,
-            videoUrl: "https://www.example.com/video",
+            video: "https://www.example.com/video",
             length: Math.floor(Math.random() * 900) + 240,
             order: k,
             courseId: course.id,

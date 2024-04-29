@@ -7,8 +7,8 @@ export const FilteredPublishedCoursesSelect =
     description: true,
     price: true,
     slug: true,
-    imageUrl: true,
-    imageBlurDataUrl: true,
+    image: true,
+    imageBlurData: true,
     createdAt: true,
     updatedAt: true,
     instructor: {

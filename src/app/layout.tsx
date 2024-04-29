@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
+import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
@@ -29,12 +30,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
-      <body className="min-h-screen bg-background leading-relaxed text-foreground antialiased">
-        {/* <SessionProvider> */}
-        <NextTopLoader />
-        {children}
-        <Toaster richColors />
-        {/* </SessionProvider> */}
+      <body className="flex h-full min-h-screen flex-col bg-neutral-50 leading-relaxed text-foreground antialiased">
+        <SessionProvider>
+          <NextTopLoader />
+          {children}
+          <Toaster richColors />
+        </SessionProvider>
       </body>
     </html>
   );
