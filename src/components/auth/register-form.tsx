@@ -8,18 +8,11 @@ import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { AuthWrapper } from "~/components/auth/auth-wrapper";
+import { FloatingLabelInput } from "~/components/floating-label-input";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { RegisterSchema } from "~/schemas/auth";
 import { register } from "~/server/actions/register";
 
@@ -54,7 +47,7 @@ export const RegisterForm = () => {
     <AuthWrapper
       title="Create account"
       description="Enter your details to start learning today!"
-      altActionText="Have an account? Please:"
+      altActionText="Have an account?"
       altActionLinkText="Login"
       altActionHref="/auth/login"
       showSocialList
@@ -71,16 +64,13 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={isPending}
-                      placeholder="Your Name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Full name"
+                    disabled={isPending}
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -88,17 +78,13 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="your.name@domain.com"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Email"
+                    disabled={isPending}
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -106,17 +92,14 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Password"
+                    disabled={isPending}
+                    type="password"
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -124,17 +107,14 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="relative">
+                  <FloatingLabelInput
+                    label="Confirm password"
+                    disabled={isPending}
+                    type="password"
+                    {...field}
+                  />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />

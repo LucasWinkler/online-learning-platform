@@ -73,10 +73,17 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        shake: {
+          "0%": { transform: "translateX(0rem)" },
+          "25%": { transform: "translateX(0.5rem)" },
+          "75%": { transform: "translateX(-0.5rem)" },
+          "100%": { transform: "translateX(0rem)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        shake: "shake 0.2s ease-in-out 0s 2",
       },
       fontFamily: {
         interVariable: [

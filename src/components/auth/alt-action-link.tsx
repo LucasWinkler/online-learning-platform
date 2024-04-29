@@ -8,9 +8,15 @@ type AltActionLinkProps = {
   href?: string;
   text?: string;
   linkText?: string;
+  onClick?: () => void;
 };
 
-export const AltActionLink = ({ href, text, linkText }: AltActionLinkProps) => {
+export const AltActionLink = ({
+  href,
+  text,
+  linkText,
+  onClick,
+}: AltActionLinkProps) => {
   if (!href && !text && !linkText) {
     return null;
   }
@@ -29,6 +35,7 @@ export const AltActionLink = ({ href, text, linkText }: AltActionLinkProps) => {
             "font-normal",
           )}
           href={href}
+          onClick={onClick}
         >
           {linkText}
         </Link>

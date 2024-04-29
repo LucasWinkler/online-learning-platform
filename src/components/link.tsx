@@ -1,24 +1,33 @@
 "use client";
 
-import type { ComponentPropsWithoutRef } from "react";
+import type { LinkProps as NextLinkProps } from "next/link";
 
 import { default as NextLink } from "next/link";
 
-type LinkProps = Omit<ComponentPropsWithoutRef<typeof NextLink>, "href"> & {
-  href?: string;
-};
+type LinkProps = {
+  href: string;
+  children: React.ReactNode;
+  target?: string;
+  className?: string;
+} & NextLinkProps;
 
-export const Link: React.FC<LinkProps> = ({ children, href, ...props }) => {
-  if (!href || href.toString().startsWith("http")) {
+export const Link: React.FC<LinkProps> = ({
+  children,
+  href,
+  target = "_blank",
+  className,
+  ...props
+}) => {
+  if (!href || href.startsWith("http")) {
     return (
-      <a href={href} {...props}>
+      <a className={className} href={href} target={target} {...props}>
         {children}
       </a>
     );
   }
 
   return (
-    <NextLink href={href?.toString()} {...props}>
+    <NextLink className={className} href={href} {...props}>
       {children}
     </NextLink>
   );

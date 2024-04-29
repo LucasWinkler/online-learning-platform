@@ -1,5 +1,5 @@
 const CoursesPage = async () => {
-  return <div>All published courses</div>;
+  return <div>Display all published courses</div>;
 };
 
 export default CoursesPage;

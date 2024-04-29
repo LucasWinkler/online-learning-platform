@@ -1,6 +1,6 @@
 // TODO:
 // Track users course progress 
-// Remake discounts/coupons
+// Create discounts/coupons
 
 generator client {
   provider        = "prisma-client-js"
@@ -18,13 +18,15 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?   @default("https://fakeimg.pl/96x96?text=Image&font=bebas")
-  role          Role      @default(USER)
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String                 @unique
+  emailVerified         DateTime?
+  password              String?
+  image                 String?
+  role                  Role                   @default(USER)
+  isTwoFactorEnabled    Boolean                @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
 
   accounts        Account[]
   enrolledCourses CourseEnrollment[]
@@ -58,19 +60,52 @@ model Account {
 model VerificationToken {
   identifier String /// The user's email
   token      String
-  expires    DateTime
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
   @@id([identifier, token])
 }
 
+model PasswordResetToken {
+  identifier String /// The user's email
+  token      String
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@id([identifier, token])
+}
+
+model TwoFactorToken {
+  identifier String /// The user's email
+  token      String
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@id([identifier, token])
+}
+
+model TwoFactorConfirmation {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId])
+}
+
 model Course {
-  id               String  @id @default(cuid())
-  title            String
-  slug             String  @unique
-  description      String?
-  price            Float?
-  imageUrl         String?
-  imageBlurDataUrl String?
+  id            String  @id @default(cuid())
+  title         String
+  slug          String  @unique
+  description   String?
+  price         Float?
+  image         String?
+  imageBlurData String?
 
   instructor        User               @relation(fields: [instructorId], references: [id], onDelete: Cascade)
   instructorId      String
@@ -104,7 +139,7 @@ model Lesson {
   title       String
   slug        String
   description String?
-  videoUrl    String?
+  video       String?
   length      Int? /// Lesson length in seconds
   order       Int /// The order a lesson should be displayed in
 

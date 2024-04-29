@@ -30,5 +30,3 @@ export const LoginButton = ({
     </span>
   );
 };
-
-export default LoginButton;
