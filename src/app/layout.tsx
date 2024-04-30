@@ -6,6 +6,8 @@ import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
+import { authApiRoutePrefix } from "~/routes";
+import { auth } from "~/server/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -15,11 +17,13 @@ export const metadata: Metadata = {
   description: "Online Learning Platform",
 };
 
-export default function RootLayout({
-  children,
-}: {
+type RootLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+const RootLayout = async ({ children }: RootLayoutProps) => {
+  const session = await auth();
+
   return (
     <html
       lang="en"
@@ -31,7 +35,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="flex h-full min-h-screen flex-col bg-neutral-50 leading-relaxed text-foreground antialiased">
-        <SessionProvider>
+        <SessionProvider session={session} basePath={authApiRoutePrefix}>
           <NextTopLoader />
           {children}
           <Toaster richColors />
@@ -39,4 +43,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

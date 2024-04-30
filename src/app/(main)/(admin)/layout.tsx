@@ -1,7 +1,9 @@
-export default async function AdminLayout({
-  children,
-}: {
+type AdminLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+const AdminLayout = ({ children }: AdminLayoutProps) => {
   return <>{children}</>;
-}
+};
+
+export default AdminLayout;

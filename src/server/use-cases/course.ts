@@ -29,18 +29,34 @@ export const createNewCourse = async ({
   return await createCourse({ title, slug, instructorId });
 };
 
-export const deleteCourseIfAuthorized = async (
-  courseId: string,
-  userId: string,
-) => {
-  const authorized = await isAuthorizedForCourseManagement(courseId, userId);
-  if (!authorized) {
-    throw new Error("Unauthorized access");
-  }
-
-  return await deleteCourse(courseId);
+// TODO: Get 5 featured courses for home page if no user is logged in
+// Most likely will be the 5 most popular courses
+// No pagination or filters/sorting
+export const getFeaturedCourses = async () => {
+  return [];
 };
 
+// TODO: Get 5 most recently accessed courses
+// Uses the user id to get the courses
+// No pagination or filters/sorting
+export const getUserRecentCourses = async () => {
+  return [];
+};
+
+// TODO: Get 10 of the users enrolled courses
+// Uses the user id to get the courses
+// Has pagination and filters/sorting
+export const getUserEnrolledCourses = async () => {
+  return [];
+};
+
+// TODO: Get 10 published courses
+// Has pagination and filters/sorting
+export const getPublishedCourses = async () => {
+  return [];
+};
+
+// TODO: Replace this function with getPublishedCourses
 export const getFilteredPublishedCourses = async (
   params: FilteredPublishedCoursesParams,
 ) => {
@@ -69,8 +85,14 @@ export const getFilteredPublishedCourses = async (
   return { courses: enhancedCourses, total: enhancedCourses.length };
 };
 
-// export const getUserPurchasedCourses = async (userId: string) => {
-//   const courses = await findFilteredPublishedCourses(params);
+export const deleteCourseIfAuthorized = async (
+  courseId: string,
+  userId: string,
+) => {
+  const authorized = await isAuthorizedForCourseManagement(courseId, userId);
+  if (!authorized) {
+    throw new Error("Unauthorized access");
+  }
 
-//   return courses;
-// };
+  return await deleteCourse(courseId);
+};

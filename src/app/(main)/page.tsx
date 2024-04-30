@@ -1,51 +1,38 @@
 import type { Metadata } from "next";
 
-import { SearchIcon } from "lucide-react";
+import { auth } from "~/server/auth";
 
-import { Link } from "~/components/link";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { auth, signOut } from "~/server/auth";
+import { Dashboard } from "./(student)/_components/dashboard";
 
 export const metadata: Metadata = {
-  title: "Overview",
+  title: "Dashboard",
+  description:
+    "Explore your Dashboard to track your learning progress, access courses, and more.",
 };
 
+// if userId fetch courses for that user
+// if not userId fetch top 5 popular courses
+const fetchCourses = (userId: string | undefined) => {
+  if (userId) {
+    // fetch courses for that user
+  } else {
+    // fetch top 5 popular courses
+  }
+
+  return [];
+};
+
+// Fetch all data here
+// Pass data to
 const HomePage = async () => {
   const session = await auth();
-  const isLoggedIn = !!session?.user;
+  const user = session?.user;
+  const courses = fetchCourses(user?.id);
 
   return (
-    <section className="space-y-4">
-      <form className="mr-auto flex w-full max-w-[280px] md:hidden">
-        <Input
-          className="w-full rounded-none rounded-l-md border-r-0 bg-background"
-          placeholder="Search courses..."
-        />
-        <Button
-          className="rounded-none rounded-r-md p-4"
-          variant="default"
-          size="icon"
-        >
-          <SearchIcon className="h-5 w-5 shrink-0" />
-        </Button>
-      </form>
-      {isLoggedIn ? (
-        <form
-          action={async () => {
-            "use server";
-            await signOut();
-          }}
-        >
-          <button type="submit">sign out</button>
-        </form>
-      ) : (
-        <>
-          <Link href="/auth/login">Login</Link>
-          <Link href="/auth/register">Register</Link>
-        </>
-      )}
-    </section>
+    <div className="">
+      <Dashboard user={user} />
+    </div>
   );
 };
 

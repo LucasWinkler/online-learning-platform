@@ -1,10 +1,10 @@
 import { Header } from "~/components/header";
 
-export default async function MainLayout({
-  children,
-}: {
+type MainLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <Header />
@@ -28,4 +28,6 @@ export default async function MainLayout({
       </div>
     </>
   );
-}
+};
+
+export default MainLayout;
