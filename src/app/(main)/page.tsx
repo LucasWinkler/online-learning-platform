@@ -31,7 +31,7 @@ const HomePage = async () => {
 
   return (
     <div className="">
-      <Dashboard user={user} />
+      <Dashboard courses={courses} user={user} />
     </div>
   );
 };

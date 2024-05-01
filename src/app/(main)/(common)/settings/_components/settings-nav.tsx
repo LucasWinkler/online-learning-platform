@@ -4,7 +4,7 @@ import { settingsNavigationLinks } from "~/lib/links";
 export const SettingsNav = () => {
   return (
     <nav
-      className="z-5 sticky top-[90px] w-full rounded-lg border border-border p-0 backdrop-blur supports-[backdrop-blur]:bg-background/95 lg:bg-background lg:p-3 lg:backdrop-blur-none"
+      className="sticky top-[90px] z-[5] w-full rounded-lg border border-border p-0 backdrop-blur supports-[backdrop-blur]:bg-background/95 lg:bg-background lg:p-3 lg:backdrop-blur-none"
       aria-label="User settings"
     >
       <ul className="flex flex-row justify-center gap-0 text-3xl lg:flex-col lg:gap-2">

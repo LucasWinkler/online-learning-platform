@@ -23,6 +23,7 @@ type RootLayoutProps = {
 
 const RootLayout = async ({ children }: RootLayoutProps) => {
   const session = await auth();
+  // TODO: possibly filter out sensitive data before passing to client
 
   return (
     <html

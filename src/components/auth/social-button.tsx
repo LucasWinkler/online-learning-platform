@@ -8,16 +8,19 @@ import { ChevronRightIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 
 import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 
 type SocialButtonProps = {
   layoutType: SocialListLayoutType;
   social: SocialListProvidersType;
+  className?: string;
 } & ButtonProps;
 
 export const SocialButton = ({
   layoutType,
   social,
+  className,
   ...props
 }: SocialButtonProps) => {
   const classNames = {
@@ -30,7 +33,7 @@ export const SocialButton = ({
       key={social.provider}
       variant="outline"
       size="lg"
-      className={classNames[layoutType]}
+      className={cn(classNames[layoutType], className)}
       onClick={() =>
         signIn(social.provider, { callbackUrl: DEFAULT_LOGIN_REDIRECT })
       }

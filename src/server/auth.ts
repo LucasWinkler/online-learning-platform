@@ -39,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           } catch (error) {
             console.error("Error authorizing user credentials:", error);
+            throw new Error("Error authorizing user credentials");
           }
         }
 
@@ -80,8 +81,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (session.user) {
-        session.user.id = token.sub;
-        session.user.role = token.role;
+        session.user = {
+          ...session.user,
+          id: token.sub,
+          role: token.role,
+          isTwoFactorEnabled: token.isTwoFactorEnabled,
+        };
       }
 
       return session;
@@ -92,7 +97,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
-        token.role = user.role;
+        token = {
+          ...token,
+          role: user.role,
+          isTwoFactorEnabled: user.isTwoFactorEnabled,
+        };
       }
 
       return token;

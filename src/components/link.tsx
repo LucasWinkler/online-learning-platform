@@ -2,7 +2,7 @@
 
 import type { LinkProps as NextLinkProps } from "next/link";
 
-import React from "react";
+import React, { type AriaAttributes } from "react";
 import { default as NextLink } from "next/link";
 
 import { cn } from "~/lib/utils";
@@ -12,7 +12,7 @@ type LinkProps = {
   children: React.ReactNode;
   target?: string;
   className?: string;
-} & NextLinkProps;
+} & AriaAttributes & NextLinkProps;
 
 export const Link = React.forwardRef(
   (
