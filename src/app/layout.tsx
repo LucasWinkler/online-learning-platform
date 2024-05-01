@@ -34,7 +34,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
-      <body className="flex h-full min-h-screen flex-col bg-neutral-50 leading-relaxed text-foreground antialiased">
+      <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
         <SessionProvider session={session} basePath={authApiRoutePrefix}>
           <NextTopLoader />
           {children}
