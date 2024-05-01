@@ -9,16 +9,19 @@ declare module "next-auth" {
       email: string;
       name: string;
       image: string;
+      isTwoFactorEnabled: boolean;
     } & DefaultSession["user"];
   }
 
   interface User {
     role: Role;
+    isTwoFactorEnabled: boolean;
   }
 }
 
 declare module "@auth/core/jwt" {
   interface JWT {
     role: Role;
+    isTwoFactorEnabled: boolean;
   }
 }

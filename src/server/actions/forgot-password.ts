@@ -5,12 +5,14 @@ import type { z } from "zod";
 import { createId } from "@paralleldrive/cuid2";
 
 import { sendPasswordResetEmail } from "~/lib/mail";
-import { ResetSchema } from "~/schemas/auth";
+import { ForgotPasswordSchema } from "~/schemas/auth";
 import { createPasswordResetToken } from "~/server/data-access/password-reset-token";
 import { findUserByEmail } from "~/server/data-access/user";
 
-export const resetPassword = async (values: z.infer<typeof ResetSchema>) => {
-  const validatedFields = ResetSchema.safeParse(values);
+export const forgotPassword = async (
+  values: z.infer<typeof ForgotPasswordSchema>,
+) => {
+  const validatedFields = ForgotPasswordSchema.safeParse(values);
   if (!validatedFields.success) {
     return { error: "Invalid email" };
   }

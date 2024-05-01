@@ -7,12 +7,12 @@ export const ErrorCard = () => {
     <>
       <AuthWrapper
         title="Uh oh..."
-        description="An has error occurred"
+        description="An error has occurred. Please try again or contact us if the problem persists."
         altActionHref="/auth/login"
         altActionText="Back to:"
         altActionLinkText="login"
       >
-        <ExclamationTriangleIcon className="animate-shake mx-auto size-8 text-destructive" />
+        <ExclamationTriangleIcon className="mx-auto size-10 animate-shake text-destructive" />
       </AuthWrapper>
     </>
   );

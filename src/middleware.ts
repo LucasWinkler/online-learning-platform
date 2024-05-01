@@ -6,22 +6,11 @@ import {
 } from "~/routes";
 import { auth } from "~/server/auth";
 
-/**
- * This middleware is used to allow access to specific routes and redirect depending
- * on the user's authentication status. By default the matcher config will protect all
- * routes except for static assets and api routes.
- *
- * If the route is a /api/auth route, the middleware will not redirect the user.
- *
- * If the route is an authentication page route and the user is authenticated, the
- * middleware will redirect the user to the default login redirect ("/").
- *
- * If the route is an authentication page route and the user is not authenticated,
- * the middleware will not redirect the user.
- *
- * If the route is not protected and the user is not authenticated, the middleware
- * will redirect the user to the login page.
- */
+// Protect all routes except for "/", static assets, and api routes
+export const config = {
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api)(.*)"],
+};
+
 export default auth((req) => {
   const { nextUrl } = req;
   const isAuthenticated = !!req.auth;
@@ -46,9 +35,9 @@ export default auth((req) => {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
 
+  if (nextUrl.pathname === "/settings") {
+    return Response.redirect(new URL("/settings/profile", nextUrl));
+  }
+
   return;
 });
-
-export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-};

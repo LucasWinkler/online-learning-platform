@@ -38,7 +38,7 @@ export const RegisterSchema = z
     path: ["confirmPassword"],
   });
 
-export const ResetSchema = z.object({
+export const ForgotPasswordSchema = z.object({
   email,
 });
 

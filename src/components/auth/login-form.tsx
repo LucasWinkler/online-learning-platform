@@ -92,11 +92,13 @@ export const LoginForm = () => {
                 control={loginForm.control}
                 name="code"
                 render={({ field }) => (
-                  <FloatingLabelInput
-                    label="Two Factor Code"
-                    disabled={isPending}
-                    {...field}
-                  />
+                  <FormItem className="relative">
+                    <FloatingLabelInput
+                      label="Two Factor Code"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormItem>
                 )}
               />
             )}
@@ -129,7 +131,7 @@ export const LoginForm = () => {
                       />
                       <FormMessage className="mt-1" />
                       <Link
-                        href="/auth/reset"
+                        href={`/auth/forgot-password?email=${loginForm.getValues().email}`}
                         className={cn(
                           buttonVariants({ variant: "link", size: "sm" }),
                           "mt-2 h-auto px-0 ",
