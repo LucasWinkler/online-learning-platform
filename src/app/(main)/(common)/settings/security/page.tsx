@@ -7,7 +7,11 @@ export const metadata: Metadata = {
 };
 
 const SecuritySettingsPage = () => {
-  return <SettingsWrapper title="Security"></SettingsWrapper>;
+  return (
+    <SettingsWrapper title="Security">
+      <p>Will contain change password form, i forgot my password link, 2fa</p>
+    </SettingsWrapper>
+  );
 };
 
 export default SecuritySettingsPage;

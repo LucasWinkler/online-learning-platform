@@ -7,7 +7,14 @@ export const metadata: Metadata = {
 };
 
 const AccountSettingsPage = () => {
-  return <SettingsWrapper title="Account"></SettingsWrapper>;
+  return (
+    <SettingsWrapper title="Account">
+      <p>
+        Will contain changing email, linking to other providers, and deleting
+        account.
+      </p>
+    </SettingsWrapper>
+  );
 };
 
 export default AccountSettingsPage;

@@ -1,6 +1,8 @@
 import type { ButtonProps } from "~/components/ui/button";
-import type { SocialListProvidersType } from "~/lib/links";
-import type { SocialListLayoutType } from "~/types/auth";
+import type {
+  SocialListLayoutType,
+  SocialListProvidersType,
+} from "~/types/auth";
 
 import { ChevronRightIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
