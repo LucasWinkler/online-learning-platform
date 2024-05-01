@@ -14,7 +14,7 @@ export const generateTwoFactorToken = async (email: string) => {
   }
 
   const token = crypto.randomInt(100_000, 1_000_000).toString();
-  const expiresIn20Minutes = new Date(Date.now() + 20 * 60 * 1000);
+  const expiresIn5Minutes = new Date(Date.now() + 5 * 60 * 1000);
 
-  return await createTwoFactorToken(email, token, expiresIn20Minutes);
+  return await createTwoFactorToken(email, token, expiresIn5Minutes);
 };

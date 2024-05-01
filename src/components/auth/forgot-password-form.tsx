@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AuthWrapper } from "~/components/auth/auth-wrapper";
@@ -13,27 +14,34 @@ import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
-import { ResetSchema } from "~/schemas/auth";
-import { resetPassword } from "~/server/actions/reset-password";
+import { ForgotPasswordSchema } from "~/schemas/auth";
+import { forgotPassword } from "~/server/actions/forgot-password";
 
-export const ResetForm = () => {
+export const ForgotPasswordForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
-  const resetForm = useForm<z.infer<typeof ResetSchema>>({
-    resolver: zodResolver(ResetSchema),
+  const forgotPasswordForm = useForm<z.infer<typeof ForgotPasswordSchema>>({
+    resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
-      email: "",
+      email: email ?? "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
+  const handleAltActionOnClick = () => {
+    router.back();
+  };
+
+  const onSubmit = (values: z.infer<typeof ForgotPasswordSchema>) => {
     setError(undefined);
     setSuccess(undefined);
 
     startTransition(async () => {
-      await resetPassword(values).then((data) => {
+      await forgotPassword(values).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });
@@ -44,14 +52,17 @@ export const ResetForm = () => {
     <AuthWrapper
       title="Forgot your password?"
       description="Hang tight, we'll send you a reset link."
-      altActionLinkText="Back to login"
-      altActionHref="/auth/login"
+      altActionLinkText="Go back"
+      altActionOnClick={handleAltActionOnClick}
     >
-      <Form {...resetForm}>
-        <form onSubmit={resetForm.handleSubmit(onSubmit)} className="space-y-6">
+      <Form {...forgotPasswordForm}>
+        <form
+          onSubmit={forgotPasswordForm.handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <div className="space-y-4">
             <FormField
-              control={resetForm.control}
+              control={forgotPasswordForm.control}
               name="email"
               render={({ field }) => (
                 <FormItem className="relative">

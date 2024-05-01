@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "Course management pages for admin",
 };
 
-const Admin = async () => {
+const Admin = () => {
   return (
     <section>
       <h1>Admin</h1>

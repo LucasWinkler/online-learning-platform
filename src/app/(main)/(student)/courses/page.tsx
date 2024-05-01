@@ -1,4 +1,4 @@
-const CoursesPage = async () => {
+const CoursesPage = () => {
   return <div>Display all published courses</div>;
 };
 

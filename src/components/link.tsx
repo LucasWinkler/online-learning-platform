@@ -2,33 +2,48 @@
 
 import type { LinkProps as NextLinkProps } from "next/link";
 
+import React, { type AriaAttributes } from "react";
 import { default as NextLink } from "next/link";
+
+import { cn } from "~/lib/utils";
 
 type LinkProps = {
   href: string;
   children: React.ReactNode;
   target?: string;
   className?: string;
-} & NextLinkProps;
+} & AriaAttributes & NextLinkProps;
 
-export const Link: React.FC<LinkProps> = ({
-  children,
-  href,
-  target = "_blank",
-  className,
-  ...props
-}) => {
-  if (!href || href.startsWith("http")) {
+export const Link = React.forwardRef(
+  (
+    { children, href, target = "_blank", className, ...props }: LinkProps,
+    ref: React.Ref<HTMLAnchorElement>,
+  ) => {
+    if (!href || href.startsWith("http")) {
+      return (
+        <a
+          ref={ref}
+          className={cn("cursor-pointer", className)}
+          href={href}
+          target={target}
+          {...props}
+        >
+          {children}
+        </a>
+      );
+    }
+
     return (
-      <a className={className} href={href} target={target} {...props}>
+      <NextLink
+        ref={ref}
+        className={cn("cursor-pointer", className)}
+        href={href}
+        {...props}
+      >
         {children}
-      </a>
+      </NextLink>
     );
-  }
+  },
+);
 
-  return (
-    <NextLink className={className} href={href} {...props}>
-      {children}
-    </NextLink>
-  );
-};
+Link.displayName = "Link";
