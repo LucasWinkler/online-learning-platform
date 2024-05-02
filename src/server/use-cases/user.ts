@@ -2,6 +2,7 @@ import type { RegisterUser } from "~/types/user";
 
 import { hashSync } from "bcrypt-edge";
 
+import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
   createUser,
@@ -12,8 +13,6 @@ import {
   updateUser,
 } from "~/server/data-access/user";
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
-
-import { getPasswordResetTokenByToken } from "../data-access/password-reset-token";
 
 export const hashPassword = async (password: string) => {
   return hashSync(password, 10);
