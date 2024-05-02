@@ -37,7 +37,7 @@ const ProfileSettingsPage = async () => {
                 <UserRoundIcon className="size-8" />
               </AvatarFallback>
             </Avatar>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Button disabled>Upload</Button>
               <Button disabled variant="outline">
                 Remove

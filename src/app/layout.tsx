@@ -37,7 +37,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
       </head>
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
         <SessionProvider session={session} basePath={authApiRoutePrefix}>
-          <NextTopLoader />
+          <NextTopLoader showSpinner={false} />
           {children}
           <Toaster richColors />
         </SessionProvider>

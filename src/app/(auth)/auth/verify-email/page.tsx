@@ -1,13 +1,7 @@
-import React from "react";
-
 import { VerifyForm } from "~/components/auth/verify-form";
 
 const VerifyEmailPage = () => {
-  return (
-    <>
-      <VerifyForm />
-    </>
-  );
+  return <VerifyForm />;
 };
 
 export default VerifyEmailPage;

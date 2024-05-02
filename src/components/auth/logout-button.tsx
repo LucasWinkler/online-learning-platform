@@ -16,7 +16,7 @@ export const LogoutButton = React.forwardRef(
     ref: React.Ref<HTMLButtonElement>,
   ) => {
     const onClick = async () => {
-      await logout();
+      await logout({ redirect: true, redirectTo: "/" });
     };
 
     return (

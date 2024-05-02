@@ -13,6 +13,7 @@ import { Input } from "~/components/ui/input";
 import { currentUser } from "~/lib/auth";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
+import { DeleteAccountButton } from "./_components/delete-account-button";
 import { LinkSocialProviders } from "./_components/link-social-providers";
 
 export const metadata: Metadata = {
@@ -57,10 +58,7 @@ const AccountSettingsPage = async () => {
           <CardDescription>This action cannot be undone.</CardDescription>
         </CardHeader>
         <CardFooter className="border-t px-6 py-4">
-          {/* TODO: Open confirmation modal */}
-          <Button disabled variant="destructive">
-            Delete
-          </Button>
+          <DeleteAccountButton>Delete account</DeleteAccountButton>
         </CardFooter>
       </Card>
     </SettingsWrapper>

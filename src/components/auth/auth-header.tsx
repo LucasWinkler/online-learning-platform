@@ -1,7 +1,6 @@
+import { Link } from "~/components/link";
+import { Logo } from "~/components/logo";
 import { CardDescription, CardTitle } from "~/components/ui/card";
-
-import { Link } from "../link";
-import { Logo } from "../logo";
 
 type AuthHeaderProps = {
   title: string;
