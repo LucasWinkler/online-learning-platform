@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { DELETE_ACCOUNT_PHRASE } from '~/constants';
 
 const email = z
   .string()
@@ -42,7 +43,7 @@ export const ForgotPasswordSchema = z.object({
   email,
 });
 
-export const NewPasswordSchema = z
+export const ResetPasswordSchema = z
   .object({
     password: password,
     confirmPassword: confirmPassword,
@@ -51,3 +52,12 @@ export const NewPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const DeleteAccountSchema = z.object({
+  confirmationPhrase: z.string().min(1, {
+      message: "You must enter the phrase",
+    })
+    .refine((value) => value.toLowerCase() === DELETE_ACCOUNT_PHRASE.toLowerCase(), {
+      message: "Incorrect phrase",
+    }),
+});

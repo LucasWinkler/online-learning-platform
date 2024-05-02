@@ -4,7 +4,6 @@ import { AuthWrapper } from "~/components/auth/auth-wrapper";
 
 export const ErrorCard = () => {
   return (
-    <>
       <AuthWrapper
         title="Uh oh..."
         description="An error has occurred. Please try again or contact us if the problem persists."
@@ -14,6 +13,5 @@ export const ErrorCard = () => {
       >
         <ExclamationTriangleIcon className="mx-auto size-10 animate-shake text-destructive" />
       </AuthWrapper>
-    </>
   );
 };

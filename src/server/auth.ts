@@ -5,7 +5,6 @@ import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-import { authApiRoutePrefix } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import {
   deleteTwoFactorConfirmation,
@@ -17,7 +16,6 @@ import { updateUserEmailVerified } from "~/server/use-cases/user";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
-  basePath: authApiRoutePrefix,
   providers: [
     Google,
     GitHub,

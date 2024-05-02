@@ -7,7 +7,12 @@ export const DEFAULT_LOGIN_REDIRECT = "/";
  * An array of routes that are accessible to the public
  * These routes do not require authentication
  */
-export const unprotectedRoutes = ["/", "/courses", "/auth/verify-email"];
+export const unprotectedRoutes = [
+  "/",
+  "/courses",
+  "/auth/verify-email",
+  "/auth/account-deleted",
+];
 
 /**
  * An array of routes that are used for authentication
@@ -18,11 +23,12 @@ export const authenticationRoutes = [
   "/auth/register",
   "/auth/error",
   "/auth/forgot-password",
-  "/auth/new-password",
+  "/auth/reset-password",
+  "/auth/account-deleted",
 ];
 
 /**
  * The prefix for all API authentication routes
  * Routes that start with this prefix are used for API authentication purposes
  */
-export const authApiRoutePrefix = "/auth";
+export const authApiRoutePrefix = "/api/auth";

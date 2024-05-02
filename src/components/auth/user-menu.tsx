@@ -3,6 +3,8 @@
 import { Role } from "@prisma/client";
 import { ChevronDownIcon, UserRoundIcon } from "lucide-react";
 
+import { LogoutButton } from "~/components/auth/logout-button";
+import { Link } from "~/components/link";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
@@ -13,9 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-
-import { Link } from "../link";
-import { LogoutButton } from "./logout-button";
 
 type UserMenuProps = {
   fullName: string;

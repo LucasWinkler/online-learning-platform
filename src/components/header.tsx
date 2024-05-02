@@ -18,7 +18,7 @@ export const Header = () => {
       <Button className="md:hidden" variant="ghost" size="icon">
         <MenuIcon className="h-6 w-6" />
       </Button>
-      <Link className="md:mr-auto" href="/">
+      <Link className="mb-0.5 md:mb-1.5 md:mr-auto" href="/">
         <Logo />
       </Link>
       <form className="mr-auto hidden w-full max-w-[280px] md:flex lg:max-w-[500px]">

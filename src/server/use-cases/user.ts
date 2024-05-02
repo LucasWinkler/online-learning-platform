@@ -2,6 +2,7 @@ import type { RegisterUser } from "~/types/user";
 
 import { hashSync } from "bcrypt-edge";
 
+import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
   createUser,
@@ -12,8 +13,6 @@ import {
   updateUser,
 } from "~/server/data-access/user";
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
-
-import { getPasswordResetTokenByToken } from "../data-access/password-reset-token";
 
 export const hashPassword = async (password: string) => {
   return hashSync(password, 10);
@@ -52,7 +51,7 @@ export const updateUserPassword = async (
   return await updateUser(userId, { password: hashedPassword });
 };
 
-export const updateUserPasswordWithToken = async (
+export const resetUserPasswordWithToken = async (
   newPassword: string,
   token: string,
 ) => {
@@ -116,7 +115,7 @@ export const deleteOwnAccount = async (
   userToDeleteId: string,
 ) => {
   if (userId !== userToDeleteId) {
-    return { error: "Unauthorized: You can only delete your own account" };
+    throw new Error("Unauthorized: You can only delete your own account");
   }
 
   await deleteUserById(userId);
