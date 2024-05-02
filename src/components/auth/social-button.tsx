@@ -32,7 +32,6 @@ export const SocialButton = ({
     <Button
       key={social.provider}
       variant="outline"
-      size="lg"
       className={cn(classNames[layoutType], className)}
       onClick={() =>
         signIn(social.provider, { callbackUrl: DEFAULT_LOGIN_REDIRECT })
