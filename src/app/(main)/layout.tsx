@@ -54,13 +54,13 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
 
   return (
     <div className="grid h-full min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr] xl:grid-cols-[280px_1fr]">
-      <aside className="hidden h-full max-h-screen flex-col gap-2 border-r border-border bg-background md:flex">
-        <div className="h-header flex items-center justify-start border-b border-border px-4 lg:px-6">
+      <aside className="hidden h-full max-h-screen flex-col border-r border-border bg-background md:flex">
+        <div className="h-header flex shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
           <Link className="" href="/">
             <Logo type="short" />
           </Link>
         </div>
-        <nav className="flex-1 flex-col items-start px-2 text-sm font-medium lg:px-4">
+        <nav className="mt-2 flex-1 flex-col items-start overflow-y-auto px-2 text-sm font-medium lg:px-4">
           <ul className="flex flex-col">
             {temp.map((item, index) => (
               <li className="" key={index}>
@@ -76,7 +76,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
             ))}
           </ul>
         </nav>
-        <div className="mt-auto p-4 lg:p-6">
+        <div className="mt-auto border-t border-border p-4 lg:p-6">
           <Button className="w-full" variant="secondary">
             Sign out
           </Button>
@@ -102,7 +102,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
               </SheetHeader>
             </SheetContent>
           </Sheet>
-          <CommandMenu className="w-full px-1 md:max-w-[200px]" />
+          <CommandMenu className="w-full px-1 md:max-w-[300px]" />
           <div className="flex items-center justify-end gap-2">
             {user ? (
               <UserMenu

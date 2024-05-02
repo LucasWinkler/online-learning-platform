@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Role } from "@prisma/client";
 import { CommandIcon, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -97,19 +97,21 @@ export const CommandMenu = ({ className }: CommandMenuProps) => {
           {commandSearchList.map(
             (group) =>
               (!group.role || group.role === user?.role) && (
-                <CommandGroup key={group.heading} heading={group.heading}>
-                  {group.items.map((item) => (
-                    <CommandItem
-                      key={item.label}
-                      onClick={() => router.push(item.path)}
-                    >
-                      {item.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                <React.Fragment key={group.heading}>
+                  <CommandGroup heading={group.heading}>
+                    {group.items.map((item) => (
+                      <CommandItem
+                        key={item.label}
+                        onClick={() => router.push(item.path)}
+                      >
+                        {item.label}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                  <CommandSeparator />
+                </React.Fragment>
               ),
           )}
-          <CommandSeparator />
         </CommandList>
       </CommandDialog>
     </>
