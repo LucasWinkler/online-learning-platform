@@ -24,7 +24,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             </ul>
           </nav>
         </aside>
-        <main className="flex-1 p-6 md:ml-[240px]">{children}</main>
+        <main className="flex-1  xs:p-6 md:ml-[240px]">{children}</main>
       </div>
     </>
   );

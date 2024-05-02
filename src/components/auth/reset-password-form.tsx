@@ -14,30 +14,30 @@ import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
-import { NewPasswordSchema } from "~/schemas/auth";
-import { newPassword } from "~/server/actions/new-password";
+import { ResetPasswordSchema } from "~/schemas/auth";
+import { resetPassword } from "~/server/actions/reset-password";
 
-export const NewPasswordForm = () => {
+export const ResetPasswordForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const resetForm = useForm<z.infer<typeof NewPasswordSchema>>({
-    resolver: zodResolver(NewPasswordSchema),
+  const resetForm = useForm<z.infer<typeof ResetPasswordSchema>>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetPasswordSchema>) => {
     setError(undefined);
     setSuccess(undefined);
 
     startTransition(async () => {
-      await newPassword(values, token).then((data) => {
+      await resetPassword(values, token).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });

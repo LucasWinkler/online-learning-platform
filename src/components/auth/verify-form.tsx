@@ -13,7 +13,7 @@ export const VerifyForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") ?? "";
+  const token = searchParams.get("token");
 
   const handleEmailVerification = useCallback(() => {
     if (!token) {
@@ -41,7 +41,7 @@ export const VerifyForm = () => {
         success
           ? "Email Verified"
           : error
-            ? "Error Verifying Email"
+            ? "Unable to Verify"
             : "Verifying Email"
       }
       description={
@@ -53,13 +53,9 @@ export const VerifyForm = () => {
       }
       altActionHref={!success && !error ? "/login" : "/login"}
       altActionText={
-        success
-          ? "You're all set to:"
-          : error
-            ? "Please go back to:"
-            : "Taking too long?"
+        success ? "You're all set to!" : error ? undefined : "Taking too long?"
       }
-      altActionLinkText={!success && !error ? "Go to login" : "login"}
+      altActionLinkText={"Back to login"}
     >
       <div className="flex w-full items-center justify-center">
         {!success && !error && (

@@ -2,11 +2,11 @@
 
 import { type z } from "zod";
 
-import { NewPasswordSchema } from "~/schemas/auth";
-import { updateUserPasswordWithToken } from "~/server/use-cases/user";
+import { ResetPasswordSchema } from "~/schemas/auth";
+import { resetUserPasswordWithToken } from "~/server/use-cases/user";
 
-export const newPassword = async (
-  values: z.infer<typeof NewPasswordSchema>,
+export const resetPassword = async (
+  values: z.infer<typeof ResetPasswordSchema>,
   token?: string | null,
 ): Promise<
   | {
@@ -22,7 +22,7 @@ export const newPassword = async (
     return { error: "No token provided" };
   }
 
-  const validatedFields = NewPasswordSchema.safeParse(values);
+  const validatedFields = ResetPasswordSchema.safeParse(values);
   if (!validatedFields.success) {
     return { error: "Invalid password" };
   }
@@ -30,7 +30,7 @@ export const newPassword = async (
   const { password } = validatedFields.data;
 
   try {
-    return await updateUserPasswordWithToken(password, token);
+    return await resetUserPasswordWithToken(password, token);
   } catch (error: unknown) {
     return { error: "Error while creating new password" };
   }

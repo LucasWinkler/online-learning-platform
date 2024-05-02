@@ -52,7 +52,7 @@ export const updateUserPassword = async (
   return await updateUser(userId, { password: hashedPassword });
 };
 
-export const updateUserPasswordWithToken = async (
+export const resetUserPasswordWithToken = async (
   newPassword: string,
   token: string,
 ) => {
@@ -116,7 +116,7 @@ export const deleteOwnAccount = async (
   userToDeleteId: string,
 ) => {
   if (userId !== userToDeleteId) {
-    return { error: "Unauthorized: You can only delete your own account" };
+    throw new Error("Unauthorized: You can only delete your own account");
   }
 
   await deleteUserById(userId);

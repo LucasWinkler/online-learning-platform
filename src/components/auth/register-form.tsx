@@ -17,8 +17,8 @@ import { RegisterSchema } from "~/schemas/auth";
 import { register } from "~/server/actions/register";
 
 export const RegisterForm = () => {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [success, setSuccess] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
 
   const registerForm = useForm<z.infer<typeof RegisterSchema>>({
