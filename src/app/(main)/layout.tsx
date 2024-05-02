@@ -6,6 +6,14 @@ import { UserMenu } from "~/components/auth/user-menu";
 import { Link } from "~/components/link";
 import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import { currentUser } from "~/lib/auth";
 
 import { CommandMenu } from "./_components/command-menu";
@@ -76,9 +84,24 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
       </aside>
       <div className="flex flex-col">
         <header className="h-header flex items-center justify-between gap-2 border-b border-border bg-background px-4 lg:px-6">
-          <Button className="md:hidden" variant="ghost" size="icon">
-            <MenuIcon className="h-6 w-6" />
-          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                className="shrink-0 md:hidden"
+                variant="outline"
+                size="icon"
+              >
+                <span className="sr-only">Toggle navigation menu</span>
+                <MenuIcon className="size-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <SheetHeader>
+                <SheetTitle>Acme</SheetTitle>
+                <SheetDescription>Links...</SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
           <CommandMenu className="w-full px-1 md:max-w-[200px]" />
           <div className="flex items-center justify-end gap-2">
             {user ? (

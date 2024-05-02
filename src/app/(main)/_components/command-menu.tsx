@@ -84,11 +84,10 @@ export const CommandMenu = ({ className }: CommandMenuProps) => {
       >
         <span className="flex items-center gap-1">
           <SearchIcon className="size-4" />
-          <span>Search...</span>
+          Search...
         </span>
         <span className="flex gap-1 rounded-sm bg-secondary p-1">
-          <CommandIcon className="size-4" />
-          <span>K</span>
+          <CommandIcon className="size-4" />K
         </span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
