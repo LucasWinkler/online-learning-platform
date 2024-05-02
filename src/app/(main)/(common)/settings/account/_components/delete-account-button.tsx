@@ -60,7 +60,10 @@ export const DeleteAccountButton = ({ children }: DeleteAccountButtonProps) => {
 
           if (data.success) {
             setIsDialogOpen(false);
-            await logout({ redirect: true, redirectTo: "/" });
+            await logout({
+              redirect: true,
+              redirectTo: "/auth/account-deleted",
+            });
           }
         })
         .catch(() => {
