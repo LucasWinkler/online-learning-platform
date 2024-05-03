@@ -1,8 +1,13 @@
 "use client";
 
 import { Role } from "@prisma/client";
-import { ChevronDownIcon, UserRoundIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
+import {
+  ArrowLeftRightIcon,
+  ArrowRightLeftIcon,
+  ChevronDownIcon,
+  PowerIcon,
+  UserRoundIcon,
+} from "lucide-react";
 
 import { LogoutButton } from "~/components/auth/logout-button";
 import { Link } from "~/components/link";
@@ -16,7 +21,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { isInstructorPage } from "~/lib/utils";
+import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
+import {
+  commonUserMenuLinks,
+  instructorDashboardLinks,
+  studentDashboardLinks,
+} from "~/lib/links";
+
+import { Badge } from "./ui/badge";
 
 type UserMenuProps = {
   fullName: string;
@@ -25,30 +37,17 @@ type UserMenuProps = {
   role: Role;
 };
 
-const studentLinks = [
-  { href: "/", label: "Overview" },
-  { href: "/courses", label: "All Courses" },
-  { href: "/my-courses", label: "My Courses" },
-];
-
-const instructorOnlyLinks = [
-  { href: "/manage", label: "Overview" },
-  { href: "/manage/courses", label: "Manage Courses" },
-  { href: "/manage/students", label: "Manage Students" },
-];
-
-const commonLinks = [{ href: "/settings", label: "Settings" }];
-
 export const UserMenu = ({
   fullName,
   email,
   role,
   avatarImage,
 }: UserMenuProps) => {
-  const pathname = usePathname();
-  const links = isInstructorPage(pathname) ? instructorOnlyLinks : studentLinks;
+  const isInstructorPage = useIsInstructorPage();
+  const links = isInstructorPage
+    ? instructorDashboardLinks
+    : studentDashboardLinks;
   const isInstructor = role === Role.ADMIN;
-  const roleText = role === Role.USER ? "Student" : "Instructor";
 
   return (
     <DropdownMenu>
@@ -63,9 +62,23 @@ export const UserMenu = ({
           <span className="max-w-[6.5625rem] truncate text-sm font-medium">
             {fullName}
           </span>
-          <span className="text-xs font-normal text-neutral-500">
-            {roleText}
-          </span>
+          {isInstructor ? (
+            <>
+              {isInstructorPage ? (
+                <span className="text-xs font-normal text-primary">
+                  Instructor View
+                </span>
+              ) : (
+                <span className="text-xs font-normal text-amber-500">
+                  Student View
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="max-w-[6.5625rem] truncate text-xs font-normal text-neutral-500">
+              {email}
+            </span>
+          )}
         </div>
         <span className="hidden self-center justify-self-end rounded-md p-2 transition-all duration-300 group-hover:bg-neutral-100 md:block">
           <ChevronDownIcon className="h-4 w-4" />
@@ -84,7 +97,10 @@ export const UserMenu = ({
               className="cursor-pointer"
               asChild
             >
-              <Link href={link.href}>{link.label}</Link>
+              <Link className="flex items-center gap-2" href={link.href}>
+                <link.Icon className="size-4" />
+                {link.title}
+              </Link>
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
@@ -93,20 +109,43 @@ export const UserMenu = ({
             <DropdownMenuSeparator />
             <DropdownMenuGroup className="space-y-1">
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link href={isInstructorPage(pathname) ? "/" : "/manage"}>
-                  {isInstructorPage(pathname)
-                    ? "View as Student"
-                    : "View as Instructor"}
+                <Link
+                  className="flex items-center gap-2"
+                  href={isInstructorPage ? "/" : "/manage"}
+                >
+                  {isInstructorPage ? (
+                    <>
+                      <ArrowRightLeftIcon className="size-4" />
+                      <span>View as</span>
+                    </>
+                  ) : (
+                    <>
+                      <ArrowLeftRightIcon className="size-4" />
+                      <span>View as</span>
+                    </>
+                  )}
+                  {isInstructorPage ? (
+                    <>
+                      <Badge variant="student">Student</Badge>
+                    </>
+                  ) : (
+                    <>
+                      <Badge variant="default">Instructor</Badge>
+                    </>
+                  )}
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </>
         )}
         <DropdownMenuSeparator />
-        {commonLinks.map((link) => (
+        {commonUserMenuLinks.map((link) => (
           <DropdownMenuGroup className="space-y-1" key={link.href}>
             <DropdownMenuItem className="cursor-pointer" asChild>
-              <Link href={link.href}>{link.label}</Link>
+              <Link className="flex items-center gap-2" href={link.href}>
+                <link.Icon className="size-4" />
+                {link.title}
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         ))}
@@ -114,11 +153,12 @@ export const UserMenu = ({
         <DropdownMenuGroup className="space-y-1">
           <DropdownMenuItem className="cursor-pointer" asChild>
             <LogoutButton
-              className="w-full justify-start"
+              className="flex w-full items-center justify-start gap-2"
               variant="none"
               size="none"
               weight="normal"
             >
+              <PowerIcon className="size-4" />
               Sign out
             </LogoutButton>
           </DropdownMenuItem>

@@ -1,5 +1,6 @@
 "use client";
 
+import { PowerIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { LoginButton } from "~/components/auth/login-button";
@@ -29,7 +30,11 @@ export const DashboardSidebar = () => {
             <Skeleton className="h-4 w-10" />
           </div>
         ) : status === "authenticated" ? (
-          <LogoutButton className="w-full" variant="secondary">
+          <LogoutButton
+            className="flex w-full items-center gap-2"
+            variant="secondary"
+          >
+            <PowerIcon className="size-4" />
             Sign out
           </LogoutButton>
         ) : (

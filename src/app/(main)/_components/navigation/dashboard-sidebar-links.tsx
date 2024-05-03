@@ -1,26 +1,14 @@
 "use client";
 
-import { HomeIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
-
 import ActiveLink from "~/components/active-link";
-import { isInstructorPage } from "~/lib/utils";
-
-const studentLinks = [
-  { label: "Overview", href: "/" },
-  { label: "All Courses", href: "/courses" },
-  { label: "My Courses", href: "/my-courses" },
-];
-
-const instructorOnlyLinks = [
-  { label: "Overview", href: "/manage" },
-  { label: "Courses", href: "/manage/courses" },
-  { label: "Students", href: "/manage/students" },
-];
+import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
+import { instructorDashboardLinks, studentDashboardLinks } from "~/lib/links";
 
 export const DashboardSidebarLinks = () => {
-  const pathname = usePathname();
-  const links = isInstructorPage(pathname) ? instructorOnlyLinks : studentLinks;
+  const isInstructorPage = useIsInstructorPage();
+  const links = isInstructorPage
+    ? instructorDashboardLinks
+    : studentDashboardLinks;
 
   return (
     <ul className="flex flex-col">
@@ -31,8 +19,8 @@ export const DashboardSidebarLinks = () => {
             activeClassName="bg-secondary"
             href={item.href}
           >
-            <HomeIcon className="size-4" />
-            {item.label}
+            <item.Icon className="size-4" />
+            {item.title}
           </ActiveLink>
         </li>
       ))}
