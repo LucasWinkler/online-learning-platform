@@ -5,7 +5,7 @@ import { env } from "~/env";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const confirmationLink = `${env.VERCEL_URL ? "https://" : ""}${env.VERCEL_URL ?? "http://localhost:3000"}/auth/verify-email?token=${token}`;
+  const confirmationLink = `${env.VERCEL_URL ? "https://" : ""}${env.VERCEL_URL ?? "http://localhost:3000"}/auth/email-verification?token=${token}`;
 
   await resend.emails.send({
     from: "Online Learning Platform <noreply@lucaswinkler.dev>",
@@ -16,7 +16,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const resetLink = `${env.VERCEL_URL ? "https://" : ""}${env.VERCEL_URL ?? "http://localhost:3000"}/auth/new-password?token=${token}`;
+  const resetLink = `${env.VERCEL_URL ? "https://" : ""}${env.VERCEL_URL ?? "http://localhost:3000"}/auth/reset-password?token=${token}`;
 
   await resend.emails.send({
     from: "Online Learning Platform <noreply@lucaswinkler.dev>",

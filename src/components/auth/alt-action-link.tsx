@@ -27,12 +27,16 @@ export const AltActionLink = ({
 
   return (
     <p className="w-full space-x-1 text-center">
-      {text && <span className="text-xs font-medium">{text}</span>}
+      {text && (
+        <span className="text-wrap text-base font-medium xs:text-sm">
+          {text}
+        </span>
+      )}
       {href ? (
         <Link
           className={cn(
             buttonVariants({ variant: "link", size: "xs" }),
-            "font-normal",
+            "text-wrap text-base font-normal xs:text-sm",
           )}
           href={href}
         >
@@ -42,7 +46,7 @@ export const AltActionLink = ({
         <button
           className={cn(
             buttonVariants({ variant: "link", size: "xs" }),
-            "font-normal",
+            "text-wrap text-base font-normal xs:text-sm",
           )}
           onClick={onClick}
         >

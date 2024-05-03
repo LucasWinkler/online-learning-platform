@@ -1,10 +1,10 @@
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
-import { AuthWrapper } from "~/components/auth/auth-wrapper";
+import { AuthCard } from "~/components/auth/auth-card";
 
 export const ErrorCard = () => {
   return (
-      <AuthWrapper
+      <AuthCard
         title="Uh oh..."
         description="An error has occurred. Please try again or contact us if the problem persists."
         altActionHref="/auth/login"
@@ -12,6 +12,6 @@ export const ErrorCard = () => {
         altActionLinkText="login"
       >
         <ExclamationTriangleIcon className="mx-auto size-10 animate-shake text-destructive" />
-      </AuthWrapper>
+      </AuthCard>
   );
 };

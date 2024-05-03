@@ -2,7 +2,7 @@ import { cn } from "~/lib/utils";
 
 type LogoProps = {
   className?: string;
-  type?: "short" | "full";
+  type?: "icon" | "short" | "full";
 };
 
 export const Logo = ({ className, type = "full" }: LogoProps) => {
@@ -13,7 +13,7 @@ export const Logo = ({ className, type = "full" }: LogoProps) => {
         className,
       )}
     >
-      {type === "short" ? "acme" : "acme courses"}
+      {type === "icon" ? "ac" : type === "short" ? "acme" : "acme courses"}
     </h1>
   );
 };
