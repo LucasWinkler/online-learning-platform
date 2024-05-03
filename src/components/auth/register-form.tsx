@@ -7,12 +7,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { AuthWrapper } from "~/components/auth/auth-wrapper";
-import { FloatingLabelInput } from "~/components/floating-label-input";
+import { AuthCard } from "~/components/auth/auth-card";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { RegisterSchema } from "~/schemas/auth";
 import { register } from "~/server/actions/register";
 
@@ -44,7 +50,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <AuthWrapper
+    <AuthCard
       title="Create account"
       description="Enter your details to start learning today!"
       altActionText="Have an account?"
@@ -64,13 +70,18 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="relative">
-                  <FloatingLabelInput
-                    label="Full name"
+                <FormItem className="flex flex-col gap-1">
+                  <FormLabel htmlFor="name" className="text-base xs:text-sm">
+                    Full name
+                  </FormLabel>
+                  <Input
+                    id="name"
+                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                     disabled={isPending}
+                    placeholder="John Doe"
                     {...field}
                   />
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
             />
@@ -78,13 +89,18 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="relative">
-                  <FloatingLabelInput
-                    label="Email"
+                <FormItem className="flex flex-col gap-1">
+                  <FormLabel htmlFor="email" className="text-base xs:text-sm">
+                    Email
+                  </FormLabel>
+                  <Input
+                    id="email"
+                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                     disabled={isPending}
+                    placeholder="name@example.com"
                     {...field}
                   />
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
             />
@@ -92,14 +108,24 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="password"
               render={({ field }) => (
-                <FormItem className="relative">
-                  <FloatingLabelInput
-                    label="Password"
-                    disabled={isPending}
-                    type="password"
-                    {...field}
-                  />
-                  <FormMessage className="mt-1" />
+                <FormItem className="flex flex-col gap-1">
+                  <FormLabel
+                    htmlFor="password"
+                    className="text-base xs:text-sm"
+                  >
+                    Password
+                  </FormLabel>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                      disabled={isPending}
+                      type="password"
+                      placeholder="********"
+                      {...field}
+                    />
+                  </div>
+                  <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
             />
@@ -107,29 +133,43 @@ export const RegisterForm = () => {
               control={registerForm.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem className="relative">
-                  <FloatingLabelInput
-                    label="Confirm password"
-                    disabled={isPending}
-                    type="password"
-                    {...field}
-                  />
-                  <FormMessage className="mt-1" />
+                <FormItem className="flex flex-col gap-1">
+                  <FormLabel
+                    htmlFor="confirmPassword"
+                    className="text-base xs:text-sm"
+                  >
+                    Confirm password
+                  </FormLabel>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                      disabled={isPending}
+                      type="password"
+                      placeholder="********"
+                      {...field}
+                    />
+                  </div>
+                  <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
             />
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
+          >
             {isPending ? (
-              <Loader2Icon className="h-5 w-5 animate-spin" />
+              <Loader2Icon className="size-6 animate-spin xs:size-5" />
             ) : (
               "Register"
             )}
           </Button>
         </form>
       </Form>
-    </AuthWrapper>
+    </AuthCard>
   );
 };

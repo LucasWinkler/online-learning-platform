@@ -45,18 +45,22 @@ export const SocialButton = ({
       disabled={disabled ?? isPending}
       key={social.provider}
       variant="outline"
-      className={cn("relative", classNames[layoutType], className)}
+      className={cn(
+        "relative h-10 py-5 text-base xs:text-sm",
+        classNames[layoutType],
+        className,
+      )}
       onClick={handleSignIn}
       {...props}
     >
       {isPending ? (
         <>
-          <Loader2Icon className="h-5 w-5 animate-spin" />
+          <Loader2Icon className="size-6 animate-spin xs:size-5" />
           <span className="sr-only">Signing in...</span>
         </>
       ) : (
         <>
-          <social.Icon className="h-5 w-5 shrink-0" />
+          <social.Icon className="size-6 shrink-0 xs:size-5" />
           {layoutType !== "icon-only" && (
             <span>
               {layoutType === "icon-name-only"
@@ -65,7 +69,7 @@ export const SocialButton = ({
             </span>
           )}
           {layoutType === "icon-full-text" && (
-            <ChevronRightIcon className="hidden h-5 w-5 shrink-0 transition-all duration-150 group-hover:translate-x-1 xxs:[display:unset]" />
+            <ChevronRightIcon className="hidden size-6 shrink-0 transition-all duration-150 group-hover:translate-x-1 xxs:[display:unset] xs:size-5" />
           )}
         </>
       )}

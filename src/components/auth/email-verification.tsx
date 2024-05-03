@@ -4,12 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-import { AuthWrapper } from "~/components/auth/auth-wrapper";
+import { AuthCard } from "~/components/auth/auth-card";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { verifyEmail } from "~/server/actions/verify-email";
 
-export const VerifyForm = () => {
+export const EmailVerification = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
@@ -36,7 +36,7 @@ export const VerifyForm = () => {
   }, [handleEmailVerification]);
 
   return (
-    <AuthWrapper
+    <AuthCard
       title={
         success
           ? "Email Verified"
@@ -64,6 +64,6 @@ export const VerifyForm = () => {
         <FormSuccess message={success} />
         <FormError message={error} />
       </div>
-    </AuthWrapper>
+    </AuthCard>
   );
 };

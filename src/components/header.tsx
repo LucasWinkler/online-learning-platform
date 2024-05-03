@@ -4,10 +4,10 @@ import { MenuIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 
 import { LoginButton } from "~/components/auth/login-button";
-import { UserMenu } from "~/components/auth/user-menu";
 import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { UserMenu } from "~/components/user-menu";
 import { useCurrentUser } from "~/hooks/use-current-user";
 
 export const Header = () => {
