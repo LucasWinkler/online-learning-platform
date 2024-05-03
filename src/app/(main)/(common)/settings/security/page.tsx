@@ -66,7 +66,7 @@ const SecuritySettingsPage = async () => {
         <CardFooter className="flex flex-col items-start justify-start gap-4 border-t px-6 py-4 xs:flex-row xs:items-center xs:justify-between">
           <Button disabled>Update password</Button>
           <ForgotPasswordButton
-            redirectTo={`/auth/forgot-password?email=${user.email}`}
+            redirectTo={`/auth/forgot-password?email=${user?.email}`}
           >
             Forgot password?
           </ForgotPasswordButton>
@@ -83,9 +83,9 @@ const SecuritySettingsPage = async () => {
           {/* TODO: Open modal asking for a code to enable/disable */}
           <Button
             disabled
-            variant={user.isTwoFactorEnabled ? "destructive" : "default"}
+            variant={user?.isTwoFactorEnabled ? "destructive" : "default"}
           >
-            {user.isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
+            {user?.isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
           </Button>
         </CardFooter>
       </Card>

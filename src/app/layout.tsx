@@ -6,7 +6,6 @@ import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
-import { authApiRoutePrefix } from "~/routes";
 import { auth } from "~/server/auth";
 
 export const metadata: Metadata = {
@@ -23,7 +22,6 @@ type RootLayoutProps = {
 
 const RootLayout = async ({ children }: RootLayoutProps) => {
   const session = await auth();
-  // TODO: possibly filter out sensitive data before passing to client
 
   return (
     <html
@@ -36,7 +34,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
-        <SessionProvider session={session} basePath={authApiRoutePrefix}>
+        <SessionProvider session={session}>
           <NextTopLoader showSpinner={false} />
           {children}
           <Toaster richColors />

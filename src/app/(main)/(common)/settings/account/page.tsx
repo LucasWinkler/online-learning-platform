@@ -33,7 +33,7 @@ const AccountSettingsPage = async () => {
           <form>
             <Input
               disabled
-              defaultValue={user.email}
+              defaultValue={user?.email}
               className="bg-background"
               placeholder="your.name@example.com"
             />
