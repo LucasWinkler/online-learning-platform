@@ -12,7 +12,7 @@ import {
   CardHeader,
 } from "~/components/ui/card";
 
-type AuthWrapperProps = {
+type AuthCardProps = {
   children: React.ReactNode;
   title: string;
   description: string;
@@ -25,7 +25,7 @@ type AuthWrapperProps = {
   socialListLayoutType?: SocialListLayoutType;
 } & React.ComponentProps<typeof Card>;
 
-export const AuthWrapper = ({
+export const AuthCard = ({
   children,
   title,
   description,
@@ -37,7 +37,7 @@ export const AuthWrapper = ({
   socialListPosition = "bottom",
   socialListLayoutType = "icon-full-text",
   ...props
-}: AuthWrapperProps) => {
+}: AuthCardProps) => {
   return (
     <Card
       className="mx-auto h-full w-full rounded-none border-0 shadow-none xs:h-auto xs:max-w-[25rem] xs:rounded-lg xs:border xs:shadow-md"

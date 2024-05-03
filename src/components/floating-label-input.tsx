@@ -18,9 +18,9 @@ export const FloatingLabelInput = React.forwardRef<
     <div className="relative">
       <FormControl>
         <Input
-          className={cn("peer", className)}
           placeholder=" "
           ref={ref}
+          className={cn("peer", className)}
           {...props}
         />
       </FormControl>

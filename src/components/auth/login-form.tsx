@@ -8,13 +8,19 @@ import { Loader2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { AuthWrapper } from "~/components/auth/auth-wrapper";
-import { FloatingLabelInput } from "~/components/floating-label-input";
+import { AuthCard } from "~/components/auth/auth-card";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import { Link } from "~/components/link";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { LoginSchema } from "~/schemas/auth";
 import { login } from "~/server/actions/login";
@@ -71,7 +77,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <AuthWrapper
+    <AuthCard
       title="Welcome back"
       description="Enter your details to start learning today!"
       altActionText={showTwoFactor ? undefined : "New here?"}
@@ -92,12 +98,19 @@ export const LoginForm = () => {
                 control={loginForm.control}
                 name="code"
                 render={({ field }) => (
-                  <FormItem className="relative">
-                    <FloatingLabelInput
-                      label="Two Factor Code"
+                  <FormItem className="flex flex-col gap-1">
+                    <FormLabel htmlFor="code" className="text-base xs:text-sm">
+                      Two Factor Code
+                    </FormLabel>
+                    <Input
+                      autoComplete="off"
+                      id="code"
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       disabled={isPending}
+                      placeholder="123456"
                       {...field}
                     />
+                    <FormMessage className="mt-1 text-sm" />
                   </FormItem>
                 )}
               />
@@ -108,13 +121,22 @@ export const LoginForm = () => {
                   control={loginForm.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem className="relative">
-                      <FloatingLabelInput
-                        label="Email"
+                    <FormItem className="flex flex-col gap-1">
+                      <FormLabel
+                        htmlFor="email"
+                        className="text-base xs:text-sm"
+                      >
+                        Email
+                      </FormLabel>
+                      <Input
+                        autoComplete="email"
+                        id="email"
+                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                         disabled={isPending}
+                        placeholder="name@example.com"
                         {...field}
                       />
-                      <FormMessage className="mt-1" />
+                      <FormMessage className="mt-1 text-sm" />
                     </FormItem>
                   )}
                 />
@@ -122,19 +144,30 @@ export const LoginForm = () => {
                   control={loginForm.control}
                   name="password"
                   render={({ field }) => (
-                    <FormItem className="relative">
-                      <FloatingLabelInput
-                        label="Password"
-                        disabled={isPending}
-                        type="password"
-                        {...field}
-                      />
-                      <FormMessage className="mt-1" />
+                    <FormItem className="flex flex-col gap-1">
+                      <FormLabel
+                        htmlFor="password"
+                        className="text-base xs:text-sm"
+                      >
+                        Password
+                      </FormLabel>
+                      <div className="relative">
+                        <Input
+                          autoComplete="current-password"
+                          id="password"
+                          className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                          disabled={isPending}
+                          placeholder="********"
+                          type="password"
+                          {...field}
+                        />
+                      </div>
+                      <FormMessage className="mt-1 text-sm" />
                       <Link
                         href={`/auth/forgot-password?email=${loginForm.getValues().email}`}
                         className={cn(
                           buttonVariants({ variant: "link", size: "sm" }),
-                          "mt-2 h-auto px-0 ",
+                          "mt-2 h-auto self-start px-0 xxs:text-base xs:text-sm",
                         )}
                       >
                         Forgot password?
@@ -147,9 +180,13 @@ export const LoginForm = () => {
           </div>
           <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
+          >
             {isPending ? (
-              <Loader2Icon className="h-5 w-5 animate-spin" />
+              <Loader2Icon className="size-6 animate-spin xs:size-5" />
             ) : showTwoFactor ? (
               "Confirm"
             ) : (
@@ -158,6 +195,6 @@ export const LoginForm = () => {
           </Button>
         </form>
       </Form>
-    </AuthWrapper>
+    </AuthCard>
   );
 };

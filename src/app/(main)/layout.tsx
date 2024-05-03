@@ -3,7 +3,6 @@ import { BellIcon, HomeIcon, MenuIcon } from "lucide-react";
 import ActiveLink from "~/components/active-link";
 import { LoginButton } from "~/components/auth/login-button";
 import { LogoutButton } from "~/components/auth/logout-button";
-import { UserMenu } from "~/components/auth/user-menu";
 import { Link } from "~/components/link";
 import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
@@ -21,6 +20,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/ui/sheet";
+import { UserMenu } from "~/components/user-menu";
 import { currentUser } from "~/lib/auth";
 
 import { CommandMenu } from "./_components/command-menu";
@@ -62,7 +62,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   return (
     <>
       <aside className="fixed left-0 top-0 z-[15] hidden h-full max-w-[13.75rem] flex-col border-r border-border bg-background md:flex md:w-full md:max-w-[15rem] lg:max-w-[17.5rem]">
-        <div className="h-header-height flex shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
+        <div className="flex h-header-height shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
           <Link className="" href="/">
             <Logo type="short" />
           </Link>
@@ -89,11 +89,11 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
               Sign out
             </LogoutButton>
           ) : (
-            <LoginButton className="w-full">Join us</LoginButton>
+            <LoginButton className="w-full">Start learning</LoginButton>
           )}
         </div>
       </aside>
-      <header className="h-header-height fixed left-0 right-0 top-0 z-[10] border-b border-border bg-background md:left-[15rem] lg:left-[17.5rem]">
+      <header className="fixed left-0 right-0 top-0 z-[10] h-header-height border-b border-border bg-background md:left-[15rem] lg:left-[17.5rem]">
         <div className="flex h-full w-full items-center justify-between gap-2 px-4 lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
@@ -109,13 +109,13 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
             <SheetContent side="left">
               <SheetHeader>
                 <SheetTitle>Acme</SheetTitle>
-                <SheetDescription>Links...</SheetDescription>
+                <SheetDescription>Work in progress</SheetDescription>
               </SheetHeader>
             </SheetContent>
           </Sheet>
-          <CommandMenu className="w-full flex-1 shrink px-1 md:max-w-[15.625rem] lg:max-w-[20.3125rem] xl:max-w-[23.4375rem]" />
+          <CommandMenu className="hidden w-full flex-1 shrink px-1 xxs:inline-flex md:max-w-[15.625rem] lg:max-w-[20.3125rem] xl:max-w-[23.4375rem]" />
           <div className="flex items-center justify-end gap-2">
-            {user && (
+            {user ? (
               <>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -142,6 +142,10 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
                   avatarImage={user?.image}
                   role={user?.role}
                 />
+              </>
+            ) : (
+              <>
+                <LoginButton>Start learning</LoginButton>
               </>
             )}
           </div>

@@ -10,7 +10,7 @@ export const DEFAULT_LOGIN_REDIRECT = "/";
 export const unprotectedRoutes = [
   "/",
   "/courses",
-  "/auth/verify-email",
+  "/auth/email-verification",
   "/auth/account-deleted",
 ];
 
