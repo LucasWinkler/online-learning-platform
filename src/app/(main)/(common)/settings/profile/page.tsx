@@ -32,7 +32,7 @@ const ProfileSettingsPage = async () => {
         <CardContent>
           <form className="flex flex-wrap items-center gap-4">
             <Avatar className="mr-2 size-[4.5rem]">
-              <AvatarImage src={user.image} />
+              <AvatarImage src={user?.image} />
               <AvatarFallback>
                 <UserRoundIcon className="size-8" />
               </AvatarFallback>
@@ -55,7 +55,7 @@ const ProfileSettingsPage = async () => {
             <Input
               disabled
               className="bg-background"
-              defaultValue={user.name}
+              defaultValue={user?.name}
               placeholder="Your full name"
             />
           </form>
