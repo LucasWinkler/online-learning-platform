@@ -78,14 +78,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return session;
       }
 
-      if (session.user) {
-        session.user = {
-          ...session.user,
-          id: token.sub,
-          role: token.role,
-          isTwoFactorEnabled: token.isTwoFactorEnabled,
-        };
-      }
+      session.user = {
+        ...session.user,
+        id: token.sub,
+        role: token.role,
+        isTwoFactorEnabled: token.isTwoFactorEnabled,
+      };
+
+      //   const existingUser = await findUserById(token.email ?? "");
+      //   if (existingUser) {
+      //     session.user.id = existingUser.id;
+      //     session.user.email = existingUser.email;
+      //     session.user.name = existingUser.name;
+      //     session.user.role = existingUser.role;
+      //     session.user.image = existingUser.image;
+      //     session.user.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      //   }
 
       return session;
     },
@@ -95,11 +103,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
-        token = {
-          ...token,
-          role: user.role,
-          isTwoFactorEnabled: user.isTwoFactorEnabled,
-        };
+        token.role = user.role;
+        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
       }
 
       return token;

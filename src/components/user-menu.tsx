@@ -1,7 +1,13 @@
 "use client";
 
 import { Role } from "@prisma/client";
-import { ChevronDownIcon, UserRoundIcon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  ArrowRightLeftIcon,
+  ChevronDownIcon,
+  PowerIcon,
+  UserRoundIcon,
+} from "lucide-react";
 
 import { LogoutButton } from "~/components/auth/logout-button";
 import { Link } from "~/components/link";
@@ -15,6 +21,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
+import {
+  commonUserMenuLinks,
+  instructorDashboardLinks,
+  studentDashboardLinks,
+} from "~/lib/links";
+
+import { Badge } from "./ui/badge";
 
 type UserMenuProps = {
   fullName: string;
@@ -29,7 +43,11 @@ export const UserMenu = ({
   role,
   avatarImage,
 }: UserMenuProps) => {
-  const roleText = role === Role.USER ? "Student" : "Instructor";
+  const isInstructorPage = useIsInstructorPage();
+  const links = isInstructorPage
+    ? instructorDashboardLinks
+    : studentDashboardLinks;
+  const isInstructor = role === Role.ADMIN;
 
   return (
     <DropdownMenu>
@@ -44,9 +62,23 @@ export const UserMenu = ({
           <span className="max-w-[6.5625rem] truncate text-sm font-medium">
             {fullName}
           </span>
-          <span className="text-xs font-normal text-neutral-500">
-            {roleText}
-          </span>
+          {isInstructor ? (
+            <>
+              {isInstructorPage ? (
+                <span className="text-xs font-normal text-primary">
+                  Instructor View
+                </span>
+              ) : (
+                <span className="text-xs font-normal text-amber-500">
+                  Student View
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="max-w-[6.5625rem] truncate text-xs font-normal text-neutral-500">
+              {email}
+            </span>
+          )}
         </div>
         <span className="hidden self-center justify-self-end rounded-md p-2 transition-all duration-300 group-hover:bg-neutral-100 md:block">
           <ChevronDownIcon className="h-4 w-4" />
@@ -59,24 +91,78 @@ export const UserMenu = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-1">
+          {links.map((link) => (
+            <DropdownMenuItem
+              key={link.href}
+              className="cursor-pointer"
+              asChild
+            >
+              <Link className="flex items-center gap-2" href={link.href}>
+                <link.Icon className="size-4" />
+                {link.title}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+        {isInstructor && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup className="space-y-1">
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link
+                  className="flex items-center gap-2"
+                  href={isInstructorPage ? "/" : "/manage"}
+                >
+                  {isInstructorPage ? (
+                    <>
+                      <ArrowRightLeftIcon className="size-4" />
+                      <span>View as</span>
+                    </>
+                  ) : (
+                    <>
+                      <ArrowLeftRightIcon className="size-4" />
+                      <span>View as</span>
+                    </>
+                  )}
+                  {isInstructorPage ? (
+                    <>
+                      <Badge variant="student">Student</Badge>
+                    </>
+                  ) : (
+                    <>
+                      <Badge variant="default">Instructor</Badge>
+                    </>
+                  )}
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </>
+        )}
+        <DropdownMenuSeparator />
+        {commonUserMenuLinks.map((link) => (
+          <DropdownMenuGroup className="space-y-1" key={link.href}>
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <Link className="flex items-center gap-2" href={link.href}>
+                <link.Icon className="size-4" />
+                {link.title}
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup className="space-y-1">
           <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/courses">Courses</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/settings/profile">Settings</Link>
+            <LogoutButton
+              className="flex w-full items-center justify-start gap-2"
+              variant="none"
+              size="none"
+              weight="normal"
+            >
+              <PowerIcon className="size-4" />
+              Sign out
+            </LogoutButton>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <LogoutButton
-            className="w-full justify-start"
-            variant="none"
-            size="none"
-            weight="normal"
-          >
-            Sign out
-          </LogoutButton>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

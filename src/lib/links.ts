@@ -1,7 +1,15 @@
 import type { SocialListProvidersType } from "~/types/auth";
 import type { LucideIcon } from "lucide-react";
 
-import { LockKeyholeIcon, SettingsIcon, UserIcon } from "lucide-react";
+import {
+  BookMarkedIcon,
+  BookOpenIcon,
+  LayoutDashboardIcon,
+  LockKeyholeIcon,
+  SettingsIcon,
+  UserIcon,
+  UsersIcon,
+} from "lucide-react";
 
 import { GitHubIcon, GoogleIcon } from "~/components/icons";
 
@@ -9,32 +17,63 @@ export type IconType =
   | ((props: React.ComponentPropsWithoutRef<"svg">) => JSX.Element)
   | LucideIcon;
 
-export type NavigationLinks = {
+export type DashboardSidebarLinks = {
   title: string;
   href: string;
-  target?: string;
+  Icon: IconType;
 };
 
-export type SettingsNavigationLinks = {
+export type SettingsLinks = {
   label: string;
   href: string;
   Icon: IconType;
 };
 
-export const mainNavigationLinks: NavigationLinks[] = [
+export const studentDashboardLinks: DashboardSidebarLinks[] = [
   {
-    title: "Home",
+    title: "Overview",
     href: "/",
+    Icon: LayoutDashboardIcon,
   },
   {
-    title: "Courses",
+    title: "All Courses",
     href: "/courses",
+    Icon: BookOpenIcon,
+  },
+  {
+    title: "My Courses",
+    href: "/my-courses",
+    Icon: BookMarkedIcon,
   },
 ];
 
-export const mobileMenuLinks: NavigationLinks[] = [];
+export const instructorDashboardLinks: DashboardSidebarLinks[] = [
+  {
+    title: "Overview",
+    href: "/manage",
+    Icon: LayoutDashboardIcon,
+  },
+  {
+    title: "Courses",
+    href: "/manage/courses",
+    Icon: BookOpenIcon,
+  },
+  {
+    title: "Students",
+    href: "/manage/students",
+    Icon: UsersIcon,
+  },
+];
 
-export const settingsNavigationLinks: SettingsNavigationLinks[] = [
+export const commonUserMenuLinks: DashboardSidebarLinks[] = [
+  {
+    title: "Settings",
+    href: "/settings",
+    Icon: SettingsIcon,
+  },
+];
+
+export const settingsNavigationLinks: SettingsLinks[] = [
   {
     label: "Profile",
     href: "/settings/profile",

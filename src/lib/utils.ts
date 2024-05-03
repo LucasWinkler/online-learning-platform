@@ -20,3 +20,7 @@ export const formatCourseLength = (lengthInSeconds: number): string => {
     return `${minutes}m`;
   }
 };
+
+export const isInstructorPage = (pathname: string) => {
+  return pathname.startsWith("/manage");
+};

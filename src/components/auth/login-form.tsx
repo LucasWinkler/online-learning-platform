@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { AuthCard } from "~/components/auth/auth-card";
 import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
+import { FormWarning } from "~/components/form-warning";
 import { Link } from "~/components/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
@@ -28,6 +29,7 @@ import { login } from "~/server/actions/login";
 export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+  const [warning, setWarning] = useState<string | undefined>();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -48,6 +50,7 @@ export const LoginForm = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError(undefined);
     setSuccess(undefined);
+    setWarning(undefined);
 
     if (showTwoFactor && values.code?.length === 0) {
       setError("No 2FA code provided.");
@@ -62,8 +65,15 @@ export const LoginForm = () => {
           }
 
           if (data?.success) {
-            loginForm.reset();
+            if (!data.twoFactor) {
+              loginForm.reset();
+            }
+
             setSuccess(data.success);
+          }
+
+          if (data?.warning) {
+            setWarning(data.warning);
           }
 
           if (data?.twoFactor) {
@@ -76,6 +86,14 @@ export const LoginForm = () => {
     });
   };
 
+  const onAltActionClick = () => {
+    setShowTwoFactor(false);
+    setWarning(undefined);
+    setError(undefined);
+    setSuccess(undefined);
+    loginForm.resetField("code");
+  };
+
   return (
     <AuthCard
       title="Welcome back"
@@ -83,9 +101,7 @@ export const LoginForm = () => {
       altActionText={showTwoFactor ? undefined : "New here?"}
       altActionLinkText={showTwoFactor ? "Back to login" : "Create account"}
       altActionHref={showTwoFactor ? "/auth/login" : "/auth/register"}
-      altActionOnClick={
-        showTwoFactor ? () => setShowTwoFactor(false) : undefined
-      }
+      altActionOnClick={showTwoFactor ? () => onAltActionClick() : undefined}
       showSocialList
       socialListPosition="top"
       socialListLayoutType="icon-name-only"
@@ -180,6 +196,7 @@ export const LoginForm = () => {
           </div>
           <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
+          <FormWarning message={warning} />
           <Button
             disabled={isPending}
             type="submit"
