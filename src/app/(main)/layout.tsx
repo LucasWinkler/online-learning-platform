@@ -1,11 +1,18 @@
-import { HomeIcon, MenuIcon } from "lucide-react";
+import { BellIcon, HomeIcon, MenuIcon } from "lucide-react";
 
 import ActiveLink from "~/components/active-link";
 import { LoginButton } from "~/components/auth/login-button";
+import { LogoutButton } from "~/components/auth/logout-button";
 import { UserMenu } from "~/components/auth/user-menu";
 import { Link } from "~/components/link";
 import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Separator } from "~/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -53,9 +60,9 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   const user = await currentUser();
 
   return (
-    <div className="grid h-full min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr] xl:grid-cols-[280px_1fr]">
-      <aside className="hidden h-full max-h-screen flex-col border-r border-border bg-background md:flex">
-        <div className="h-header flex shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
+    <>
+      <aside className="fixed left-0 top-0 z-[15] hidden h-full max-w-[13.75rem] flex-col border-r border-border bg-background md:flex md:w-full md:max-w-[15rem] lg:max-w-[17.5rem]">
+        <div className="h-header-height flex shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
           <Link className="" href="/">
             <Logo type="short" />
           </Link>
@@ -77,13 +84,17 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
           </ul>
         </nav>
         <div className="mt-auto border-t border-border p-4 lg:p-6">
-          <Button className="w-full" variant="secondary">
-            Sign out
-          </Button>
+          {user ? (
+            <LogoutButton className="w-full" variant="secondary">
+              Sign out
+            </LogoutButton>
+          ) : (
+            <LoginButton className="w-full">Join us</LoginButton>
+          )}
         </div>
       </aside>
-      <div className="flex flex-col">
-        <header className="h-header flex items-center justify-between gap-2 border-b border-border bg-background px-4 lg:px-6">
+      <header className="h-header-height fixed left-0 right-0 top-0 z-[10] border-b border-border bg-background md:left-[15rem] lg:left-[17.5rem]">
+        <div className="flex h-full w-full items-center justify-between gap-2 px-4 lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -102,25 +113,44 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
               </SheetHeader>
             </SheetContent>
           </Sheet>
-          <CommandMenu className="w-full px-1 md:max-w-[300px]" />
+          <CommandMenu className="w-full flex-1 shrink px-1 md:max-w-[15.625rem] lg:max-w-[20.3125rem] xl:max-w-[23.4375rem]" />
           <div className="flex items-center justify-end gap-2">
-            {user ? (
-              <UserMenu
-                fullName={user?.name}
-                email={user?.email}
-                avatarImage={user?.image}
-                role={user?.role}
-              />
-            ) : (
+            {user && (
               <>
-                <LoginButton type="redirect">Join us</LoginButton>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button className="shrink-0" variant="outline" size="icon">
+                      <BellIcon className="size-4" />
+                      <span className="sr-only">Notifications</span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="grid w-[17.5rem] gap-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium leading-none">
+                        Notifications
+                      </h4>
+                    </div>
+                    <Separator />
+                    <div className="grid gap-2">
+                      <p className="text-sm">No notifications at this time</p>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <UserMenu
+                  fullName={user?.name}
+                  email={user?.email}
+                  avatarImage={user?.image}
+                  role={user?.role}
+                />
               </>
             )}
           </div>
-        </header>
-        <main className="px-4 lg:px-6">{children}</main>
-      </div>
-    </div>
+        </div>
+      </header>
+      <main className="mt-[calc(var(--header-height)_+_1rem)] px-[1rem] md:ml-[15rem] lg:ml-[17.5rem] lg:mt-[calc(var(--header-height)_+_1.5rem)] lg:px-[1.5rem]">
+        {children}
+      </main>
+    </>
   );
 };
 

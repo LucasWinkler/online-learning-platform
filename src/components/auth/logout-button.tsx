@@ -1,14 +1,14 @@
 "use client";
 
+import type { ButtonProps } from "~/components/ui/button";
+
 import React from "react";
 
+import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { logout } from "~/server/actions/logout";
 
-type LogoutButtonProps = {
-  children?: React.ReactNode;
-  className?: string;
-};
+type LogoutButtonProps = ButtonProps;
 
 export const LogoutButton = React.forwardRef(
   (
@@ -20,14 +20,9 @@ export const LogoutButton = React.forwardRef(
     };
 
     return (
-      <button
-        className={cn("cursor-pointer", className)}
-        ref={ref}
-        {...props}
-        onClick={onClick}
-      >
+      <Button className={cn(className)} ref={ref} {...props} onClick={onClick}>
         {children}
-      </button>
+      </Button>
     );
   },
 );

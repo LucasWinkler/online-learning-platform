@@ -44,7 +44,7 @@ export const Header = () => {
           />
         ) : (
           <>
-            <LoginButton type="redirect">Sign in</LoginButton>
+            <LoginButton mode="redirect">Sign in</LoginButton>
           </>
         )}
       </div>
