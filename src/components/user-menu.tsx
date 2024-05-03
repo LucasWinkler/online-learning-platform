@@ -2,6 +2,7 @@
 
 import { Role } from "@prisma/client";
 import { ChevronDownIcon, UserRoundIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { LogoutButton } from "~/components/auth/logout-button";
 import { Link } from "~/components/link";
@@ -15,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { isInstructorPage } from "~/lib/utils";
 
 type UserMenuProps = {
   fullName: string;
@@ -23,12 +25,29 @@ type UserMenuProps = {
   role: Role;
 };
 
+const studentLinks = [
+  { href: "/", label: "Overview" },
+  { href: "/courses", label: "All Courses" },
+  { href: "/my-courses", label: "My Courses" },
+];
+
+const instructorOnlyLinks = [
+  { href: "/manage", label: "Overview" },
+  { href: "/manage/courses", label: "Manage Courses" },
+  { href: "/manage/students", label: "Manage Students" },
+];
+
+const commonLinks = [{ href: "/settings", label: "Settings" }];
+
 export const UserMenu = ({
   fullName,
   email,
   role,
   avatarImage,
 }: UserMenuProps) => {
+  const pathname = usePathname();
+  const links = isInstructorPage(pathname) ? instructorOnlyLinks : studentLinks;
+  const isInstructor = role === Role.ADMIN;
   const roleText = role === Role.USER ? "Student" : "Instructor";
 
   return (
@@ -59,24 +78,51 @@ export const UserMenu = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-1">
+          {links.map((link) => (
+            <DropdownMenuItem
+              key={link.href}
+              className="cursor-pointer"
+              asChild
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+        {isInstructor && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup className="space-y-1">
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href={isInstructorPage(pathname) ? "/" : "/manage"}>
+                  {isInstructorPage(pathname)
+                    ? "View as Student"
+                    : "View as Instructor"}
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </>
+        )}
+        <DropdownMenuSeparator />
+        {commonLinks.map((link) => (
+          <DropdownMenuGroup className="space-y-1" key={link.href}>
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <Link href={link.href}>{link.label}</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup className="space-y-1">
           <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/courses">Courses</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/settings/profile">Settings</Link>
+            <LogoutButton
+              className="w-full justify-start"
+              variant="none"
+              size="none"
+              weight="normal"
+            >
+              Sign out
+            </LogoutButton>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <LogoutButton
-            className="w-full justify-start"
-            variant="none"
-            size="none"
-            weight="normal"
-          >
-            Sign out
-          </LogoutButton>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
