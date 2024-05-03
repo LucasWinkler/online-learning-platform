@@ -2,9 +2,10 @@ import { cn } from "~/lib/utils";
 
 type LogoProps = {
   className?: string;
+  type?: "short" | "full";
 };
 
-export const Logo = ({ className }: LogoProps) => {
+export const Logo = ({ className, type = "full" }: LogoProps) => {
   return (
     <h1
       className={cn(
@@ -12,7 +13,7 @@ export const Logo = ({ className }: LogoProps) => {
         className,
       )}
     >
-      acme courses
+      {type === "short" ? "acme" : "acme courses"}
     </h1>
   );
 };

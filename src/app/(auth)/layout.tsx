@@ -7,8 +7,8 @@ type AuthLayoutProps = {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <section className="flex h-full flex-col items-center justify-center bg-background xxs:bg-inherit xxs:px-6">
-      <div className="flex w-full items-center justify-center border-b border-border p-2 xxs:border-none">
+    <section className="flex h-full flex-col items-center justify-center bg-background xxs:px-3 xs:bg-inherit xs:px-6">
+      <div className="flex w-full items-center justify-center border-b border-border p-2 xs:border-none">
         <Link href="/" className="p-3">
           <Logo />
         </Link>

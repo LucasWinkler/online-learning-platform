@@ -20,6 +20,9 @@ const config = {
         xs: "480px",
         ...defaultTheme.screens,
       },
+      spacing: {
+        "header-height": "var(--header-height)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
