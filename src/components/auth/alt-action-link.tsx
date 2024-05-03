@@ -39,6 +39,7 @@ export const AltActionLink = ({
             "text-wrap text-base font-normal xs:text-sm",
           )}
           href={href}
+          onClick={onClick}
         >
           {linkText}
         </Link>

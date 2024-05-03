@@ -77,7 +77,7 @@ export const CommandMenu = ({ className }: CommandMenuProps) => {
     <>
       <Button
         className={cn(
-          "flex w-full justify-between rounded-md bg-background",
+          "group flex w-full justify-between rounded-md bg-background",
           className,
         )}
         aria-label="Open search menu"

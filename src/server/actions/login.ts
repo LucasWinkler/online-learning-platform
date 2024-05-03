@@ -42,6 +42,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       return { error: "Invalid email or password." };
     }
 
+    // check if exists like 2fa
     if (!existingUser.emailVerified) {
       const verificationToken = await generateVerificationToken(
         existingUser.email,
@@ -52,7 +53,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         verificationToken.token,
       );
 
-      return { success: "Confirmation email sent." };
+      return { success: "Verification email sent." };
     }
 
     if (existingUser.isTwoFactorEnabled) {
@@ -84,10 +85,27 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
         await createTwoFactorConfirmation(existingUser.id);
       } else {
-        const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-        await sendTwoFactorTokenEmail(existingUser.email, twoFactorToken.token);
+        const existingToken = await getTwoFactorTokenByEmail(
+          existingUser.email,
+        );
 
-        return { twoFactor: true };
+        if (!existingToken || existingToken.expiresAt < new Date()) {
+          const twoFactorToken = await generateTwoFactorToken(
+            existingUser.email,
+          );
+          await sendTwoFactorTokenEmail(
+            existingUser.email,
+            twoFactorToken.token,
+          );
+
+          return { twoFactor: true, success: "A 2FA Code has been sent." };
+        }
+
+        return {
+          twoFactor: true,
+          warning:
+            "A valid 2FA Code has already been sent. If you did not receive it, please wait 5 minutes and try again.",
+        };
       }
     }
 
