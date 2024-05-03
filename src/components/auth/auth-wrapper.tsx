@@ -40,7 +40,7 @@ export const AuthWrapper = ({
 }: AuthWrapperProps) => {
   return (
     <Card
-      className="mx-auto h-full w-full rounded-none border-0 shadow-none xxs:h-auto xxs:max-w-[400px] xxs:rounded-lg xxs:border xxs:shadow-md"
+      className="mx-auto h-full w-full rounded-none border-0 shadow-none xs:h-auto xs:max-w-[25rem] xs:rounded-lg xs:border xs:shadow-md"
       {...props}
     >
       <CardHeader className="text-center">

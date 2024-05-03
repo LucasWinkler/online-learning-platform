@@ -21,7 +21,7 @@ const config = {
         ...defaultTheme.screens,
       },
       spacing: {
-        header: "60px",
+        "header-height": "var(--header-height)",
       },
       colors: {
         border: "hsl(var(--border))",

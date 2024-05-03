@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        none: "",
+        none: "focus-visible:ring-0",
         default:
           "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive:

@@ -41,7 +41,7 @@ export const UserMenu = ({
           </AvatarFallback>
         </Avatar>
         <div className="hidden flex-col items-start md:flex">
-          <span className="max-w-[105px] truncate text-sm font-medium">
+          <span className="max-w-[6.5625rem] truncate text-sm font-medium">
             {fullName}
           </span>
           <span className="text-xs font-normal text-neutral-500">
@@ -68,7 +68,14 @@ export const UserMenu = ({
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <LogoutButton className="w-full">Sign out</LogoutButton>
+          <LogoutButton
+            className="w-full justify-start"
+            variant="none"
+            size="none"
+            weight="normal"
+          >
+            Sign out
+          </LogoutButton>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

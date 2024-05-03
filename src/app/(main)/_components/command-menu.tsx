@@ -13,7 +13,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "~/components/ui/command";
 import { useCurrentUser } from "~/hooks/use-current-user";
 import { cn } from "~/lib/utils";
@@ -40,6 +39,7 @@ export const commandSearchList: CommandSearchListGroup[] = [
       { label: "Overview", path: "/manage/" },
       { label: "Students", path: "/manage/students" },
       { label: "Courses", path: "/manage/courses" },
+      { label: "Add Course", path: "/manage/courses" },
     ],
   },
   {
@@ -76,7 +76,10 @@ export const CommandMenu = ({ className }: CommandMenuProps) => {
   return (
     <>
       <Button
-        className={cn("flex w-full justify-between rounded-md", className)}
+        className={cn(
+          "flex w-full justify-between rounded-md bg-background",
+          className,
+        )}
         aria-label="Open search menu"
         variant="outline"
         size="sm"
@@ -97,19 +100,17 @@ export const CommandMenu = ({ className }: CommandMenuProps) => {
           {commandSearchList.map(
             (group) =>
               (!group.role || group.role === user?.role) && (
-                <React.Fragment key={group.heading}>
-                  <CommandGroup heading={group.heading}>
-                    {group.items.map((item) => (
-                      <CommandItem
-                        key={item.label}
-                        onClick={() => router.push(item.path)}
-                      >
-                        {item.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                  <CommandSeparator />
-                </React.Fragment>
+                <CommandGroup key={group.heading} heading={group.heading}>
+                  {group.items.map((item) => (
+                    <CommandItem
+                      key={item.label}
+                      value={item.label}
+                      onSelect={() => router.push(item.path)}
+                    >
+                      {item.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
               ),
           )}
         </CommandList>
