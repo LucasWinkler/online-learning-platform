@@ -96,7 +96,10 @@ export const ForgotPasswordForm = () => {
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
             {isPending ? (
-              <Loader2Icon className="size-6 animate-spin xs:size-5" />
+              <>
+                <span className="sr-only">Sending email...</span>
+                <Loader2Icon className="size-6 animate-spin xs:size-5" />
+              </>
             ) : (
               "Send email"
             )}
