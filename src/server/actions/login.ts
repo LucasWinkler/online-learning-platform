@@ -6,7 +6,6 @@ import { compareSync } from "bcrypt-edge";
 import { AuthError } from "next-auth";
 
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "~/lib/mail";
-import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
 import {
@@ -112,7 +111,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {
