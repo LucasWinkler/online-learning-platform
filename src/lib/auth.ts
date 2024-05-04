@@ -1,4 +1,3 @@
-
 import { auth } from "~/server/auth";
 
 export const currentUser = async () => {
