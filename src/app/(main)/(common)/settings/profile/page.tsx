@@ -15,6 +15,7 @@ import { Input } from "~/components/ui/input";
 import { currentUser } from "~/lib/auth";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
+import { AvatarButton } from "./_components/avatar-button";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -25,26 +26,21 @@ const ProfileSettingsPage = async () => {
 
   return (
     <SettingsWrapper title="Profile">
-      <Card className="border-0 bg-gray-50">
-        <CardHeader>
-          <CardTitle>Profile picture</CardTitle>
+      <Card className="relative border-0 bg-gray-50">
+        <CardHeader className="block">
+          <div className="float-right flex">
+            <AvatarButton image={user?.image} />
+          </div>
+          <CardTitle className="">Profile picture</CardTitle>
+          <p className="my-3 text-sm">
+            This is your profile picture.
+            <br />
+            Click on the picture to upload a new one.
+          </p>
         </CardHeader>
-        <CardContent>
-          <form className="flex flex-wrap items-center gap-4">
-            <Avatar className="mr-2 size-[4.5rem]">
-              <AvatarImage src={user?.image} />
-              <AvatarFallback>
-                <UserRoundIcon className="size-8" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-wrap items-center gap-4">
-              <Button disabled>Upload</Button>
-              <Button disabled variant="outline">
-                Remove
-              </Button>
-            </div>
-          </form>
-        </CardContent>
+        <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-start">
+          A profile picture is optional but recommended.
+        </CardFooter>
       </Card>
       <Card className="border-0 bg-gray-50">
         <CardHeader>
@@ -56,12 +52,12 @@ const ProfileSettingsPage = async () => {
               disabled
               className="bg-background"
               defaultValue={user?.name}
-              placeholder="Your full name"
+              placeholder="John Doe"
             />
           </form>
         </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-          <Button disabled>Save</Button>
+        <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
+          <Button size="sm">Save</Button>
         </CardFooter>
       </Card>
     </SettingsWrapper>

@@ -17,7 +17,6 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { logout } from "~/server/actions/logout";
 
 type ForgotPasswordButtonProps = ButtonProps & {
-  children: React.ReactNode;
   redirectTo?: string;
 };
 
