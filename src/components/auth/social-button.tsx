@@ -37,7 +37,6 @@ export const SocialButton = ({
   const handleSignIn = async () => {
     setIsPending(true);
     await signIn(social.provider, { callbackUrl: DEFAULT_LOGIN_REDIRECT });
-    setIsPending(false);
   };
 
   return (
@@ -53,25 +52,24 @@ export const SocialButton = ({
       onClick={handleSignIn}
       {...props}
     >
-      {isPending ? (
+      {isPending && (
         <>
-          <Loader2Icon className="size-6 animate-spin xs:size-5" />
-          <span className="sr-only">Signing in...</span>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <span className="sr-only">Signing in...</span>
+            <Loader2Icon className="size-6 animate-spin xs:size-5" />
+          </div>
         </>
-      ) : (
-        <>
-          <social.Icon className="size-6 shrink-0 xs:size-5" />
-          {layoutType !== "icon-only" && (
-            <span>
-              {layoutType === "icon-name-only"
-                ? social.displayName
-                : `Continue with ${social.displayName}`}
-            </span>
-          )}
-          {layoutType === "icon-full-text" && (
-            <ChevronRightIcon className="hidden size-6 shrink-0 transition-all duration-150 group-hover:translate-x-1 xxs:[display:unset] xs:size-5" />
-          )}
-        </>
+      )}
+      <social.Icon className="size-6 shrink-0 xs:size-5" />
+      {layoutType !== "icon-only" && (
+        <span>
+          {layoutType === "icon-name-only"
+            ? social.displayName
+            : `Continue with ${social.displayName}`}
+        </span>
+      )}
+      {layoutType === "icon-full-text" && (
+        <ChevronRightIcon className="hidden size-6 shrink-0 transition-all duration-150 group-hover:translate-x-1 xxs:[display:unset] xs:size-5" />
       )}
     </Button>
   );
