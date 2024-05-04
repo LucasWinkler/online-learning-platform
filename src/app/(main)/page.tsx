@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { currentUser } from "~/lib/auth";
 import { auth } from "~/server/auth";
 
 import { Dashboard } from "./(student)/_components/dashboard";
@@ -25,8 +26,7 @@ const fetchCourses = (userId: string | undefined) => {
 // Fetch all data here
 // Pass data to
 const HomePage = async () => {
-  const session = await auth();
-  const user = session?.user;
+  const user = await currentUser();
   const courses = fetchCourses(user?.id);
 
   return (

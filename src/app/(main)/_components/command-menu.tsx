@@ -1,5 +1,7 @@
 "use client";
 
+import type { User } from "next-auth";
+
 import React, { useEffect, useState } from "react";
 import { Role } from "@prisma/client";
 import { CommandIcon, SearchIcon } from "lucide-react";
@@ -14,7 +16,6 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import { useCurrentUser } from "~/hooks/use-current-user";
 import { cn } from "~/lib/utils";
 
 type CommandSearchListGroup = {
@@ -54,12 +55,12 @@ export const commandSearchList: CommandSearchListGroup[] = [
 
 type CommandMenuProps = {
   className?: string;
+  user?: User;
 };
 
-export const CommandMenu = ({ className }: CommandMenuProps) => {
+export const CommandMenu = ({ user, className }: CommandMenuProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { user } = useCurrentUser();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

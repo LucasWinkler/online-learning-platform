@@ -1,5 +1,6 @@
+import type { User } from "next-auth";
+
 import { MenuIcon, PowerIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import { LoginButton } from "~/components/auth/login-button";
 import { LogoutButton } from "~/components/auth/logout-button";
@@ -12,13 +13,14 @@ import {
   SheetContent,
   SheetTrigger,
 } from "~/components/ui/sheet";
-import { Skeleton } from "~/components/ui/skeleton";
 
 import { DashboardSidebarLinks } from "./dashboard-sidebar-links";
 
-export const DashboardMobileMenu = () => {
-  const { status } = useSession();
+type DashboardMobileMenuProps = {
+  user?: User;
+};
 
+export const DashboardMobileMenu = ({ user }: DashboardMobileMenuProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -42,11 +44,7 @@ export const DashboardMobileMenu = () => {
           <DashboardSidebarLinks withSheetClose />
         </nav>
         <div className="mt-auto border-t border-border p-4 lg:p-6">
-          {status === "loading" ? (
-            <div className="flex items-center justify-center">
-              <Skeleton className="h-4 w-10" />
-            </div>
-          ) : status === "authenticated" ? (
+          {user ? (
             <LogoutButton
               className="flex w-full items-center gap-2"
               variant="secondary"
