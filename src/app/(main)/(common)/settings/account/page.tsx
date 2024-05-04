@@ -1,6 +1,5 @@
 import type { Metadata } from "next/types";
 
-import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
 import { currentUser } from "~/lib/auth";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
