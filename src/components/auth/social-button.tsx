@@ -12,7 +12,6 @@ import { signIn } from "next-auth/react";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 
 type SocialButtonProps = {
   layoutType: SocialListLayoutType;
@@ -36,7 +35,7 @@ export const SocialButton = ({
 
   const handleSignIn = async () => {
     setIsPending(true);
-    await signIn(social.provider, { callbackUrl: DEFAULT_LOGIN_REDIRECT });
+    await signIn(social.provider);
   };
 
   return (

@@ -1,11 +1,12 @@
 /**
- * The default redirect path after logging in
+ * The default redirect path after logging in for students
  */
 export const DEFAULT_LOGIN_REDIRECT = "/";
 
 /**
  * The prefix for all instructor routes
  * Routes that start with this prefix are only accessible to instructors
+ * This route is also the default redirect path after logging in for instructors
  */
 export const instructorRoutePrefix = "/manage";
 
@@ -34,7 +35,7 @@ export const unprotectedRoutes = [
 
 /**
  * An array of routes that are used for authentication
- * These routes will redirect logged in users to DEFAULT_LOGIN_REDIRECT
+ * These routes will redirect logged in users to the default login redirect
  */
 export const authenticationRoutes = [
   "/auth/login",
