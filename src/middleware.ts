@@ -1,9 +1,9 @@
 import { Role } from "@prisma/client";
 
+import { getLoginRedirectUrl } from "~/lib/auth";
 import {
   authApiRoutePrefix,
   authenticationRoutes,
-  DEFAULT_LOGIN_REDIRECT,
   instructorRoutePrefix,
   unauthorizedRoute,
   unprotectedRoutes,
@@ -24,16 +24,17 @@ export default auth((req) => {
   const isAuthApiRoute = nextUrl.pathname.startsWith(authApiRoutePrefix);
   const isAuthPageRoute = authenticationRoutes.includes(nextUrl.pathname);
   const isInstructorRoute = nextUrl.pathname.startsWith(instructorRoutePrefix);
+  const loginRedirectUrl = getLoginRedirectUrl({ role: userRole });
 
   // Ensure anyone can access /api/auth/[...nextauth]
   if (isAuthApiRoute) {
     return;
   }
 
-  // Redirect to home if user is authenticated and trying to access an authentication page
+  // Redirect if user is authenticated and trying to access an authentication page
   if (isAuthPageRoute) {
     if (isAuthenticated) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return Response.redirect(new URL(loginRedirectUrl, nextUrl));
     }
 
     return;
