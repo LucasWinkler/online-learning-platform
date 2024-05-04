@@ -1,20 +1,17 @@
 import type { Metadata } from "next/types";
 
-import { Button } from "~/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { currentUser } from "~/lib/auth";
 
-import { ForgotPasswordButton } from "../_components/forgot-password-button";
 import { SettingsWrapper } from "../_components/settings-wrapper";
+import { TwoFactorAuthenticationForm } from "./_components/2fa-form";
+import { ChangePasswordForm } from "./_components/change-password-card";
 
 export const metadata: Metadata = {
   title: "Security",
@@ -25,55 +22,7 @@ const SecuritySettingsPage = async () => {
 
   return (
     <SettingsWrapper title="Security">
-      <Card className="border-0 bg-gray-50">
-        <CardHeader>
-          <CardTitle>Change password</CardTitle>
-          <CardDescription className="text-sm">
-            Your password must be at least 8 characters long.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="flex flex-col gap-4">
-            <Label>Current password</Label>
-            <div className="relative">
-              <Input
-                disabled
-                className="bg-background"
-                type="password"
-                placeholder="********"
-              />
-            </div>
-            <Label>New password</Label>
-            <div className="relative">
-              <Input
-                disabled
-                className="bg-background"
-                type="password"
-                placeholder="********"
-              />
-            </div>
-            <Label>Confirm new password</Label>
-            <div className="relative">
-              <Input
-                disabled
-                className="bg-background"
-                type="password"
-                placeholder="********"
-              />
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center justify-center gap-4 border-t px-6 py-3 text-sm font-light text-gray-600 sm:flex-row sm:justify-between">
-          <ForgotPasswordButton
-            redirectTo={`/auth/forgot-password?email=${user?.email}`}
-          >
-            Forgot password?
-          </ForgotPasswordButton>
-          <Button disabled size="sm">
-            Update password
-          </Button>
-        </CardFooter>
-      </Card>
+      <ChangePasswordForm user={user} />
       <Card className="border-0 bg-gray-50">
         <CardHeader>
           <CardTitle>Two-factor authentication</CardTitle>
@@ -82,14 +31,7 @@ const SecuritySettingsPage = async () => {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
-          {/* TODO: Open modal asking for a code to enable/disable */}
-          <Button
-            disabled
-            variant={user?.isTwoFactorEnabled ? "destructive" : "default"}
-            size="sm"
-          >
-            {user?.isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
-          </Button>
+          <TwoFactorAuthenticationForm user={user} />
         </CardFooter>
       </Card>
     </SettingsWrapper>

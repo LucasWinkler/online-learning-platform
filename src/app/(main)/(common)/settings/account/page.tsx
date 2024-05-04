@@ -12,6 +12,7 @@ import { currentUser } from "~/lib/auth";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
 import { DeleteAccountButton } from "./_components/delete-account-button";
+import { EmailCard } from "./_components/email-card";
 import { LinkSocialProviders } from "./_components/link-social-providers";
 
 export const metadata: Metadata = {
@@ -23,19 +24,7 @@ const AccountSettingsPage = async () => {
 
   return (
     <SettingsWrapper title="Account">
-      <Card className="border-0 bg-gray-50">
-        <CardHeader>
-          <CardTitle>Email</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-border bg-background px-2 py-2 text-sm font-light text-gray-400">
-            {user?.email}
-          </div>
-        </CardContent>
-        <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-start">
-          You are not able to change your email.
-        </CardFooter>
-      </Card>
+      <EmailCard user={user} />
       <Card className="border-0 bg-gray-50">
         <CardHeader>
           <CardTitle>Linked accounts</CardTitle>

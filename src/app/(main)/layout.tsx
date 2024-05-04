@@ -5,7 +5,7 @@ type MainLayoutProps = {
   children: React.ReactNode;
 };
 
-const MainLayout = async ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <DashboardSidebar />
