@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { currentUser } from "~/lib/auth";
-import { auth } from "~/server/auth";
 
 import { Dashboard } from "./(student)/_components/dashboard";
 
