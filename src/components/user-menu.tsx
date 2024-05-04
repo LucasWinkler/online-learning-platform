@@ -65,11 +65,11 @@ export const UserMenu = ({
           {isInstructor ? (
             <>
               {isInstructorPage ? (
-                <span className="text-xs font-normal text-primary">
+                <span className="rounded bg-primary/10 p-1 text-xs font-medium text-primary/80">
                   Instructor View
                 </span>
               ) : (
-                <span className="text-xs font-normal text-amber-500">
+                <span className="rounded bg-amber-500/10 p-1 text-xs font-medium text-amber-500">
                   Student View
                 </span>
               )}

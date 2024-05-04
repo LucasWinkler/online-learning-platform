@@ -17,7 +17,7 @@ export const DashboardSidebar = () => {
   return (
     <aside className="fixed left-0 top-0 z-[15] hidden h-full max-w-[13.75rem] flex-col border-r border-border bg-background md:flex md:w-full md:max-w-[15rem] lg:max-w-[17.5rem]">
       <div className="flex h-header-height shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
-        <Link className="" href="/">
+        <Link href="/">
           <Logo type="short" />
         </Link>
       </div>
@@ -34,7 +34,7 @@ export const DashboardSidebar = () => {
             className="flex w-full items-center gap-2"
             variant="secondary"
           >
-            <PowerIcon className="size-4" />
+            <PowerIcon className="size-4 shrink-0" />
             Sign out
           </LogoutButton>
         ) : (
