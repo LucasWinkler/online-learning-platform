@@ -11,7 +11,9 @@ export const SettingsWrapper = ({ title, children }: SettingsWrapperProps) => {
       <h2 className="text-xl font-semibold xxs:text-2xl md:text-3xl">
         {settingsTitle}
       </h2>
-      <div className="flex flex-col gap-6">{children}</div>
+      <div id="settings" className="flex flex-col gap-6">
+        {children}
+      </div>
     </div>
   );
 };
