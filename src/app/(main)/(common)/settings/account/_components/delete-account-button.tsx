@@ -27,11 +27,12 @@ import { DeleteAccountSchema } from "~/schemas/auth";
 import { deleteAccount } from "~/server/actions/delete-account";
 import { logout } from "~/server/actions/logout";
 
-type DeleteAccountButtonProps = ButtonProps & {
-  children: React.ReactNode;
-};
+type DeleteAccountButtonProps = ButtonProps;
 
-export const DeleteAccountButton = ({ children }: DeleteAccountButtonProps) => {
+export const DeleteAccountButton = ({
+  children,
+  ...props
+}: DeleteAccountButtonProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
@@ -75,7 +76,9 @@ export const DeleteAccountButton = ({ children }: DeleteAccountButtonProps) => {
   return (
     <AlertDialog open={isDialogOpen}>
       <AlertDialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
-        <Button variant="destructive">{children}</Button>
+        <Button variant="destructive" {...props}>
+          {children}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
