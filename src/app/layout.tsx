@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
-import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
-import { auth } from "~/server/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -20,9 +18,7 @@ type RootLayoutProps = {
   children: React.ReactNode;
 };
 
-const RootLayout = async ({ children }: RootLayoutProps) => {
-  const session = await auth();
-
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html
       lang="en"
@@ -34,11 +30,9 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
-        <SessionProvider session={session}>
-          <NextTopLoader showSpinner={false} />
-          {children}
-          <Toaster richColors />
-        </SessionProvider>
+        <NextTopLoader showSpinner={false} />
+        {children}
+        <Toaster richColors />
       </body>
     </html>
   );

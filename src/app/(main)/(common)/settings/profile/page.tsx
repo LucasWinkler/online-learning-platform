@@ -8,11 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
 import { currentUser } from "~/lib/auth";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
 import { AvatarButton } from "./_components/avatar-button";
+import { FullNameForm } from "./_components/full-name-form";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -26,7 +26,7 @@ const ProfileSettingsPage = async () => {
       <Card className="relative border-0 bg-gray-50">
         <CardHeader className="block">
           <div className="float-right flex">
-            <AvatarButton image={user?.image} />
+            <AvatarButton user={user} />
           </div>
           <CardTitle className="">Profile picture</CardTitle>
           <p className="my-3 text-sm">
@@ -44,17 +44,12 @@ const ProfileSettingsPage = async () => {
           <CardTitle>Full name</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <Input
-              disabled
-              className="bg-background"
-              defaultValue={user?.name}
-              placeholder="John Doe"
-            />
-          </form>
+          <FullNameForm user={user} />
         </CardContent>
         <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
-          <Button size="sm">Save</Button>
+          <Button size="sm" disabled>
+            Save
+          </Button>
         </CardFooter>
       </Card>
     </SettingsWrapper>

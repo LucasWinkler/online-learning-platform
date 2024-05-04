@@ -1,18 +1,15 @@
-"use client";
-
 import { PowerIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import { LoginButton } from "~/components/auth/login-button";
 import { LogoutButton } from "~/components/auth/logout-button";
 import { Link } from "~/components/link";
 import { Logo } from "~/components/logo";
-import { Skeleton } from "~/components/ui/skeleton";
+import { currentUser } from "~/lib/auth";
 
 import { DashboardSidebarLinks } from "./dashboard-sidebar-links";
 
-export const DashboardSidebar = () => {
-  const { status } = useSession();
+export const DashboardSidebar = async () => {
+  const user = await currentUser();
 
   return (
     <aside className="fixed left-0 top-0 z-[15] hidden h-full max-w-[13.75rem] flex-col border-r border-border bg-background md:flex md:w-full md:max-w-[15rem] lg:max-w-[17.5rem]">
@@ -25,11 +22,7 @@ export const DashboardSidebar = () => {
         <DashboardSidebarLinks />
       </nav>
       <div className="mt-auto border-t border-border p-4 lg:p-6">
-        {status === "loading" ? (
-          <div className="flex items-center justify-center">
-            <Skeleton className="h-4 w-10" />
-          </div>
-        ) : status === "authenticated" ? (
+        {user ? (
           <LogoutButton
             className="flex w-full items-center gap-2"
             variant="secondary"
