@@ -59,12 +59,12 @@ export const SocialButton = ({
           </div>
         </>
       )}
-      <social.Icon className="size-6 shrink-0 xs:size-5" />
+      <social.icon className="size-6 shrink-0 xs:size-5" />
       {layoutType !== "icon-only" && (
         <span>
           {layoutType === "icon-name-only"
-            ? social.displayName
-            : `Continue with ${social.displayName}`}
+            ? social.title
+            : `Continue with ${social.title}`}
         </span>
       )}
       {layoutType === "icon-full-text" && (

@@ -52,7 +52,7 @@ export const UserMenu = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex items-center gap-1 md:gap-2">
-        <Avatar className="size-8">
+        <Avatar className="size-9">
           <AvatarImage src={avatarImage} />
           <AvatarFallback className="bg-neutral-500 text-neutral-50">
             <UserRoundIcon className="h-4 w-4" />
@@ -98,7 +98,7 @@ export const UserMenu = ({
               asChild
             >
               <Link className="flex items-center gap-2" href={link.href}>
-                <link.Icon className="size-4" />
+                <link.icon className="size-4" />
                 {link.title}
               </Link>
             </DropdownMenuItem>
@@ -143,7 +143,7 @@ export const UserMenu = ({
           <DropdownMenuGroup className="space-y-1" key={link.href}>
             <DropdownMenuItem className="cursor-pointer" asChild>
               <Link className="flex items-center gap-2" href={link.href}>
-                <link.Icon className="size-4" />
+                <link.icon className="size-4" />
                 {link.title}
               </Link>
             </DropdownMenuItem>

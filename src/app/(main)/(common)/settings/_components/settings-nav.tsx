@@ -9,14 +9,14 @@ export const SettingsNav = () => {
     >
       <ul className="flex flex-row justify-center gap-0 text-3xl lg:flex-col lg:gap-2">
         {settingsNavigationLinks.map((link) => (
-          <li className="w-full" key={link.label}>
+          <li className="w-full" key={link.title}>
             <ActiveLink
               className="flex w-full flex-col items-center justify-center rounded-md bg-transparent px-3 py-3 text-sm transition-all duration-200 hover:bg-neutral-100 xs:text-base lg:flex-row lg:justify-start lg:px-5 lg:py-3"
               activeClassName="hover:bg-blue-700 text-primary-foreground bg-primary"
               href={link.href}
             >
-              <link.Icon className="mb-1 size-4 shrink-0 xs:size-5 lg:mb-0 lg:mr-2" />
-              {link.label}
+              <link.icon className="mb-1 size-4 shrink-0 xs:size-5 lg:mb-0 lg:mr-2" />
+              {link.title}
             </ActiveLink>
           </li>
         ))}

@@ -8,7 +8,7 @@ export type SocialListLayoutType =
 export type SocialListPosition = "top" | "bottom";
 
 export type SocialListProvidersType = {
-  provider: "google" | "github";
-  displayName: "Google" | "GitHub";
-  Icon: IconType;
+  provider: string;
+  title: string;
+  icon: IconType;
 };

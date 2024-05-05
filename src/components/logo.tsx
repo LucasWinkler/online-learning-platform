@@ -1,8 +1,10 @@
 import { cn } from "~/lib/utils";
 
+export type LogoType = "icon" | "short" | "full";
+
 type LogoProps = {
   className?: string;
-  type?: "icon" | "short" | "full";
+  type?: LogoType;
 };
 
 export const Logo = ({ className, type = "full" }: LogoProps) => {
