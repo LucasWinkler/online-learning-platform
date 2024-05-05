@@ -52,7 +52,7 @@ export const UserMenu = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex items-center gap-1 md:gap-2">
-        <Avatar className="size-8">
+        <Avatar className="size-9">
           <AvatarImage src={avatarImage} />
           <AvatarFallback className="bg-neutral-500 text-neutral-50">
             <UserRoundIcon className="h-4 w-4" />
