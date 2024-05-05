@@ -33,7 +33,7 @@ export const DashboardSidebarLinks = ({
               activeClassName="bg-secondary"
               href={item.href}
             >
-              <item.Icon className="size-4 shrink-0" />
+              <item.icon className="size-4 shrink-0" />
               {item.title}
             </ActiveLink>
           </SheetCloseWrapper>

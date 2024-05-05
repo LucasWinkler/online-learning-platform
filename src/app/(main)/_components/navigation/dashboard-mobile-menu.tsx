@@ -4,8 +4,7 @@ import { MenuIcon, PowerIcon } from "lucide-react";
 
 import { LoginButton } from "~/components/auth/login-button";
 import { LogoutButton } from "~/components/auth/logout-button";
-import { Link } from "~/components/link";
-import { Logo } from "~/components/logo";
+import { LogoLink } from "~/components/logo-link";
 import { Button } from "~/components/ui/button";
 import {
   Sheet,
@@ -35,9 +34,7 @@ export const DashboardMobileMenu = ({ user }: DashboardMobileMenuProps) => {
       >
         <div className="flex h-header-height shrink-0 items-center justify-start border-b border-border px-4 lg:px-6">
           <SheetClose asChild>
-            <Link href="/">
-              <Logo type="short" />
-            </Link>
+            <LogoLink logoType="short" />
           </SheetClose>
         </div>
         <nav className="mt-2 flex-1 flex-col items-start overflow-y-auto px-2 text-sm font-medium lg:px-4">

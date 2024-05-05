@@ -20,30 +20,33 @@ export type IconType =
 export type DashboardSidebarLinks = {
   title: string;
   href: string;
-  Icon: IconType;
+  icon: IconType;
 };
 
-export type SettingsLinks = {
-  label: string;
-  href: string;
-  Icon: IconType;
+export type SettingsLinks = DashboardSidebarLinks;
+
+export type CommandMenuLinks = DashboardSidebarLinks;
+
+export type CommandMenuGroup = {
+  title: string;
+  links: CommandMenuLinks[];
 };
 
 export const studentDashboardLinks: DashboardSidebarLinks[] = [
   {
     title: "Overview",
     href: "/",
-    Icon: LayoutDashboardIcon,
+    icon: LayoutDashboardIcon,
   },
   {
     title: "All Courses",
     href: "/courses",
-    Icon: BookOpenIcon,
+    icon: BookOpenIcon,
   },
   {
     title: "My Courses",
     href: "/my-courses",
-    Icon: BookMarkedIcon,
+    icon: BookMarkedIcon,
   },
 ];
 
@@ -51,17 +54,17 @@ export const instructorDashboardLinks: DashboardSidebarLinks[] = [
   {
     title: "Overview",
     href: "/manage",
-    Icon: LayoutDashboardIcon,
+    icon: LayoutDashboardIcon,
   },
   {
     title: "Courses",
     href: "/manage/courses",
-    Icon: BookOpenIcon,
+    icon: BookOpenIcon,
   },
   {
     title: "Students",
     href: "/manage/students",
-    Icon: UsersIcon,
+    icon: UsersIcon,
   },
 ];
 
@@ -69,37 +72,90 @@ export const commonUserMenuLinks: DashboardSidebarLinks[] = [
   {
     title: "Settings",
     href: "/settings",
-    Icon: SettingsIcon,
+    icon: SettingsIcon,
   },
 ];
 
 export const settingsNavigationLinks: SettingsLinks[] = [
   {
-    label: "Profile",
+    title: "Profile",
     href: "/settings/profile",
-    Icon: UserIcon,
+    icon: UserIcon,
   },
   {
-    label: "Account",
+    title: "Account",
     href: "/settings/account",
-    Icon: SettingsIcon,
+    icon: SettingsIcon,
   },
   {
-    label: "Security",
+    title: "Security",
     href: "/settings/security",
-    Icon: LockKeyholeIcon,
+    icon: LockKeyholeIcon,
   },
 ];
+
+export const studentCommandMenuGroup: CommandMenuGroup = {
+  title: "Learning",
+  links: [
+    {
+      title: "All Courses",
+      href: "/courses",
+      icon: BookOpenIcon,
+    },
+    {
+      title: "My Courses",
+      href: "/my-courses",
+      icon: BookMarkedIcon,
+    },
+  ],
+};
+
+export const instructorCommandMenuGroup: CommandMenuGroup = {
+  title: "Management",
+  links: [
+    {
+      title: "Courses",
+      href: "/manage/courses",
+      icon: BookOpenIcon,
+    },
+    {
+      title: "Students",
+      href: "/manage/students",
+      icon: UsersIcon,
+    },
+  ],
+};
+
+export const settingsCommandMenuGroup: CommandMenuGroup = {
+  title: "Settings",
+  links: [
+    {
+      title: "Profile",
+      href: "/settings/profile",
+      icon: UserIcon,
+    },
+    {
+      title: "Account",
+      href: "/settings/account",
+      icon: SettingsIcon,
+    },
+    {
+      title: "Security",
+      href: "/settings/security",
+      icon: LockKeyholeIcon,
+    },
+  ],
+};
 
 export const socialListProviders: SocialListProvidersType[] = [
   {
     provider: "google",
-    displayName: "Google",
-    Icon: GoogleIcon,
+    title: "Google",
+    icon: GoogleIcon,
   },
   {
     provider: "github",
-    displayName: "GitHub",
-    Icon: GitHubIcon,
+    title: "GitHub",
+    icon: GitHubIcon,
   },
 ];

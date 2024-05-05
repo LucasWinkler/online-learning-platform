@@ -11,7 +11,7 @@ import { Separator } from "~/components/ui/separator";
 import { UserMenu } from "~/components/user-menu";
 import { currentUser } from "~/lib/auth";
 
-import { CommandMenu } from "../command-menu";
+import { CommandMenu } from "./command-menu";
 import { DashboardMobileMenu } from "./dashboard-mobile-menu";
 
 export const DashboardHeader = async () => {
