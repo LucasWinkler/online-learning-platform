@@ -8,19 +8,19 @@ export default function Loading() {
         <Skeleton className="flex w-full flex-col gap-4 p-4 sm:p-6">
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-8 w-full" />
+          <Skeleton className="mt-2 h-8 w-full" />
         </Skeleton>
         <Skeleton className="flex w-full flex-col gap-5 p-4 sm:p-6">
-          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-8 w-36" />
           <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-8 w-28" />
-          <Skeleton className="h-9 w-full" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="mt-2 h-9 w-full" />
         </Skeleton>
         <Skeleton className="flex w-full flex-col gap-3 p-4 sm:p-6">
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-8 w-2/3" />
-          <Skeleton className="h-7 w-full" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="mt-2 h-7 w-full" />
         </Skeleton>
       </div>
     </div>
