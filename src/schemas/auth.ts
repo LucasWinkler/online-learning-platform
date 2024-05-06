@@ -76,6 +76,7 @@ export const DeleteAccountSchema = z.object({
 
 export const ToggleTwoFactorAuthenticationSchema = z.object({
   isTwoFactorEnabled: z.boolean(),
+  code: z.optional(z.string()),
 });
 
 export const ChangeNameSchema = z.object({

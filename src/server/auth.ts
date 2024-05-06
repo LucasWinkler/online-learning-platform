@@ -99,12 +99,17 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
 
       if (trigger === "update" && session) {
-        token = {
-          ...token,
-          picture: session.user.image,
-          name: session.user.name,
-          isTwoFactorEnabled: session.user.isTwoFactorEnabled,
-        };
+        if (session.user.image) {
+          token.picture = session.user.image;
+        }
+
+        if (session.user.name) {
+          token.name = session.user.name;
+        }
+        
+        if (session.user.isTwoFactorEnabled) {
+          token.isTwoFactorEnabled = session.user.isTwoFactorEnabled;
+        }
       }
 
       return token;

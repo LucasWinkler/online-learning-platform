@@ -1,6 +1,5 @@
 import type { Metadata } from "next/types";
 
-import { AvatarUploadButton } from "~/components/avatar-upload-button";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 } from "~/components/ui/card";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
+import { AvatarUploadButton } from "./_components/avatar-upload-button";
 import { FullNameForm } from "./_components/full-name-form";
 
 export const metadata: Metadata = {
