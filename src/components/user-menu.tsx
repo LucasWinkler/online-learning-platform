@@ -33,7 +33,7 @@ import { Badge } from "./ui/badge";
 type UserMenuProps = {
   fullName: string;
   email: string;
-  avatarImage?: string;
+  avatarImage?: string | null;
   role: Role;
 };
 
@@ -53,7 +53,7 @@ export const UserMenu = ({
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex items-center gap-1 md:gap-2">
         <Avatar className="size-9">
-          <AvatarImage src={avatarImage} />
+          <AvatarImage src={avatarImage ?? undefined} />
           <AvatarFallback className="bg-neutral-500 text-neutral-50">
             <UserRoundIcon className="h-4 w-4" />
           </AvatarFallback>

@@ -17,6 +17,7 @@ import { Label } from "~/components/ui/label";
 import { ForgotPasswordButton } from "../../_components/forgot-password-button";
 
 export const ChangePasswordForm = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, update } = useSession();
   const user = session?.user;
 

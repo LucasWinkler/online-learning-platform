@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Security",
 };
 
+// TODO: Conditionally render 2FA form, password form, etc. based on user's account type (oauth or credentials)
 const SecuritySettingsPage = () => {
   return (
     <SettingsWrapper title="Security">

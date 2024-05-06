@@ -35,7 +35,11 @@ export const SocialButton = ({
 
   const handleSignIn = async () => {
     setIsPending(true);
-    await signIn(social.provider);
+    await signIn(social.provider).then((data) => {
+      console.log("data", data);
+      console.log("interesting");
+      
+    });
   };
 
   return (
