@@ -34,13 +34,13 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "*.imgur.com",
+        hostname: "placehold.co",
         port: "",
         pathname: "**",
       },
       {
         protocol: "https",
-        hostname: "placehold.co",
+        hostname: "utfs.io",
         port: "",
         pathname: "**",
       },

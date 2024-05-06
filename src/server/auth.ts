@@ -1,3 +1,7 @@
+import type { AdapterUser } from "@auth/core/adapters";
+import type { Session, User } from "next-auth";
+import type { JWT } from "next-auth/jwt";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compareSync } from "bcrypt-edge";
 import NextAuth from "next-auth";
@@ -14,7 +18,7 @@ import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [
     Google,
@@ -73,6 +77,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true;
     },
+    async jwt({
+      token,
+      trigger,
+      user,
+      session,
+    }: {
+      token: JWT;
+      user: User | AdapterUser;
+      trigger?: "update" | "signIn" | "signUp" | undefined;
+      session?: Session;
+    }) {
+      if (!token.sub) {
+        return token;
+      }
+
+      if (user) {
+        token.role = user.role;
+        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
+        token.picture = user.image;
+      }
+
+      if (trigger === "update" && session) {
+        token = {
+          ...token,
+          picture: session.user.image,
+          name: session.user.name,
+          isTwoFactorEnabled: session.user.isTwoFactorEnabled,
+        };
+      }
+
+      return token;
+    },
     async session({ token, session }) {
       if (!token.sub) {
         return session;
@@ -83,31 +119,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         id: token.sub,
         role: token.role,
         isTwoFactorEnabled: token.isTwoFactorEnabled,
+        image: token.picture,
+        name: token.name ?? token.email!,
       };
 
-      //   const existingUser = await findUserById(token.email ?? "");
-      //   if (existingUser) {
-      //     session.user.id = existingUser.id;
-      //     session.user.email = existingUser.email;
-      //     session.user.name = existingUser.name;
-      //     session.user.role = existingUser.role;
-      //     session.user.image = existingUser.image;
-      //     session.user.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      //   }
-
       return session;
-    },
-    async jwt({ token, user }) {
-      if (!token.sub) {
-        return token;
-      }
-
-      if (user) {
-        token.role = user.role;
-        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
-      }
-
-      return token;
     },
   },
   pages: {

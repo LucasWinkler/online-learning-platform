@@ -3,10 +3,6 @@ import { Role } from "@prisma/client";
 import { DEFAULT_LOGIN_REDIRECT, instructorRoutePrefix } from "~/routes";
 import { auth } from "~/server/auth";
 
-type DefaultLoginRedirectOptions = {
-  role?: Role;
-};
-
 export const currentUser = async () => {
   const session = await auth();
 
@@ -15,7 +11,9 @@ export const currentUser = async () => {
 
 export const getLoginRedirectUrl = ({
   role = Role.USER,
-}: DefaultLoginRedirectOptions): string => {
+}: {
+  role?: Role;
+}): string => {
   let redirectUrl = DEFAULT_LOGIN_REDIRECT;
 
   if (role === Role.ADMIN) {

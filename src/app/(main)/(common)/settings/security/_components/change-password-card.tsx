@@ -1,4 +1,6 @@
-import type { User } from "next-auth";
+"use client";
+
+import { useSession } from "next-auth/react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -14,11 +16,10 @@ import { Label } from "~/components/ui/label";
 
 import { ForgotPasswordButton } from "../../_components/forgot-password-button";
 
-type ChangePasswordFormProps = {
-  user?: User;
-};
+export const ChangePasswordForm = () => {
+  const { data: session, update } = useSession();
+  const user = session?.user;
 
-export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   return (
     <Card className="border-0 bg-gray-50">
       <CardHeader>

@@ -1,5 +1,6 @@
 import type { RegisterUser } from "~/types/user";
 
+import { type Prisma } from "@prisma/client";
 import { hashSync } from "bcrypt-edge";
 
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
@@ -30,13 +31,19 @@ export const registerUser = async (data: RegisterUser) => {
   return await createUser(data);
 };
 
-// TODO: Allow user to upload image and add new email which must be verified
 export const updateUserProfile = async (
   userId: string,
-  data: { name?: string },
+  data: Pick<
+    Prisma.UserUpdateInput,
+    "name" | "image" | "isTwoFactorEnabled" | "password" | "email"
+  >,
 ) => {
-  if (!data.name) {
-    return null;
+  const updateData = Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== undefined),
+  );
+
+  if (Object.keys(updateData).length === 0) {
+    throw new Error("No updated data provided for user profile");
   }
 
   return await updateUser(userId, data);

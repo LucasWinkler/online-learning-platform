@@ -1,5 +1,6 @@
 import * as z from "zod";
-import { DELETE_ACCOUNT_PHRASE } from '~/constants';
+
+import { DELETE_ACCOUNT_PHRASE } from "~/constants";
 
 const email = z
   .string()
@@ -15,8 +16,16 @@ const password = z.string().trim().min(8, {
   message: "Password must be at least 8 characters",
 });
 
+const newPassword = z.string().trim().min(8, {
+  message: "New password must be at least 8 characters",
+});
+
 const confirmPassword = z.string().trim().min(1, {
   message: "Confirm password is required",
+});
+
+const name = z.string().trim().min(1, {
+  message: "Name is required",
 });
 
 export const LoginSchema = z.object({
@@ -27,9 +36,7 @@ export const LoginSchema = z.object({
 
 export const RegisterSchema = z
   .object({
-    name: z.string().trim().min(1, {
-      message: "Name is required",
-    }),
+    name: name,
     email: email,
     password: password,
     confirmPassword: confirmPassword,
@@ -54,10 +61,37 @@ export const ResetPasswordSchema = z
   });
 
 export const DeleteAccountSchema = z.object({
-  confirmationPhrase: z.string().min(1, {
+  confirmationPhrase: z
+    .string()
+    .min(1, {
       message: "You must enter the phrase",
     })
-    .refine((value) => value.toLowerCase() === DELETE_ACCOUNT_PHRASE.toLowerCase(), {
-      message: "Incorrect phrase",
-    }),
+    .refine(
+      (value) => value.toLowerCase() === DELETE_ACCOUNT_PHRASE.toLowerCase(),
+      {
+        message: "Incorrect phrase",
+      },
+    ),
 });
+
+export const ToggleTwoFactorAuthenticationSchema = z.object({
+  isTwoFactorEnabled: z.boolean(),
+});
+
+export const ChangeNameSchema = z.object({
+  name: name,
+});
+
+export const ChangeEmailSchema = z.object({
+  email: email,
+});
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: password,
+    newPassword: newPassword,
+  })
+  .refine((values) => values.currentPassword !== values.newPassword, {
+    message: "New password cannot be the same as the current password",
+    path: ["newPassword"],
+  });

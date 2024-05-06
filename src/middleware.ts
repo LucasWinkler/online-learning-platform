@@ -7,6 +7,7 @@ import {
   instructorRoutePrefix,
   unauthorizedRoute,
   unprotectedRoutes,
+  uploadThingApiRoutePrefix,
 } from "~/routes";
 import { auth } from "~/server/auth";
 
@@ -20,14 +21,19 @@ export default auth((req) => {
   const isAuthenticated = !!req.auth;
   const userRole = req.auth?.user.role;
 
-  const isPublicRoute = unprotectedRoutes.includes(nextUrl.pathname);
   const isAuthApiRoute = nextUrl.pathname.startsWith(authApiRoutePrefix);
+  const isUploadThingApiRoute = nextUrl.pathname.startsWith(
+    uploadThingApiRoutePrefix,
+  );
+
+  const isPublicRoute = unprotectedRoutes.includes(nextUrl.pathname);
   const isAuthPageRoute = authenticationRoutes.includes(nextUrl.pathname);
   const isInstructorRoute = nextUrl.pathname.startsWith(instructorRoutePrefix);
+
   const loginRedirectUrl = getLoginRedirectUrl({ role: userRole });
 
-  // Ensure anyone can access /api/auth/[...nextauth]
-  if (isAuthApiRoute) {
+  // Ensure anyone can access certain api routes
+  if (isAuthApiRoute || isUploadThingApiRoute) {
     return;
   }
 
