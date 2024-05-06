@@ -1,6 +1,5 @@
 import { Role } from "@prisma/client";
 
-import { getLoginRedirectUrl } from "~/lib/auth";
 import {
   authApiRoutePrefix,
   authenticationRoutes,
@@ -30,7 +29,9 @@ export default auth((req) => {
   const isAuthPageRoute = authenticationRoutes.includes(nextUrl.pathname);
   const isInstructorRoute = nextUrl.pathname.startsWith(instructorRoutePrefix);
 
-  const loginRedirectUrl = getLoginRedirectUrl({ role: userRole });
+  const loginRedirectUrl = Role.ADMIN
+    ? instructorRoutePrefix
+    : instructorRoutePrefix;
 
   // Ensure anyone can access certain api routes
   if (isAuthApiRoute || isUploadThingApiRoute) {
