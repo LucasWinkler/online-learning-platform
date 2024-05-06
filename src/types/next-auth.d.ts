@@ -10,6 +10,7 @@ declare module "next-auth" {
       name: string;
       image?: string | null;
       isTwoFactorEnabled: boolean;
+      isOAuth: boolean;
     } & DefaultSession["user"];
   }
 

@@ -106,7 +106,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         if (session.user.name) {
           token.name = session.user.name;
         }
-        
+
         if (session.user.isTwoFactorEnabled) {
           token.isTwoFactorEnabled = session.user.isTwoFactorEnabled;
         }
@@ -115,18 +115,25 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       return token;
     },
     async session({ token, session }) {
-      if (!token.sub) {
-        return session;
+      if (token.sub) {
+        session.user.id = token.sub;
       }
 
-      session.user = {
-        ...session.user,
-        id: token.sub,
-        role: token.role,
-        isTwoFactorEnabled: token.isTwoFactorEnabled,
-        image: token.picture,
-        name: token.name ?? token.email!,
-      };
+      if (token.role) {
+        session.user.role = token.role;
+      }
+
+      if (token.isTwoFactorEnabled) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
+      }
+
+      if (token.picture) {
+        session.user.image = token.picture;
+      }
+
+      if (token.name) {
+        session.user.name = token.name;
+      }
 
       return session;
     },
