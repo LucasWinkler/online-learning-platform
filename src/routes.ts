@@ -17,6 +17,12 @@ export const instructorRoutePrefix = "/manage";
 export const authApiRoutePrefix = "/api/auth";
 
 /**
+ * The prefix for all uploadthing routes
+ * Routes that start with this prefix are used for uploadthing purposes
+ */
+export const uploadThingApiRoutePrefix = "/api/uploadthing";
+
+/**
  * The route for the unauthorized page
  * This route is used when the user is not authorized to access a page
  */

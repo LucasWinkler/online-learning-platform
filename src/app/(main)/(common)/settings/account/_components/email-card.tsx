@@ -24,7 +24,7 @@ export const EmailCard = ({ user }: EmailCardProps) => {
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-start">
-        You are not able to change your email.
+        You must verify your email before you can change your email.
       </CardFooter>
     </Card>
   );

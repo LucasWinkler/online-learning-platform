@@ -1,12 +1,13 @@
-import type { User } from "next-auth";
+"use client";
+
+import { useSession } from "next-auth/react";
 
 import { Input } from "~/components/ui/input";
 
-type FullNameFormProps = {
-  user?: User;
-};
+export const FullNameForm = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
 
-export const FullNameForm = ({ user }: FullNameFormProps) => {
   return (
     <form>
       <Input

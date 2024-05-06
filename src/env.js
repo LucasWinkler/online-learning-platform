@@ -30,6 +30,7 @@ export const env = createEnv({
       (str) => process.env.VERCEL_URL ?? str,
       process.env.VERCEL ? z.string() : z.string().optional(),
     ),
+    UPLOADTHING_SECRET: z.string(),
   },
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
@@ -46,6 +47,7 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
+    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

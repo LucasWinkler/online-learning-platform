@@ -1,13 +1,6 @@
 import type { Metadata } from "next/types";
 
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { currentUser } from "~/lib/auth";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { SettingsWrapper } from "../_components/settings-wrapper";
 import { TwoFactorAuthenticationForm } from "./_components/2fa-form";
@@ -17,21 +10,23 @@ export const metadata: Metadata = {
   title: "Security",
 };
 
-const SecuritySettingsPage = async () => {
-  const user = await currentUser();
-
+// TODO: Conditionally render 2FA form, password form, etc. based on user's account type (oauth or credentials)
+const SecuritySettingsPage = () => {
   return (
     <SettingsWrapper title="Security">
-      <ChangePasswordForm user={user} />
+      <ChangePasswordForm />
       <Card className="border-0 bg-gray-50">
-        <CardHeader>
-          <CardTitle>Two-factor authentication</CardTitle>
-          <CardDescription className="text-sm">
+        <CardHeader className="block">
+          <CardTitle>Two-factor authentication (2FA)</CardTitle>
+          <div className="float-right">
+            <TwoFactorAuthenticationForm />
+          </div>
+          <p className="my-3 text-sm">
             Use your email to verify your account during sign-in.
-          </CardDescription>
+          </p>
         </CardHeader>
-        <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
-          <TwoFactorAuthenticationForm user={user} />
+        <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-start">
+          2FA is optional but highly recommended.
         </CardFooter>
       </Card>
     </SettingsWrapper>
