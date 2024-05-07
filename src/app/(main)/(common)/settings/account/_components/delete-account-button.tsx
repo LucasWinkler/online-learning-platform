@@ -6,6 +6,7 @@ import type { z } from "zod";
 import React, { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 import { FloatingLabelInput } from "~/components/floating-label-input";
@@ -25,7 +26,6 @@ import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { DELETE_ACCOUNT_PHRASE } from "~/constants";
 import { DeleteAccountSchema } from "~/schemas/auth";
 import { deleteAccount } from "~/server/actions/delete-account";
-import { logout } from "~/server/actions/logout";
 
 type DeleteAccountButtonProps = ButtonProps;
 
@@ -54,16 +54,16 @@ export const DeleteAccountButton = ({
 
     startTransition(async () => {
       await deleteAccount(values)
-        .then(async (data) => {
+        .then((data) => {
           if (data.error) {
             setError(data.error);
           }
 
           if (data.success) {
             setIsDialogOpen(false);
-            await logout({
+            void signOut({
               redirect: true,
-              redirectTo: "/auth/account-deleted",
+              callbackUrl: "/auth/account-deleted",
             });
           }
         })

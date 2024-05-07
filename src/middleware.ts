@@ -1,15 +1,17 @@
 import { Role } from "@prisma/client";
 
 import {
-  authApiRoutePrefix,
-  authenticationRoutes,
-  DEFAULT_LOGIN_REDIRECT,
-  instructorRoutePrefix,
-  unauthorizedRoute,
-  unprotectedRoutes,
-  uploadThingApiRoutePrefix,
+  AUTH_API_ROUTE_PREFIX,
+  AUTH_ROUTES,
+  DEFAULT_REDIRECT,
+  INSTRUCTOR_ROUTE_PREFIX,
+  PUBLIC_ROUTES,
+  UNAUTHORIZED_ROUTE,
+  UT_API_ROUTE_PREFIX,
 } from "~/routes";
 import { auth } from "~/server/auth";
+
+import { findUserById } from "./server/data-access/user";
 
 // Runs middleware on all routes except for static assets
 export const config = {
@@ -18,28 +20,30 @@ export const config = {
 
 export default auth(async (req) => {
   const { nextUrl } = req;
-  const isAuthenticated = !!req.auth;
-  const userRole = req.auth?.user.role;
 
-  const isAuthApiRoute = nextUrl.pathname.startsWith(authApiRoutePrefix);
-  const isUploadThingApiRoute = nextUrl.pathname.startsWith(
-    uploadThingApiRoutePrefix,
+  const isAuthenticated = !!req.auth;
+  const isAuthApiRoute = nextUrl.pathname.startsWith(AUTH_API_ROUTE_PREFIX);
+  const isUTApiRoute = nextUrl.pathname.startsWith(UT_API_ROUTE_PREFIX);
+  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
+  const isAuthRoute = AUTH_ROUTES.includes(nextUrl.pathname);
+  const isInstructorRoute = nextUrl.pathname.startsWith(
+    INSTRUCTOR_ROUTE_PREFIX,
   );
 
-  const isPublicRoute = unprotectedRoutes.includes(nextUrl.pathname);
-  const isAuthPageRoute = authenticationRoutes.includes(nextUrl.pathname);
-  const isInstructorRoute = nextUrl.pathname.startsWith(instructorRoutePrefix);
+  const existingUser = await findUserById(req.auth?.user.id ?? "");
+  console.log("existingUser:", existingUser);
 
+  const userRole = req.auth?.user.role;
   const loginRedirectUrl =
-    userRole === Role.ADMIN ? instructorRoutePrefix : DEFAULT_LOGIN_REDIRECT;
+    userRole === Role.ADMIN ? INSTRUCTOR_ROUTE_PREFIX : DEFAULT_REDIRECT;
 
   // Ensure anyone can access certain api routes
-  if (isAuthApiRoute || isUploadThingApiRoute) {
+  if (isAuthApiRoute || isUTApiRoute) {
     return;
   }
 
   // Redirect if user is authenticated and trying to access an authentication page
-  if (isAuthPageRoute) {
+  if (isAuthRoute) {
     if (isAuthenticated) {
       return Response.redirect(new URL(loginRedirectUrl, nextUrl));
     }
@@ -55,7 +59,7 @@ export default auth(async (req) => {
   // Redirect to unauthorized if user is not an instructor and trying to access an instructor route
   if (isInstructorRoute) {
     if (userRole !== Role.ADMIN) {
-      return Response.redirect(new URL(unauthorizedRoute, nextUrl));
+      return Response.redirect(new URL(UNAUTHORIZED_ROUTE, nextUrl));
     }
 
     return;

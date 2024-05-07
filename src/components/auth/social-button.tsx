@@ -33,13 +33,9 @@ export const SocialButton = ({
     "icon-only": "w-full",
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     setIsPending(true);
-    await signIn(social.provider).then((data) => {
-      console.log("data", data);
-      console.log("interesting");
-      
-    });
+    void signIn(social.provider);
   };
 
   return (

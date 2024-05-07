@@ -6,7 +6,7 @@ import { Link } from "~/components/link";
 import { Logo } from "~/components/logo";
 import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
 import { cn } from "~/lib/utils";
-import { instructorRoutePrefix } from "~/routes";
+import { INSTRUCTOR_ROUTE_PREFIX } from "~/routes";
 
 type LogoLinkProps = {
   className?: string;
@@ -15,7 +15,7 @@ type LogoLinkProps = {
 
 export const LogoLink = ({ className, logoType }: LogoLinkProps) => {
   const isInstructorPage = useIsInstructorPage();
-  const href = isInstructorPage ? instructorRoutePrefix : "/";
+  const href = isInstructorPage ? INSTRUCTOR_ROUTE_PREFIX : "/";
 
   return (
     <Link className={cn("", className)} href={href}>

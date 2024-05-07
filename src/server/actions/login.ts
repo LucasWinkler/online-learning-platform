@@ -23,15 +23,14 @@ import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
-  const validatedFields = LoginSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid email or password." };
-  }
-
-  const { email, password, code } = validatedFields.data;
-
   try {
+    const validatedFields = LoginSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid email or password." };
+    }
+
+    const { email, password, code } = validatedFields.data;
+
     const existingUser = await findUserByEmail(email);
     if (!existingUser?.email || !existingUser?.password) {
       return { error: "Invalid email or password." };
@@ -115,18 +114,20 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       email,
       password,
     });
+
+    return { success: "Login successful" };
   } catch (error) {
+    console.error("Error logging in:", error);
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid email or password." };
         default:
-          return { error: "An error occurred. Please try again." };
+          return { error: "An unknown error occurred" };
       }
     }
 
     throw error;
   }
-
-  return { success: "Login successful" };
 };

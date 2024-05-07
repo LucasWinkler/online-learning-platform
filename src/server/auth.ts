@@ -3,13 +3,13 @@ import type { Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
-// import { compareSync } from "bcrypt-edge";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
+import { env } from "~/env";
 import { LoginSchema } from "~/schemas/auth";
 import {
   deleteTwoFactorConfirmation,
@@ -41,9 +41,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               password,
               user.password,
             );
-            if (isPasswordCorrect) {
-              return user;
+
+            if (!isPasswordCorrect) {
+              return null;
             }
+
+            return user;
           } catch (error) {
             console.error("Error authorizing user credentials:", error);
             throw new Error("Error authorizing user credentials");
@@ -84,6 +87,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({
       token,
+      user,
       trigger,
       session,
     }: {
@@ -96,19 +100,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return token;
       }
 
-      const existingUser = await findUserById(token.sub);
-      if (!existingUser) {
-        return token;
+      if (trigger === "signIn" || trigger === "signUp") {
+        token.role = user.role;
+        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
+        token.picture = user.image;
       }
 
-      const existingAccount = await doesAccountExistByUserId(existingUser.id);
-
-      token.name = existingUser.name;
-      token.email = existingUser.email;
-      token.role = existingUser.role;
-      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      token.picture = existingUser.image;
-      token.isOAuth = existingAccount;
+      if (trigger === undefined) {
+        const existingUser = await findUserById(token.sub);
+        if (!existingUser) {
+          return token;
+        }
+        const existingAccount = await doesAccountExistByUserId(existingUser.id);
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+        token.picture = existingUser.image;
+        token.isOAuth = existingAccount;
+      }
 
       if (trigger === "update" && session) {
         if (session.user.image) {
@@ -152,5 +162,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       await updateUserEmailVerified(user.id!);
     },
   },
-  // debug: env.NODE_ENV !== "production",
+  debug: env.NODE_ENV !== "production",
 });
