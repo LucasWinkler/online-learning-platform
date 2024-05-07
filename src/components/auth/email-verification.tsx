@@ -23,8 +23,8 @@ export const EmailVerification = () => {
 
     verifyEmail(token)
       .then((data) => {
-        setError(data.error);
         setSuccess(data.success);
+        setError(data.error);
       })
       .catch(() => {
         setError("An error occurred while verifying your email address.");

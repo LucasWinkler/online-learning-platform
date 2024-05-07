@@ -2,7 +2,8 @@
 
 import type { z } from "zod";
 
-import { compareSync } from "bcrypt-edge";
+// import { compareSync } from "bcrypt-edge";
+import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "~/lib/mail";
@@ -36,12 +37,14 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       return { error: "Invalid email or password." };
     }
 
-    const isPasswordCorrect = compareSync(password, existingUser.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password,
+    );
     if (!isPasswordCorrect) {
       return { error: "Invalid email or password." };
     }
 
-    // check if exists like 2fa
     if (!existingUser.emailVerified) {
       const verificationToken = await generateVerificationToken(
         existingUser.email,

@@ -3,7 +3,8 @@ import type { Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { compareSync } from "bcrypt-edge";
+// import { compareSync } from "bcrypt-edge";
+import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
@@ -14,11 +15,12 @@ import {
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmationByUserId,
 } from "~/server/data-access/2fa-confirmation";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
 
-export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [
     Google,
@@ -35,7 +37,10 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
               return null;
             }
 
-            const isPasswordCorrect = compareSync(password, user.password);
+            const isPasswordCorrect = await bcrypt.compare(
+              password,
+              user.password,
+            );
             if (isPasswordCorrect) {
               return user;
             }
@@ -80,7 +85,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     async jwt({
       token,
       trigger,
-      user,
       session,
     }: {
       token: JWT;
@@ -92,11 +96,19 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         return token;
       }
 
-      if (user) {
-        token.role = user.role;
-        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
-        token.picture = user.image;
+      const existingUser = await findUserById(token.sub);
+      if (!existingUser) {
+        return token;
       }
+
+      const existingAccount = await doesAccountExistByUserId(existingUser.id);
+
+      token.name = existingUser.name;
+      token.email = existingUser.email;
+      token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      token.picture = existingUser.image;
+      token.isOAuth = existingAccount;
 
       if (trigger === "update" && session) {
         if (session.user.image) {
@@ -106,7 +118,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         if (session.user.name) {
           token.name = session.user.name;
         }
-        
+
         if (session.user.isTwoFactorEnabled) {
           token.isTwoFactorEnabled = session.user.isTwoFactorEnabled;
         }
@@ -115,18 +127,18 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       return token;
     },
     async session({ token, session }) {
-      if (!token.sub) {
-        return session;
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
       }
 
-      session.user = {
-        ...session.user,
-        id: token.sub,
-        role: token.role,
-        isTwoFactorEnabled: token.isTwoFactorEnabled,
-        image: token.picture,
-        name: token.name ?? token.email!,
-      };
+      if (session.user) {
+        session.user.role = token.role;
+        session.user.name = token.name!;
+        session.user.email = token.email!;
+        session.user.image = token.picture;
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
+        session.user.isOAuth = token.isOAuth;
+      }
 
       return session;
     },

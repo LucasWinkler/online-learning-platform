@@ -10,6 +10,7 @@ declare module "next-auth" {
       name: string;
       image?: string | null;
       isTwoFactorEnabled: boolean;
+      isOAuth: boolean;
     } & DefaultSession["user"];
   }
 
@@ -23,5 +24,6 @@ declare module "@auth/core/jwt" {
   interface JWT {
     role: Role;
     isTwoFactorEnabled: boolean;
+    isOAuth: boolean;
   }
 }

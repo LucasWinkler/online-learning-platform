@@ -72,7 +72,7 @@ export const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
                   <FormLabel htmlFor="name" className="text-base xs:text-sm">
-                    Full name
+                    Full Name
                   </FormLabel>
                   <Input
                     id="name"
@@ -138,7 +138,7 @@ export const RegisterForm = () => {
                     htmlFor="confirmPassword"
                     className="text-base xs:text-sm"
                   >
-                    Confirm password
+                    Confirm Password
                   </FormLabel>
                   <div className="relative">
                     <Input

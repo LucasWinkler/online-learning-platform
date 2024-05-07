@@ -1,8 +1,10 @@
 import type { RegisterUser } from "~/types/user";
 
 import { type Prisma } from "@prisma/client";
-import { hashSync } from "bcrypt-edge";
+// import { hashSync } from "bcrypt-edge";
+import bcrypt from "bcryptjs";
 
+import { auth } from "~/server/auth";
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
@@ -16,7 +18,7 @@ import {
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
 
 export const hashPassword = async (password: string) => {
-  return hashSync(password, 10);
+  return await bcrypt.hash(password, 10);
 };
 
 export const registerUser = async (data: RegisterUser) => {
@@ -53,9 +55,9 @@ export const updateUserPassword = async (
   userId: string,
   newPassword: string,
 ) => {
-  const hashedPassword = await hashPassword(newPassword);
+  const newHashedPassword = await hashPassword(newPassword);
 
-  return await updateUser(userId, { password: hashedPassword });
+  return await updateUser(userId, { password: newHashedPassword });
 };
 
 export const resetUserPasswordWithToken = async (
@@ -105,14 +107,32 @@ export const verifyUserEmail = async (
     return { error: "Token has expired" };
   }
 
-  const existingUser = await findUserByEmail(existingToken.identifier);
+  const session = await auth();
+  const user = session?.user;
+
+  // New user is verifying their email
+  if (!user) {
+    const existingUser = await findUserByEmail(existingToken.identifier);
+    if (!existingUser) {
+      return { error: "Invalid email address" };
+    }
+
+    return await verifyUserEmailTransaction(
+      existingUser.id,
+      existingUser.email,
+      existingToken.token,
+    );
+  }
+
+  // Existing using is verifying their new email
+  const existingUser = await findUserByEmail(user.email);
   if (!existingUser) {
-    return { error: "Invalid email address" };
+    return { error: "User not found" };
   }
 
   return await verifyUserEmailTransaction(
     existingUser.id,
-    existingUser.email,
+    existingToken.identifier,
     existingToken.token,
   );
 };

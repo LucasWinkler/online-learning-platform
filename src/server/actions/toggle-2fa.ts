@@ -5,21 +5,20 @@ import type { z } from "zod";
 import { currentUser } from "~/lib/auth";
 import { sendTwoFactorTokenEmail } from "~/lib/mail";
 import { ToggleTwoFactorAuthenticationSchema } from "~/schemas/auth";
-import { doesAccountExistByUserId } from "~/server/data-access/account";
-import { findUserById } from "~/server/data-access/user";
-import { updateUserProfile } from "~/server/use-cases/user";
-
 import {
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmationByUserId,
-} from "../data-access/2fa-confirmation";
+} from "~/server/data-access/2fa-confirmation";
 import {
   deleteTwoFactorToken,
   getTwoFactorTokenByEmail,
   getTwoFactorTokenByToken,
-} from "../data-access/2fa-token";
-import { generateTwoFactorToken } from "../use-cases/2fa-token";
+} from "~/server/data-access/2fa-token";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
+import { findUserById } from "~/server/data-access/user";
+import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
+import { updateUserProfile } from "~/server/use-cases/user";
 
 export const toggleTwoFactorAuthentication = async (
   values: z.infer<typeof ToggleTwoFactorAuthenticationSchema>,
@@ -40,6 +39,14 @@ export const toggleTwoFactorAuthentication = async (
       return {
         showCodeInput: !!code,
         error: "You are not authenticated",
+      };
+    }
+
+    if (user.isOAuth) {
+      return {
+        showCodeInput: !!code,
+        error:
+          "Your account can only manage 2FA through your third-party account provider.",
       };
     }
 
