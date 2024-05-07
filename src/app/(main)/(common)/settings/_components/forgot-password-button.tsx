@@ -2,6 +2,8 @@
 
 import type { ButtonProps } from "~/components/ui/button";
 
+import React from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,41 +20,54 @@ import { logout } from "~/server/actions/logout";
 
 type ForgotPasswordButtonProps = ButtonProps & {
   redirectTo?: string;
+  disabled?: boolean;
 };
 
-export const ForgotPasswordButton = ({
-  children,
-  redirectTo,
-}: ForgotPasswordButtonProps) => {
-  const handleActionClick = async () => {
-    await logout({ redirectTo });
-  };
+export const ForgotPasswordButton = React.forwardRef(
+  (
+    { children, redirectTo, disabled }: ForgotPasswordButtonProps,
+    ref: React.Ref<HTMLButtonElement>,
+  ) => {
+    const handleActionClick = async () => {
+      await logout({ redirectTo });
+    };
 
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button className="text-foreground" variant="link" size="none">
-          {children}
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Sign out and reset your password?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Clicking &apos;Reset&apos; will sign you out immediately, and you
-            will be redirected to the forgot password page.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            className={buttonVariants({ variant: "warning" })}
-            onClick={handleActionClick}
+    return (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button
+            disabled={disabled}
+            ref={ref}
+            className="text-foreground"
+            variant="link"
+            size="none"
           >
-            Reset
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
+            {children}
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Sign out and reset your password?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Clicking &apos;Reset&apos; will sign you out immediately, and you
+              will be redirected to the forgot password page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={buttonVariants({ variant: "warning" })}
+              onClick={handleActionClick}
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  },
+);
+
+ForgotPasswordButton.displayName = "ForgotPasswordButton";

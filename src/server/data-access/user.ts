@@ -42,6 +42,10 @@ export const doesUserExistById = async (id: string) => {
   return (await db.user.count({ where: { id } })) > 0;
 };
 
+export const doesUserExistByEmail = async (email: string) => {
+  return (await db.user.count({ where: { email } })) > 0;
+};
+
 export const isUserEmailTaken = async (email: string) => {
   return (await db.user.count({ where: { email } })) > 0;
 };

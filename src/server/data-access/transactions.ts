@@ -8,7 +8,10 @@ export const verifyUserEmailTransaction = async (
   return await db.$transaction(async (tx) => {
     const updatedUser = await tx.user.update({
       where: { id: userId },
-      data: { emailVerified: new Date(), email },
+      data: { 
+        emailVerified: new Date(), 
+        email
+       },
     });
 
     if (!updatedUser) {

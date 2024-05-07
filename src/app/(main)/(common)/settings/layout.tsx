@@ -2,7 +2,7 @@ import type { Metadata } from "next/types";
 
 import { SessionProvider } from "next-auth/react";
 
-import { auth } from "~/server/auth";
+import { auth } from "~/lib/auth";
 
 import { SettingsNav } from "./_components/settings-nav";
 

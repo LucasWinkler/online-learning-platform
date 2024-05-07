@@ -34,15 +34,17 @@ import { Switch } from "~/components/ui/switch";
 import { ToggleTwoFactorAuthenticationSchema } from "~/schemas/auth";
 import { toggleTwoFactorAuthentication } from "~/server/actions/toggle-2fa";
 
-export const TwoFactorAuthenticationForm = () => {
+export const Toggle2FAForm = () => {
   const { data: session, update } = useSession();
-  const isTwoFactorEnabled = session?.user?.isTwoFactorEnabled ?? false;
+  const user = session?.user;
+  const isTwoFactorEnabled = user?.isTwoFactorEnabled ?? false;
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
+  const isDisabled = session?.user?.isOAuth ?? isPending;
 
   const toggleTwoFactorAuthenticationForm = useForm<
     z.infer<typeof ToggleTwoFactorAuthenticationSchema>
@@ -112,6 +114,7 @@ export const TwoFactorAuthenticationForm = () => {
   return (
     <AlertDialog open={isDialogOpen}>
       <Switch
+        disabled={isDisabled}
         checked={
           toggleTwoFactorAuthenticationForm.getValues().isTwoFactorEnabled
         }
@@ -166,6 +169,7 @@ export const TwoFactorAuthenticationForm = () => {
           >
             {showCodeInput && (
               <FormField
+                disabled={isDisabled}
                 control={toggleTwoFactorAuthenticationForm.control}
                 name="code"
                 render={({ field }) => (
@@ -192,7 +196,7 @@ export const TwoFactorAuthenticationForm = () => {
             <FormSuccess message={message} />
             <AlertDialogFooter>
               <AlertDialogCancel
-                disabled={isPending}
+                disabled={isDisabled}
                 onClick={() => {
                   setIsDialogOpen(false);
                   setShowCodeInput(false);
@@ -205,6 +209,7 @@ export const TwoFactorAuthenticationForm = () => {
               </AlertDialogCancel>
               {!showCodeInput && (
                 <FormField
+                  disabled={isDisabled}
                   control={toggleTwoFactorAuthenticationForm.control}
                   name="isTwoFactorEnabled"
                   render={({ field }) => (
@@ -225,7 +230,7 @@ export const TwoFactorAuthenticationForm = () => {
               <Button
                 type="submit"
                 variant={isTwoFactorEnabled ? "destructive" : "default"}
-                disabled={isPending}
+                disabled={isDisabled}
               >
                 {isPending ? (
                   <Loader2Icon className="h-5 w-5 animate-spin" />

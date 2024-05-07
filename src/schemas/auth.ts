@@ -24,6 +24,10 @@ const confirmPassword = z.string().trim().min(1, {
   message: "Confirm password is required",
 });
 
+const confirmNewPassword = z.string().trim().min(1, {
+  message: "Confirm new password is required",
+});
+
 const name = z.string().trim().min(1, {
   message: "Name is required",
 });
@@ -91,6 +95,11 @@ export const ChangePasswordSchema = z
   .object({
     currentPassword: password,
     newPassword: newPassword,
+    confirmNewPassword: confirmNewPassword,
+  })
+  .refine((values) => values.newPassword === values.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
   })
   .refine((values) => values.currentPassword !== values.newPassword, {
     message: "New password cannot be the same as the current password",
