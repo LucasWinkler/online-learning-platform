@@ -11,8 +11,6 @@ import {
 } from "~/routes";
 import { auth } from "~/server/auth";
 
-import { findUserById } from "./server/data-access/user";
-
 // Runs middleware on all routes except for static assets
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api)(.*)"],
@@ -29,9 +27,6 @@ export default auth(async (req) => {
   const isInstructorRoute = nextUrl.pathname.startsWith(
     INSTRUCTOR_ROUTE_PREFIX,
   );
-
-  const existingUser = await findUserById(req.auth?.user.id ?? "");
-  console.log("existingUser:", existingUser);
 
   const userRole = req.auth?.user.role;
   const loginRedirectUrl =
