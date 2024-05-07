@@ -1,7 +1,8 @@
 import type { RegisterUser } from "~/types/user";
 
 import { type Prisma } from "@prisma/client";
-import { hashSync } from "bcrypt-edge";
+// import { hashSync } from "bcrypt-edge";
+import bcrypt from "bcryptjs";
 
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
@@ -16,7 +17,7 @@ import {
 import { getVerificationTokenByToken } from "~/server/data-access/verification-token";
 
 export const hashPassword = async (password: string) => {
-  return hashSync(password, 10);
+  return await bcrypt.hash(password, 10);
 };
 
 export const registerUser = async (data: RegisterUser) => {
@@ -53,9 +54,9 @@ export const updateUserPassword = async (
   userId: string,
   newPassword: string,
 ) => {
-  const hashedPassword = await hashPassword(newPassword);
+  const newHashedPassword = await hashPassword(newPassword);
 
-  return await updateUser(userId, { password: hashedPassword });
+  return await updateUser(userId, { password: newHashedPassword });
 };
 
 export const resetUserPasswordWithToken = async (

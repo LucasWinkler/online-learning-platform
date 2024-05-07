@@ -3,6 +3,7 @@ import { Role } from "@prisma/client";
 import {
   authApiRoutePrefix,
   authenticationRoutes,
+  DEFAULT_LOGIN_REDIRECT,
   instructorRoutePrefix,
   unauthorizedRoute,
   unprotectedRoutes,
@@ -15,7 +16,7 @@ export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api)(.*)"],
 };
 
-export default auth((req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isAuthenticated = !!req.auth;
   const userRole = req.auth?.user.role;
@@ -29,9 +30,8 @@ export default auth((req) => {
   const isAuthPageRoute = authenticationRoutes.includes(nextUrl.pathname);
   const isInstructorRoute = nextUrl.pathname.startsWith(instructorRoutePrefix);
 
-  const loginRedirectUrl = Role.ADMIN
-    ? instructorRoutePrefix
-    : instructorRoutePrefix;
+  const loginRedirectUrl =
+    userRole === Role.ADMIN ? instructorRoutePrefix : DEFAULT_LOGIN_REDIRECT;
 
   // Ensure anyone can access certain api routes
   if (isAuthApiRoute || isUploadThingApiRoute) {

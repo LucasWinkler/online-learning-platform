@@ -82,7 +82,7 @@ export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
   return (
     <div
       className={cn(
-        "group relative cursor-pointer overflow-hidden rounded-full",
+        "group relative size-[4.5rem] cursor-pointer overflow-hidden rounded-full",
         className,
       )}
       {...getRootProps()}

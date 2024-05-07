@@ -24,5 +24,6 @@ declare module "@auth/core/jwt" {
   interface JWT {
     role: Role;
     isTwoFactorEnabled: boolean;
+    isOAuth: boolean;
   }
 }
