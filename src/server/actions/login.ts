@@ -45,7 +45,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       return { error: "Invalid email or password." };
     }
 
-    // check if exists like 2fa
     if (!existingUser.emailVerified) {
       const verificationToken = await generateVerificationToken(
         existingUser.email,

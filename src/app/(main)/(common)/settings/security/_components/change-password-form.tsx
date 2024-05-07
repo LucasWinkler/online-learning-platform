@@ -142,8 +142,8 @@ export const ChangePasswordForm = () => {
         <CardFooter className="flex flex-col items-center justify-center gap-4 border-t px-6 py-3 text-sm font-light text-gray-600 sm:flex-row sm:justify-between">
           {!!user?.isOAuth ? (
             <p>
-              Your account can only manage passwords through your third-party
-              account provider.
+              You can not change your password because you signed up through a
+              third-party account provider.
             </p>
           ) : (
             <>

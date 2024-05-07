@@ -4,6 +4,7 @@ import { type Prisma } from "@prisma/client";
 // import { hashSync } from "bcrypt-edge";
 import bcrypt from "bcryptjs";
 
+import { auth } from "~/server/auth";
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
@@ -106,14 +107,32 @@ export const verifyUserEmail = async (
     return { error: "Token has expired" };
   }
 
-  const existingUser = await findUserByEmail(existingToken.identifier);
+  const session = await auth();
+  const user = session?.user;
+
+  // New user is verifying their email
+  if (!user) {
+    const existingUser = await findUserByEmail(existingToken.identifier);
+    if (!existingUser) {
+      return { error: "Invalid email address" };
+    }
+
+    return await verifyUserEmailTransaction(
+      existingUser.id,
+      existingUser.email,
+      existingToken.token,
+    );
+  }
+
+  // Existing using is verifying their new email
+  const existingUser = await findUserByEmail(user.email);
   if (!existingUser) {
-    return { error: "Invalid email address" };
+    return { error: "User not found" };
   }
 
   return await verifyUserEmailTransaction(
     existingUser.id,
-    existingUser.email,
+    existingToken.identifier,
     existingToken.token,
   );
 };

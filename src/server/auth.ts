@@ -15,11 +15,10 @@ import {
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmationByUserId,
 } from "~/server/data-access/2fa-confirmation";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
-
-import { doesAccountExistByUserId } from "./data-access/account";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
