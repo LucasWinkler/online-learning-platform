@@ -5,8 +5,7 @@ import ws from "ws";
 
 import { env } from "~/env";
 
-neonConfig.webSocketConstructor =
-  env.NODE_ENV === "production" ? ws : WebSocket;
+neonConfig.webSocketConstructor = ws;
 const connectionString = env.DATABASE_URL;
 
 export const pool = new Pool({
