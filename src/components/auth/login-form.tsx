@@ -33,6 +33,8 @@ export const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Please sign in using your original login method to continue."
@@ -58,7 +60,7 @@ export const LoginForm = () => {
     }
 
     startTransition(async () => {
-      await login(values)
+      await login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             setError(data.error);

@@ -9,9 +9,11 @@ import type {
 import { useState } from "react";
 import { ChevronRightIcon, Loader2Icon } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { DEFAULT_REDIRECT } from "~/routes";
 
 type SocialButtonProps = {
   layoutType: SocialListLayoutType;
@@ -26,6 +28,10 @@ export const SocialButton = ({
   ...props
 }: SocialButtonProps) => {
   const [isPending, setIsPending] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  console.log("callbackUrl", callbackUrl);
 
   const classNames = {
     "icon-full-text": "w-full flex gap-2 group",
@@ -35,7 +41,9 @@ export const SocialButton = ({
 
   const handleSignIn = () => {
     setIsPending(true);
-    void signIn(social.provider);
+    void signIn(social.provider, {
+      callbackUrl: callbackUrl ?? DEFAULT_REDIRECT,
+    });
   };
 
   return (

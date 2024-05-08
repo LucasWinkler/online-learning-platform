@@ -18,6 +18,7 @@ import {
 } from "~/components/ui/command";
 import {
   instructorCommandMenuGroup,
+  publicCommandMenuGroup,
   settingsCommandMenuGroup,
   studentCommandMenuGroup,
 } from "~/lib/links";
@@ -74,6 +75,20 @@ export const CommandMenu = ({ user, className }: CommandMenuProps) => {
         <CommandInput placeholder="Search..." />
         <CommandList>
           <CommandEmpty>No results found...</CommandEmpty>
+          {!user && (
+            <CommandGroup heading={publicCommandMenuGroup.title}>
+              {publicCommandMenuGroup.links.map((item) => (
+                <CommandItem
+                  className="cursor-pointer"
+                  onSelect={() => handleItemSelect(item.href)}
+                  key={item.href}
+                >
+                  <item.icon className="mr-2 size-4" />
+                  <span>{item.title}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
           {user?.role === Role.ADMIN && (
             <CommandGroup heading={instructorCommandMenuGroup.title}>
               {instructorCommandMenuGroup.links.map((item) => (
@@ -88,30 +103,34 @@ export const CommandMenu = ({ user, className }: CommandMenuProps) => {
               ))}
             </CommandGroup>
           )}
-          <CommandGroup heading={studentCommandMenuGroup.title}>
-            {studentCommandMenuGroup.links.map((item) => (
-              <CommandItem
-                className="cursor-pointer"
-                onSelect={() => handleItemSelect(item.href)}
-                key={item.href}
-              >
-                <item.icon className="mr-2 size-4" />
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandGroup heading={settingsCommandMenuGroup.title}>
-            {settingsCommandMenuGroup.links.map((item) => (
-              <CommandItem
-                className="cursor-pointer"
-                onSelect={() => handleItemSelect(item.href)}
-                key={item.href}
-              >
-                <item.icon className="mr-2 size-4" />
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {user && (
+            <>
+              <CommandGroup heading={studentCommandMenuGroup.title}>
+                {studentCommandMenuGroup.links.map((item) => (
+                  <CommandItem
+                    className="cursor-pointer"
+                    onSelect={() => handleItemSelect(item.href)}
+                    key={item.href}
+                  >
+                    <item.icon className="mr-2 size-4" />
+                    <span>{item.title}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              <CommandGroup heading={settingsCommandMenuGroup.title}>
+                {settingsCommandMenuGroup.links.map((item) => (
+                  <CommandItem
+                    className="cursor-pointer"
+                    onSelect={() => handleItemSelect(item.href)}
+                    key={item.href}
+                  >
+                    <item.icon className="mr-2 size-4" />
+                    <span>{item.title}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </>
+          )}
         </CommandList>
       </CommandDialog>
     </>

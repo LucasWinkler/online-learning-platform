@@ -43,11 +43,11 @@ export const UserMenu = ({
   role,
   avatarImage,
 }: UserMenuProps) => {
+  const isInstructor = role === Role.ADMIN;
   const isInstructorPage = useIsInstructorPage();
   const links = isInstructorPage
     ? instructorDashboardLinks
     : studentDashboardLinks;
-  const isInstructor = role === Role.ADMIN;
 
   return (
     <DropdownMenu>

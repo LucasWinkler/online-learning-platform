@@ -48,7 +48,16 @@ export default auth(async (req) => {
 
   // Redirect to login if user is not authenticated and trying to access a protected route
   if (!isAuthenticated && !isPublicRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
+    );
   }
 
   // Redirect to unauthorized if user is not an instructor and trying to access an instructor route

@@ -22,5 +22,5 @@ export const formatCourseLength = (lengthInSeconds: number): string => {
 };
 
 export const isInstructorPage = (pathname: string) => {
-  return pathname.startsWith("/manage");
+  return pathname.startsWith("/manage") || pathname.startsWith("/settings");
 };

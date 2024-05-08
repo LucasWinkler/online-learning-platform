@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "~/lib/mail";
+import { DEFAULT_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
 import {
@@ -22,7 +23,10 @@ import { findUserByEmail } from "~/server/data-access/user";
 import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string,
+) => {
   try {
     const validatedFields = LoginSchema.safeParse(values);
     if (!validatedFields.success) {
@@ -116,12 +120,11 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
+      redirectTo: callbackUrl ?? DEFAULT_REDIRECT,
     });
 
     return { success: "You have been successfully logged in." };
   } catch (error) {
-    console.error("Error logging in:", error);
-
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
