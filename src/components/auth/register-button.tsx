@@ -1,32 +1,47 @@
 "use client";
 
+import type { ButtonProps } from "~/components/ui/button";
+
+import React from "react";
 import { useRouter } from "next/navigation";
 
+import { RegisterForm } from "~/components/auth/register-form";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+
 type RegisterButtonProps = {
-  children: React.ReactNode;
-  type?: "modal" | "redirect";
+  mode?: "modal" | "redirect";
   asChild?: boolean;
-};
+} & ButtonProps;
 
-export const RegisterButton = ({
-  children,
-  type = "redirect",
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  asChild,
-}: RegisterButtonProps) => {
-  const router = useRouter();
+export const RegisterButton = React.forwardRef(
+  (
+    { children, mode = "redirect", asChild, ...props }: RegisterButtonProps,
+    ref: React.Ref<HTMLButtonElement>,
+  ) => {
+    const router = useRouter();
 
-  const onClick = () => {
-    router.push("/auth/register");
-  };
+    const handleClick = () => {
+      router.push("/auth/register");
+    };
 
-  if (type === "modal") {
-    return <span>TODO: Implement modal</span>;
-  }
+    if (mode === "modal") {
+      return (
+        <Dialog modal>
+          <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+          <DialogContent className="w-full border-none bg-transparent p-0">
+            <RegisterForm />
+          </DialogContent>
+        </Dialog>
+      );
+    }
 
-  return (
-    <span onClick={onClick} className="cursor-pointer">
-      {children}
-    </span>
-  );
-};
+    return (
+      <Button {...props} ref={ref} onClick={handleClick}>
+        {children}
+      </Button>
+    );
+  },
+);
+
+RegisterButton.displayName = "RegisterButton";
