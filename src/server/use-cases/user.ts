@@ -24,9 +24,9 @@ export const hashPassword = async (password: string) => {
 export const registerUser = async (data: RegisterUser) => {
   const userExists = await isUserEmailTaken(data.email);
   if (userExists) {
-    throw new Error(
+    throw (new Error(
       `Registration failed: Email (${data.email}) is already in use.`,
-    );
+    ).name = "UserExistsError");
   }
 
   data.password = await hashPassword(data.password);
@@ -99,12 +99,12 @@ export const verifyUserEmail = async (
 ): Promise<{ error?: string } | undefined> => {
   const existingToken = await getVerificationTokenByToken(token);
   if (!existingToken) {
-    return { error: "Invalid token" };
+    return { error: "Invalid verification token." };
   }
 
   const hasExpired = new Date(existingToken.expiresAt) < new Date();
   if (hasExpired) {
-    return { error: "Token has expired" };
+    return { error: "That verification token has expired." };
   }
 
   const session = await auth();
@@ -114,7 +114,7 @@ export const verifyUserEmail = async (
   if (!user) {
     const existingUser = await findUserByEmail(existingToken.identifier);
     if (!existingUser) {
-      return { error: "Invalid email address" };
+      return { error: "Invalid email address." };
     }
 
     return await verifyUserEmailTransaction(
@@ -127,7 +127,7 @@ export const verifyUserEmail = async (
   // Existing using is verifying their new email
   const existingUser = await findUserByEmail(user.email);
   if (!existingUser) {
-    return { error: "User not found" };
+    return { error: "User not found." };
   }
 
   return await verifyUserEmailTransaction(
@@ -142,9 +142,9 @@ export const deleteOwnAccount = async (
   userToDeleteId: string,
 ) => {
   if (userId !== userToDeleteId) {
-    throw new Error("Unauthorized: You can only delete your own account");
+    throw new Error("Unauthorized: You can only delete your own account.");
   }
 
   await deleteUserById(userId);
-  return { message: "User deleted successfully." };
+  return { message: "Your account has been successfully deleted." };
 };

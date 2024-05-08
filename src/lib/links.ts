@@ -6,8 +6,10 @@ import {
   BookOpenIcon,
   LayoutDashboardIcon,
   LockKeyholeIcon,
+  LogInIcon,
   SettingsIcon,
   UserIcon,
+  UserPlusIcon,
   UsersIcon,
 } from "lucide-react";
 
@@ -93,6 +95,32 @@ export const settingsNavigationLinks: SettingsLinks[] = [
     icon: LockKeyholeIcon,
   },
 ];
+
+export const publicCommandMenuGroup: CommandMenuGroup = {
+  title: "Public Access",
+  links: [
+    {
+      title: "Overview",
+      href: "/",
+      icon: LayoutDashboardIcon,
+    },
+    {
+      title: "All Courses",
+      href: "/courses",
+      icon: BookOpenIcon,
+    },
+    {
+      title: "Sign In",
+      href: "/auth/login",
+      icon: LogInIcon,
+    },
+    {
+      title: "Sign Up",
+      href: "/auth/register",
+      icon: UserPlusIcon,
+    },
+  ],
+};
 
 export const studentCommandMenuGroup: CommandMenuGroup = {
   title: "Learning",

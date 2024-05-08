@@ -9,9 +9,11 @@ import type {
 import { useState } from "react";
 import { ChevronRightIcon, Loader2Icon } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { DEFAULT_REDIRECT } from "~/routes";
 
 type SocialButtonProps = {
   layoutType: SocialListLayoutType;
@@ -26,6 +28,10 @@ export const SocialButton = ({
   ...props
 }: SocialButtonProps) => {
   const [isPending, setIsPending] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  console.log("callbackUrl", callbackUrl);
 
   const classNames = {
     "icon-full-text": "w-full flex gap-2 group",
@@ -33,19 +39,17 @@ export const SocialButton = ({
     "icon-only": "w-full",
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     setIsPending(true);
-    await signIn(social.provider).then((data) => {
-      console.log("data", data);
-      console.log("interesting");
-      
+    void signIn(social.provider, {
+      callbackUrl: callbackUrl ?? DEFAULT_REDIRECT,
     });
   };
 
   return (
     <Button
+      {...props}
       disabled={disabled ?? isPending}
-      key={social.provider}
       variant="outline"
       className={cn(
         "relative h-10 py-5 text-base xs:text-sm",
@@ -53,7 +57,6 @@ export const SocialButton = ({
         className,
       )}
       onClick={handleSignIn}
-      {...props}
     >
       {isPending && (
         <>

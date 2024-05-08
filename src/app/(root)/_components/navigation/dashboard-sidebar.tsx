@@ -28,7 +28,7 @@ export const DashboardSidebar = async () => {
             Sign out
           </LogoutButton>
         ) : (
-          <LoginButton className="w-full">Start learning</LoginButton>
+          <LoginButton className="w-full">Start Learning</LoginButton>
         )}
       </div>
     </aside>

@@ -3,10 +3,10 @@
 import type { ButtonProps } from "~/components/ui/button";
 
 import React from "react";
+import { signOut } from "next-auth/react";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { logout } from "~/server/actions/logout";
 
 type LogoutButtonProps = ButtonProps;
 
@@ -15,12 +15,17 @@ export const LogoutButton = React.forwardRef(
     { children, className, ...props }: LogoutButtonProps,
     ref: React.Ref<HTMLButtonElement>,
   ) => {
-    const onClick = async () => {
-      await logout({ redirect: true, redirectTo: "/" });
+    const handleClick = () => {
+      void signOut({ redirect: true, callbackUrl: "/" });
     };
 
     return (
-      <Button className={cn(className)} ref={ref} {...props} onClick={onClick}>
+      <Button
+        {...props}
+        className={cn(className)}
+        onClick={handleClick}
+        ref={ref}
+      >
         {children}
       </Button>
     );

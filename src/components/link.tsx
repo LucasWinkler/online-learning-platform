@@ -1,8 +1,9 @@
 "use client";
 
+import type { AriaAttributes } from "react";
 import type { LinkProps as NextLinkProps } from "next/link";
 
-import React, { type AriaAttributes } from "react";
+import React from "react";
 import { default as NextLink } from "next/link";
 
 import { cn } from "~/lib/utils";
@@ -12,7 +13,8 @@ type LinkProps = {
   children: React.ReactNode;
   target?: string;
   className?: string;
-} & AriaAttributes & NextLinkProps;
+} & AriaAttributes &
+  NextLinkProps;
 
 export const Link = React.forwardRef(
   (
@@ -22,11 +24,11 @@ export const Link = React.forwardRef(
     if (!href || href.startsWith("http")) {
       return (
         <a
+          {...props}
           ref={ref}
           className={cn("cursor-pointer", className)}
           href={href}
           target={target}
-          {...props}
         >
           {children}
         </a>
@@ -35,10 +37,10 @@ export const Link = React.forwardRef(
 
     return (
       <NextLink
+        {...props}
         ref={ref}
         className={cn("cursor-pointer", className)}
         href={href}
-        {...props}
       >
         {children}
       </NextLink>

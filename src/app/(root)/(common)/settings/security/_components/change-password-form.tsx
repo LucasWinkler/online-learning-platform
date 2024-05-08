@@ -45,16 +45,22 @@ export const ChangePasswordForm = () => {
       await changePassword(values)
         .then((data) => {
           if (data?.error) {
-            toast.error(data.error);
+            toast.error("Password Change Failed", {
+              description: data.error,
+            });
           }
 
           if (data?.success) {
             changePasswordForm.reset();
-            toast.success(data.success);
+            toast.success("Password Changed", {
+              description: data.success,
+            });
           }
         })
         .catch(() => {
-          toast.error("An error occurred while changing the password.");
+          toast.error("Password Change Failed", {
+            description: "An error occurred while changing your password.",
+          });
         });
     });
   };

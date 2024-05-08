@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "~/lib/mail";
+import { DEFAULT_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
 import {
@@ -22,16 +23,18 @@ import { findUserByEmail } from "~/server/data-access/user";
 import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
-  const validatedFields = LoginSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid email or password." };
-  }
-
-  const { email, password, code } = validatedFields.data;
-
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string,
+) => {
   try {
+    const validatedFields = LoginSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid email or password." };
+    }
+
+    const { email, password, code } = validatedFields.data;
+
     const existingUser = await findUserByEmail(email);
     if (!existingUser?.email || !existingUser?.password) {
       return { error: "Invalid email or password." };
@@ -55,7 +58,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         verificationToken.token,
       );
 
-      return { success: "Verification email sent." };
+      return { success: "Verification email has been sent to your email." };
     }
 
     if (existingUser.isTwoFactorEnabled) {
@@ -64,16 +67,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
           existingUser.email,
         );
         if (!twoFactorToken) {
-          return { error: "Invalid 2FA code." };
+          return { error: "That 2FA code is invalid." };
         }
 
         if (twoFactorToken.token !== code) {
-          return { error: "Invalid 2FA code." };
+          return { error: "That 2FA code is invalid." };
         }
 
         const hasExpired = new Date(twoFactorToken.expiresAt) < new Date();
         if (hasExpired) {
-          return { error: "2FA Code has expired." };
+          return { error: "That 2FA code has expired." };
         }
 
         await deleteTwoFactorToken(existingUser.email, twoFactorToken.token);
@@ -100,13 +103,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             twoFactorToken.token,
           );
 
-          return { twoFactor: true, success: "A 2FA Code has been sent." };
+          return {
+            twoFactor: true,
+            success: "A 2FA code has been sent to your email.",
+          };
         }
 
         return {
           twoFactor: true,
           warning:
-            "A valid 2FA Code has already been sent. If you did not receive it, please wait 5 minutes and try again.",
+            "A 2FA code has already been sent. If you did not receive it, please try again in 5 minutes.",
         };
       }
     }
@@ -114,19 +120,20 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
+      redirectTo: callbackUrl ?? DEFAULT_REDIRECT,
     });
+
+    return { success: "You have been successfully logged in." };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid email or password." };
         default:
-          return { error: "An error occurred. Please try again." };
+          return { error: "An unknown error occurred while logging in." };
       }
     }
 
     throw error;
   }
-
-  return { success: "Login successful" };
 };
