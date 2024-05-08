@@ -5,8 +5,9 @@ import type { ButtonProps } from "~/components/ui/button";
 import React from "react";
 import { useRouter } from "next/navigation";
 
+import { LoginForm } from "~/components/auth/login-form";
 import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 type LoginButtonProps = {
   mode?: "modal" | "redirect";
@@ -15,28 +16,28 @@ type LoginButtonProps = {
 
 export const LoginButton = React.forwardRef(
   (
-    {
-      children,
-      mode = "redirect",
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      asChild,
-      className,
-      ...props
-    }: LoginButtonProps,
+    { children, mode = "redirect", asChild, ...props }: LoginButtonProps,
     ref: React.Ref<HTMLButtonElement>,
   ) => {
     const router = useRouter();
 
-    const onClick = () => {
+    const handleClick = () => {
       router.push("/auth/login");
     };
 
     if (mode === "modal") {
-      return <span>TODO: Implement modal</span>;
+      return (
+        <Dialog>
+          <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+          <DialogContent className="rounded-none py-0 xs:rounded-xl xs:py-6">
+            <LoginForm />
+          </DialogContent>
+        </Dialog>
+      );
     }
 
     return (
-      <Button {...props} className={cn(className)} ref={ref} onClick={onClick}>
+      <Button {...props} ref={ref} onClick={handleClick}>
         {children}
       </Button>
     );

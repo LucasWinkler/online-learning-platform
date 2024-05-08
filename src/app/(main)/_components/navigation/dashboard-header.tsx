@@ -53,7 +53,7 @@ export const DashboardHeader = async () => {
               />
             </>
           ) : (
-            <LoginButton>Start learning</LoginButton>
+            <LoginButton>Start Learning</LoginButton>
           )}
         </div>
       </div>
