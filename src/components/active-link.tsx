@@ -26,7 +26,7 @@ const ActiveLink: React.FC<ActiveLinkProps> = ({
   );
 
   return (
-    <Link className={classNames} href={href} {...props}>
+    <Link {...props} className={classNames} href={href}>
       {children}
     </Link>
   );

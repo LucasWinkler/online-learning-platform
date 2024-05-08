@@ -40,8 +40,8 @@ export const AuthCard = ({
 }: AuthCardProps) => {
   return (
     <Card
-      className="mx-auto h-full w-full rounded-none border-0 shadow-none xs:h-auto xs:max-w-[25rem] xs:rounded-lg xs:border xs:shadow-md"
       {...props}
+      className="mx-auto h-full w-full rounded-none border-0 shadow-none xs:h-auto xs:max-w-[25rem] xs:rounded-lg xs:border xs:shadow-md"
     >
       <CardHeader className="text-center">
         <AuthHeader title={title} description={description} />

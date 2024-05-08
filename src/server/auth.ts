@@ -9,7 +9,6 @@ import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-import { env } from "~/env";
 import { LoginSchema } from "~/schemas/auth";
 import {
   deleteTwoFactorConfirmation,
@@ -106,19 +105,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = user.image;
       }
 
-      // if (trigger === undefined) {
-      //   const existingUser = await findUserById(token.sub);
-      //   if (!existingUser) {
-      //     return token;
-      //   }
-      //   const existingAccount = await doesAccountExistByUserId(existingUser.id);
-      //   token.name = existingUser.name;
-      //   token.email = existingUser.email;
-      //   token.role = existingUser.role;
-      //   token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      //   token.picture = existingUser.image;
-      //   token.isOAuth = existingAccount;
-      // }
+      if (trigger === undefined) {
+        const existingUser = await findUserById(token.sub);
+        if (!existingUser) {
+          return token;
+        }
+
+        const existingAccount = await doesAccountExistByUserId(existingUser.id);
+
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+        token.picture = existingUser.image;
+        token.isOAuth = existingAccount;
+      }
 
       if (trigger === "update" && session) {
         if (session.user.image) {
@@ -162,5 +163,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       await updateUserEmailVerified(user.id!);
     },
   },
-  debug: env.NODE_ENV !== "production",
+  // debug: env.NODE_ENV !== "production",
 });

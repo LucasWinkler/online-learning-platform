@@ -40,8 +40,8 @@ export const SocialButton = ({
 
   return (
     <Button
+      {...props}
       disabled={disabled ?? isPending}
-      key={social.provider}
       variant="outline"
       className={cn(
         "relative h-10 py-5 text-base xs:text-sm",
@@ -49,7 +49,6 @@ export const SocialButton = ({
         className,
       )}
       onClick={handleSignIn}
-      {...props}
     >
       {isPending && (
         <>

@@ -76,7 +76,7 @@ export const DeleteAccountButton = ({
   return (
     <AlertDialog open={isDialogOpen}>
       <AlertDialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
-        <Button variant="destructive" {...props}>
+        <Button {...props} variant="destructive">
           {children}
         </Button>
       </AlertDialogTrigger>

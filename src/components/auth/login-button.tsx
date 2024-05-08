@@ -36,7 +36,7 @@ export const LoginButton = React.forwardRef(
     }
 
     return (
-      <Button className={cn(className)} ref={ref} {...props} onClick={onClick}>
+      <Button {...props} className={cn(className)} ref={ref} onClick={onClick}>
         {children}
       </Button>
     );

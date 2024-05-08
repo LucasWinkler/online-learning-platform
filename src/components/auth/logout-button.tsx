@@ -21,10 +21,10 @@ export const LogoutButton = React.forwardRef(
 
     return (
       <Button
-        className={cn(className)}
-        ref={ref}
-        onClick={handleClick}
         {...props}
+        className={cn(className)}
+        onClick={handleClick}
+        ref={ref}
       >
         {children}
       </Button>
