@@ -18,7 +18,16 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   try {
     await registerUser(registrationData);
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.name === "UserExistsError") {
+        return {
+          error: error.message,
+        };
+      }
+    }
+
+    console.error("Error creating account:", error);
     return {
       error: "Error creating account. Please check your details and try again.",
     };

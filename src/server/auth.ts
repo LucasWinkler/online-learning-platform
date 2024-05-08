@@ -105,21 +105,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = user.image;
       }
 
-      // if (trigger === undefined) {
-      //   const existingUser = await findUserById(token.sub);
-      //   if (!existingUser) {
-      //     return token;
-      //   }
+      if (trigger === undefined) {
+        const existingUser = await findUserById(token.sub);
+        if (!existingUser) {
+          return token;
+        }
 
-      //   const existingAccount = await doesAccountExistByUserId(existingUser.id);
+        const existingAccount = await doesAccountExistByUserId(existingUser.id);
 
-      //   token.name = existingUser.name;
-      //   token.email = existingUser.email;
-      //   token.role = existingUser.role;
-      //   token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      //   token.picture = existingUser.image;
-      //   token.isOAuth = existingAccount;
-      // }
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+        token.picture = existingUser.image;
+        token.isOAuth = existingAccount;
+      }
 
       if (trigger === "update" && session) {
         if (session.user.image) {
