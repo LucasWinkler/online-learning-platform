@@ -54,7 +54,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         verificationToken.token,
       );
 
-      return { success: "Verification email sent." };
+      return { success: "Verification email has been sent to your email." };
     }
 
     if (existingUser.isTwoFactorEnabled) {
@@ -63,16 +63,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
           existingUser.email,
         );
         if (!twoFactorToken) {
-          return { error: "Invalid 2FA code." };
+          return { error: "That 2FA code is invalid." };
         }
 
         if (twoFactorToken.token !== code) {
-          return { error: "Invalid 2FA code." };
+          return { error: "That 2FA code is invalid." };
         }
 
         const hasExpired = new Date(twoFactorToken.expiresAt) < new Date();
         if (hasExpired) {
-          return { error: "2FA Code has expired." };
+          return { error: "That 2FA code has expired." };
         }
 
         await deleteTwoFactorToken(existingUser.email, twoFactorToken.token);
@@ -99,13 +99,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             twoFactorToken.token,
           );
 
-          return { twoFactor: true, success: "A 2FA Code has been sent." };
+          return {
+            twoFactor: true,
+            success: "A 2FA code has been sent to your email.",
+          };
         }
 
         return {
           twoFactor: true,
           warning:
-            "A valid 2FA Code has already been sent. If you did not receive it, please wait 5 minutes and try again.",
+            "A 2FA code has already been sent. If you did not receive it, please try again in 5 minutes.",
         };
       }
     }
@@ -115,7 +118,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       password,
     });
 
-    return { success: "Login successful" };
+    return { success: "You have been successfully logged in." };
   } catch (error) {
     console.error("Error logging in:", error);
 
@@ -124,7 +127,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         case "CredentialsSignin":
           return { error: "Invalid email or password." };
         default:
-          return { error: "An unknown error occurred" };
+          return { error: "An unknown error occurred while logging in." };
       }
     }
 

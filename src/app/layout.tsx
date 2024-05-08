@@ -32,7 +32,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
         <NextTopLoader showSpinner={false} />
         {children}
-        <Toaster richColors />
+        <Toaster closeButton pauseWhenPageIsHidden richColors />
       </body>
     </html>
   );

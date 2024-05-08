@@ -1,6 +1,6 @@
 "use server";
 
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { sendVerificationEmail } from "~/lib/mail";
 import { RegisterSchema } from "~/schemas/auth";
@@ -27,9 +27,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       }
     }
 
-    console.error("Error creating account:", error);
+    console.error(
+      "An unknown error occurred while creating your account:",
+      error,
+    );
     return {
-      error: "Error creating account. Please check your details and try again.",
+      error: "An unknown error occurred while creating your account.",
     };
   }
 
@@ -39,5 +42,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     verificationToken.token,
   );
 
-  return { success: "Verification email sent." };
+  return {
+    success: "A verification email has been successfully sent to your email.",
+  };
 };

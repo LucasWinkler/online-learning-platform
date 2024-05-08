@@ -27,7 +27,7 @@ export const toggleTwoFactorAuthentication = async (
   if (!validatedFields.success) {
     return {
       showCodeInput: false,
-      error: "Unable to update 2FA",
+      error: "An unknown error occurred while changing your 2FA settings.",
     };
   }
 
@@ -38,15 +38,7 @@ export const toggleTwoFactorAuthentication = async (
     if (!user) {
       return {
         showCodeInput: !!code,
-        error: "You are not authenticated",
-      };
-    }
-
-    if (user.isOAuth) {
-      return {
-        showCodeInput: !!code,
-        error:
-          "Your account can only manage 2FA through your third-party account provider.",
+        error: "You are not authenticated.",
       };
     }
 
@@ -54,17 +46,17 @@ export const toggleTwoFactorAuthentication = async (
     if (!existingUser) {
       return {
         showCodeInput: !!code,
-        error: "User not found",
+        error: "You are not authenticated.",
       };
     }
 
     const doesUserHaveOAuthAccount = await doesAccountExistByUserId(
       existingUser.id,
     );
-    if (doesUserHaveOAuthAccount) {
+    if (doesUserHaveOAuthAccount || user.isOAuth) {
       return {
         showCodeInput: !!code,
-        error: "Your authentication is handled by your login provider",
+        error: "Your 2FA is handled by your third-party social account.",
       };
     }
 
@@ -77,19 +69,19 @@ export const toggleTwoFactorAuthentication = async (
 
         return {
           showCodeInput: true,
-          message: "A 2FA Code has been sent.",
+          message: "A 2FA code has been successfully sent to your email.",
         };
       }
 
       return {
         showCodeInput: true,
         message:
-          "A 2FA Code has already been sent. If you do not have one please try again in 5 minutes.",
+          "A 2FA code has already been sent to your email. You can request a new code in 5 minutes.",
       };
     } else {
       const existingToken = await getTwoFactorTokenByToken(code);
       if (!existingToken) {
-        return { showCodeInput: true, error: "Invalid 2FA Code" };
+        return { showCodeInput: true, error: "Invalid 2FA code." };
       }
 
       if (existingToken.expiresAt < new Date()) {
@@ -98,12 +90,13 @@ export const toggleTwoFactorAuthentication = async (
 
         return {
           showCodeInput: true,
-          message: "The code expired. A new one has been sent.",
+          message:
+            "Your 2FA code has expired. A new one has been sent to your email.",
         };
       }
 
       if (existingToken.token !== code) {
-        return { showCodeInput: true, error: "Invalid 2FA Code" };
+        return { showCodeInput: true, error: "Invalid 2FA code." };
       }
 
       await deleteTwoFactorToken(existingUser.email, existingToken.token);
@@ -124,13 +117,13 @@ export const toggleTwoFactorAuthentication = async (
   } catch (error) {
     return {
       showCodeInput: false,
-      error: `Unable to ${isTwoFactorEnabled ? "disable" : "enable"} 2FA`,
+      error: "An unknown error occurred while changing your 2FA settings.",
     };
   }
 
   return {
     isTwoFactorEnabled: isTwoFactorEnabled,
     showCodeInput: false,
-    success: `2FA has been ${isTwoFactorEnabled ? "enabled" : "disabled"} on your account`,
+    success: `2FA has been successfully ${isTwoFactorEnabled ? "enabled" : "disabled"} on your account.`,
   };
 };

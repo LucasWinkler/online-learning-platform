@@ -16,7 +16,7 @@ export const changeEmail = async (
   const validatedFields = ChangeEmailSchema.safeParse(values);
   if (!validatedFields.success) {
     return {
-      error: "Invalid email",
+      error: "Invalid email input.",
     };
   }
 
@@ -26,34 +26,35 @@ export const changeEmail = async (
     const user = await currentUser();
     if (!user) {
       return {
-        error: "You are not authenticated",
+        error: "You are not authenticated.",
       };
     }
 
     const existingUser = await findUserById(user.id);
     if (!existingUser) {
       return {
-        error: "You are not authorized",
+        error: "You are not authenticated.",
       };
     }
 
     const doesAccountExist = await doesAccountExistByUserId(user.id);
-    if (doesAccountExist) {
+    if (doesAccountExist || user.isOAuth) {
       return {
-        error: "You signed up with a third-party account provider",
+        error:
+          "You can not change your email because you signed up with a third-party social account.",
       };
     }
 
     if (existingUser.email === email) {
       return {
-        error: "Email is the same",
+        error: "You are already using that email.",
       };
     }
 
     const existingUserWithEmail = await findUserByEmail(email);
     if (existingUserWithEmail && existingUserWithEmail.id !== existingUser.id) {
       return {
-        error: "Email is already taken",
+        error: "That email is already in use.",
       };
     }
 
@@ -63,10 +64,12 @@ export const changeEmail = async (
       verificationToken.token,
     );
 
-    return { success: "Verification email sent" };
+    return {
+      success: "A verification link has been successfully sent to your email.",
+    };
   } catch (error) {
     return {
-      error: "Unable to update email",
+      error: "An unknown error occurred while changing your email.",
     };
   }
 };

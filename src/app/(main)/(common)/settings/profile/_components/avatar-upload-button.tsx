@@ -31,17 +31,25 @@ export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
         },
       })
         .then(() => {
-          toast.success("Profile picture uploaded successfully!");
+          toast.success("Profile Picture Changed.", {
+            description: "Your profile picture has been successfully changed.",
+          });
         })
         .catch(() => {
-          toast.error("Error occurred while uploading profile picture");
+          toast.error("Profile Picture Change Failed.", {
+            description:
+              "An unknown error occurred while changing your profile picture.",
+          });
         })
         .finally(() => {
           setIsPending(false);
         });
     },
     onUploadError: () => {
-      toast.error("Error occurred while uploading profile picture");
+      toast.error("Profile Picture Change Failed.", {
+        description:
+          "An unknown error occurred while changing your profile picture.",
+      });
       setIsPending(false);
     },
     onUploadBegin: () => {

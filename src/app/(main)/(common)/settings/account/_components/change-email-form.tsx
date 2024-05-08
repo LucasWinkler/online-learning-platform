@@ -35,7 +35,9 @@ export const ChangeEmailForm = () => {
       await changeEmail(values)
         .then(async (data) => {
           if (data?.error) {
-            toast.error(data.error);
+            toast.error("Email Change Failed", {
+              description: data.error,
+            });
           }
 
           if (data?.success) {
@@ -45,11 +47,16 @@ export const ChangeEmailForm = () => {
                 email: values.email,
               },
             });
-            toast.success(data.success);
+
+            toast.success("Email Successfully Changed", {
+              description: data.success,
+            });
           }
         })
         .catch(() => {
-          toast.error("An error occurred while updating your email.");
+          toast.error("Email Change Failed", {
+            description: "An unknown error occurred while changing your email.",
+          });
         });
     });
   };
@@ -79,7 +86,7 @@ export const ChangeEmailForm = () => {
           {!!user?.isOAuth ? (
             <p>
               You can not change your email because you signed up through a
-              third-party account provider.
+              third-party social account.
             </p>
           ) : (
             <Button type="submit" disabled={isDisabled} size="sm">

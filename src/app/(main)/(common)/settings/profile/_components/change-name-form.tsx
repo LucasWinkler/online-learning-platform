@@ -34,7 +34,9 @@ export const ChangeNameForm = () => {
       await changeName(values)
         .then(async (data) => {
           if (data?.error) {
-            toast.error(data.error);
+            toast.error("Name Change Failed", {
+              description: data.error,
+            });
           }
 
           if (data?.success) {
@@ -44,11 +46,15 @@ export const ChangeNameForm = () => {
                 name: values.name,
               },
             });
-            toast.success(data.success);
+            toast.success("Name Changed", {
+              description: data.success,
+            });
           }
         })
         .catch(() => {
-          toast.error("An error occurred while updating your name.");
+          toast.error("Name Change Failed", {
+            description: "An unknown error occurred while changing your name.",
+          });
         });
     });
   };
