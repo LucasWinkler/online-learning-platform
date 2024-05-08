@@ -85,7 +85,9 @@ export const Toggle2FAForm = () => {
           }
 
           if (data.error) {
-            toast.error(data.error);
+            toast.error("2FA Verification Failed", {
+              description: data.error,
+            });
             toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
             setIsDialogOpen(false);
           }
@@ -95,16 +97,19 @@ export const Toggle2FAForm = () => {
               user: { isTwoFactorEnabled: data.isTwoFactorEnabled },
             });
             toggleTwoFactorAuthenticationForm.resetField("code");
-            toast.success(data.success);
+            toast.success("2FA Settings Successfully Changed", {
+              description: data.success,
+            });
             setIsDialogOpen(false);
             setShowCodeInput(false);
           }
         })
         .catch(() => {
           toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
-          toast.error(
-            `Unable to ${isTwoFactorEnabled ? "disable" : "enable"} 2FA`,
-          );
+          toast.error("2FA Verification Failed", {
+            description:
+              "An unknown error occurred while changing your 2FA settings.",
+          });
           setShowCodeInput(false);
           setIsDialogOpen(false);
         });

@@ -14,7 +14,7 @@ export const forgotPassword = async (
 ) => {
   const validatedFields = ForgotPasswordSchema.safeParse(values);
   if (!validatedFields.success) {
-    return { error: "Invalid email" };
+    return { error: "Invalid email input." };
   }
 
   const { email } = validatedFields.data;
@@ -22,7 +22,7 @@ export const forgotPassword = async (
   try {
     const existingUser = await findUserByEmail(email);
     if (!existingUser) {
-      return { error: "Email not found" };
+      return { error: "Account with that email was not found." };
     }
 
     const token = createId();
@@ -38,8 +38,13 @@ export const forgotPassword = async (
       passwordResetToken.token,
     );
   } catch (error: unknown) {
-    return { error: "Error sending password reset email" };
+    return {
+      error:
+        "An unknown error occurred while sending the password reset email.",
+    };
   }
 
-  return { success: "Password reset has been sent" };
+  return {
+    success: "Password reset has been successfully sent to your email.",
+  };
 };

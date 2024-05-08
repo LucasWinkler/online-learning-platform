@@ -19,12 +19,12 @@ export const resetPassword = async (
     }
 > => {
   if (!token) {
-    return { error: "No token provided" };
+    return { error: "No reset token provided." };
   }
 
   const validatedFields = ResetPasswordSchema.safeParse(values);
   if (!validatedFields.success) {
-    return { error: "Invalid password" };
+    return { error: "Invalid password input." };
   }
 
   const { password } = validatedFields.data;
@@ -32,6 +32,8 @@ export const resetPassword = async (
   try {
     return await resetUserPasswordWithToken(password, token);
   } catch (error: unknown) {
-    return { error: "Error while creating new password" };
+    return {
+      error: "An unknown error occurred while resetting your password.",
+    };
   }
 };

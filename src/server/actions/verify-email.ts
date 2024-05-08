@@ -10,5 +10,5 @@ export const verifyEmail = async (
     return { error: response.error };
   }
 
-  return { success: "Email verified" };
+  return { success: "Your email has been successfully verified." };
 };

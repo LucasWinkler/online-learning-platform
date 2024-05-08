@@ -3,6 +3,7 @@
 import type { ButtonProps } from "~/components/ui/button";
 
 import React from "react";
+import { signOut } from "next-auth/react";
 
 import {
   AlertDialog,
@@ -16,7 +17,6 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { logout } from "~/server/actions/logout";
 
 type ForgotPasswordButtonProps = ButtonProps & {
   redirectTo?: string;
@@ -28,8 +28,8 @@ export const ForgotPasswordButton = React.forwardRef(
     { children, redirectTo, disabled }: ForgotPasswordButtonProps,
     ref: React.Ref<HTMLButtonElement>,
   ) => {
-    const handleActionClick = async () => {
-      await logout({ redirectTo });
+    const handleActionClick = () => {
+      void signOut({ callbackUrl: redirectTo });
     };
 
     return (

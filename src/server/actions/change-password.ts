@@ -16,7 +16,7 @@ export const changePassword = async (
   const validatedFields = ChangePasswordSchema.safeParse(values);
   if (!validatedFields.success) {
     return {
-      error: "Invalid passwords",
+      error: "Invalid password input.",
     };
   }
 
@@ -25,13 +25,13 @@ export const changePassword = async (
 
   if (newPassword != confirmNewPassword) {
     return {
-      error: "Passwords do not match",
+      error: "New passwords do not match.",
     };
   }
 
   if (currentPassword == newPassword) {
     return {
-      error: "New password cannot be the same as the current password",
+      error: "New password cannot be the same as the current password.",
     };
   }
 
@@ -39,24 +39,24 @@ export const changePassword = async (
     const user = await currentUser();
     if (!user) {
       return {
-        error: "You are not authenticated",
+        error: "You are not authenticated.",
       };
     }
 
     const existingUser = await findUserById(user.id);
     if (!existingUser) {
       return {
-        error: "User not found",
+        error: "You are not authenticated.",
       };
     }
 
     const doesUserHaveOAuthAccount = await doesAccountExistByUserId(
       existingUser.id,
     );
-    if (!existingUser.password || doesUserHaveOAuthAccount) {
+    if (!existingUser.password || doesUserHaveOAuthAccount || user.isOAuth) {
       return {
         error:
-          "Your password can only be changed through your third-party account provider.",
+          "Your password can only be changed through your third-party social account.",
       };
     }
 
@@ -71,11 +71,11 @@ export const changePassword = async (
     await updateUserPassword(existingUser.id, newPassword);
 
     return {
-      success: "Password has been changed",
+      success: "Your password has been successfully changed.",
     };
   } catch (error) {
     return {
-      error: "Unable to change password",
+      error: "An unknown error occurred while changing your password.",
     };
   }
 };

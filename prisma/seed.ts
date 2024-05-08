@@ -2,7 +2,7 @@ import { Role } from "@prisma/client";
 
 import { env } from "~/env";
 import getBase64 from "~/lib/plaiceholder";
-import { db } from "~/server/db";
+import { db, pool } from "~/server/db";
 import { hashPassword } from "~/server/use-cases/user";
 
 async function main() {
@@ -112,7 +112,7 @@ async function main() {
 main()
   .then(async () => {
     console.log("Seed: Disconnecting database connection...");
-
+    // await pool.end();
     await db.$disconnect();
   })
   .catch(async (e) => {

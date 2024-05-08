@@ -11,7 +11,7 @@ export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
   const validatedFields = ChangeNameSchema.safeParse(values);
   if (!validatedFields.success) {
     return {
-      error: "Invalid name",
+      error: "Invalid name input.",
     };
   }
 
@@ -21,20 +21,20 @@ export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
     const user = await currentUser();
     if (!user) {
       return {
-        error: "You are not authenticated",
+        error: "You are not authenticated.",
       };
     }
 
     const existingUser = await findUserById(user.id);
     if (!existingUser) {
       return {
-        error: "User not found",
+        error: "You are not authenticated.",
       };
     }
 
     if (existingUser.name === name) {
       return {
-        error: "Name is the same",
+        error: "You are already using that name.",
       };
     }
 
@@ -43,11 +43,11 @@ export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
     });
 
     return {
-      success: "Name has been updated",
+      success: "Your name has been successfully changed.",
     };
   } catch (error) {
     return {
-      error: "Unable to update name",
+      error: "An unknown error occurred while changing your name.",
     };
   }
 };

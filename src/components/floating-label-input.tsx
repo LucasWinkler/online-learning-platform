@@ -18,10 +18,10 @@ export const FloatingLabelInput = React.forwardRef<
     <div className="relative">
       <FormControl>
         <Input
+          {...props}
           placeholder=" "
           ref={ref}
           className={cn("peer", className)}
-          {...props}
         />
       </FormControl>
       <FormLabel className="pointer-events-none absolute left-0 top-0 z-[2] mx-2.5 my-2.5 origin-top-left bg-background text-neutral-500 transition-all duration-200 ease-out peer-focus-within:-translate-y-4 peer-focus-within:scale-[0.85] peer-focus-within:text-foreground peer-disabled:opacity-75 peer-[:not(:placeholder-shown)]:-translate-y-4 peer-[:not(:placeholder-shown)]:scale-[0.85]">
