@@ -81,11 +81,8 @@ export const ChangeNameForm = () => {
         </CardContent>
         <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
           <Button type="submit" disabled={isPending} size="sm">
-            {isPending ? (
-              <Loader2Icon className="h-5 w-5 animate-spin" />
-            ) : (
-              "Save"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            Update Name
           </Button>
         </CardFooter>
       </form>

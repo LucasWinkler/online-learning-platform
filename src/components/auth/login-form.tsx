@@ -98,10 +98,10 @@ export const LoginForm = () => {
 
   return (
     <AuthCard
-      title="Welcome back"
+      title="Welcome Back"
       description="Enter your details to start learning today!"
       altActionText={showTwoFactor ? undefined : "New here?"}
-      altActionLinkText={showTwoFactor ? "Back to login" : "Create account"}
+      altActionLinkText={showTwoFactor ? "Back to login" : "Sign up"}
       altActionHref={showTwoFactor ? "/auth/login" : "/auth/register"}
       altActionOnClick={showTwoFactor ? () => onAltActionClick() : undefined}
       showSocialList
@@ -204,16 +204,8 @@ export const LoginForm = () => {
             type="submit"
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
-            {isPending ? (
-              <>
-                <span className="sr-only">Signing in...</span>
-                <Loader2Icon className="size-6 animate-spin xs:size-5" />
-              </>
-            ) : showTwoFactor ? (
-              "Confirm"
-            ) : (
-              "Login"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            {showTwoFactor ? "Continue" : "Sign In"}
           </Button>
         </form>
       </Form>

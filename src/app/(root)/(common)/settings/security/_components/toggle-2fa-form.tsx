@@ -237,11 +237,10 @@ export const Toggle2FAForm = () => {
                 variant={isTwoFactorEnabled ? "destructive" : "default"}
                 disabled={isDisabled}
               >
-                {isPending ? (
-                  <Loader2Icon className="h-5 w-5 animate-spin" />
-                ) : (
-                  `${isTwoFactorEnabled ? "Disable" : "Enable"} 2FA`
+                {isPending && (
+                  <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
+                {isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
               </Button>
             </AlertDialogFooter>
           </form>

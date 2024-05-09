@@ -125,11 +125,10 @@ export const DeleteAccountButton = ({
                 type="submit"
                 disabled={isPending || !isPhraseCorrect}
               >
-                {isPending ? (
-                  <Loader2Icon className="h-5 w-5 animate-spin" />
-                ) : (
-                  "Delete account"
+                {isPending && (
+                  <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
+                Delete Account
               </Button>
             </AlertDialogFooter>
           </form>

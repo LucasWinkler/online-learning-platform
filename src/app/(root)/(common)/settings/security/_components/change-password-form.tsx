@@ -160,11 +160,10 @@ export const ChangePasswordForm = () => {
                 Forgot password?
               </ForgotPasswordButton>
               <Button type="submit" disabled={isDisabled} size="sm">
-                {isPending ? (
-                  <Loader2Icon className="h-5 w-5 animate-spin" />
-                ) : (
-                  "Update password"
+                {isPending && (
+                  <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
+                Update Password
               </Button>
             </>
           )}

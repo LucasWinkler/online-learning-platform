@@ -52,8 +52,8 @@ export const ResetPasswordForm = () => {
 
   return (
     <AuthCard
-      title="Resetting your password?"
-      description="Please enter your new password below."
+      title="Password Reset"
+      description="Your new password must be different from previous used password and must be at least 8 characters."
       altActionLinkText="Back to login"
       altActionHref="/auth/login"
     >
@@ -69,7 +69,7 @@ export const ResetPasswordForm = () => {
                     htmlFor="password"
                     className="text-base xs:text-sm"
                   >
-                    New password
+                    New Password
                   </FormLabel>
                   <div className="relative">
                     <Input
@@ -95,7 +95,7 @@ export const ResetPasswordForm = () => {
                     htmlFor="confirmPassword"
                     className="text-base xs:text-sm"
                   >
-                    Confirm password
+                    Confirm Password
                   </FormLabel>
                   <div className="relative">
                     <Input
@@ -120,14 +120,8 @@ export const ResetPasswordForm = () => {
             type="submit"
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
-            {isPending ? (
-              <>
-                <span className="sr-only">Resetting password...</span>
-                <Loader2Icon className="size-6 animate-spin xs:size-5" />
-              </>
-            ) : (
-              "Reset password"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            Reset Password
           </Button>
         </form>
       </Form>

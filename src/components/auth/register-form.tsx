@@ -51,7 +51,7 @@ export const RegisterForm = () => {
 
   return (
     <AuthCard
-      title="Create account"
+      title="Sign Up"
       description="Enter your details to start learning today!"
       altActionText="Have an account?"
       altActionLinkText="Login"
@@ -162,14 +162,8 @@ export const RegisterForm = () => {
             type="submit"
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
-            {isPending ? (
-              <>
-                <span className="sr-only">Registering...</span>
-                <Loader2Icon className="size-6 animate-spin xs:size-5" />
-              </>
-            ) : (
-              "Register"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            Sign Up
           </Button>
         </form>
       </Form>

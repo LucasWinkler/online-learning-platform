@@ -90,11 +90,10 @@ export const ChangeEmailForm = () => {
             </p>
           ) : (
             <Button type="submit" disabled={isDisabled} size="sm">
-              {isPending ? (
-                <Loader2Icon className="h-5 w-5 animate-spin" />
-              ) : (
-                "Change email"
+              {isPending && (
+                <Loader2Icon className="mr-1 size-4 animate-spin" />
               )}
+              Update Email
             </Button>
           )}
         </CardFooter>

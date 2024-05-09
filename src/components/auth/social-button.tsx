@@ -56,15 +56,11 @@ export const SocialButton = ({
       )}
       onClick={handleSignIn}
     >
-      {isPending && (
-        <>
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <span className="sr-only">Signing in...</span>
-            <Loader2Icon className="size-6 animate-spin xs:size-5" />
-          </div>
-        </>
+      {isPending ? (
+        <Loader2Icon className="size-5 animate-spin" />
+      ) : (
+        <social.icon className="size-6 shrink-0 xs:size-5" />
       )}
-      <social.icon className="size-6 shrink-0 xs:size-5" />
       {layoutType !== "icon-only" && (
         <span>
           {layoutType === "icon-name-only"
