@@ -14,6 +14,7 @@ import {
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmationByUserId,
 } from "~/server/data-access/2fa-confirmation";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
@@ -104,22 +105,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = user.image;
       }
 
-      // TODO: Enable when issue with neon + ws on edge is fixed
-      // if (trigger === undefined) {
-      //   const existingUser = await findUserById(token.sub);
-      //   if (!existingUser) {
-      //     return token;
-      //   }
+      if (trigger === undefined) {
+        const existingUser = await findUserById(token.sub);
+        if (!existingUser) {
+          return token;
+        }
 
-      //   const existingAccount = await doesAccountExistByUserId(existingUser.id);
+        const existingAccount = await doesAccountExistByUserId(existingUser.id);
 
-      //   token.name = existingUser.name;
-      //   token.email = existingUser.email;
-      //   token.role = existingUser.role;
-      //   token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      //   token.picture = existingUser.image;
-      //   token.isOAuth = existingAccount;
-      // }
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+        token.picture = existingUser.image;
+        token.isOAuth = existingAccount;
+      }
 
       if (trigger === "update" && session) {
         if (session.user.image) {

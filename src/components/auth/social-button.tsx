@@ -31,8 +31,6 @@ export const SocialButton = ({
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  console.log("callbackUrl", callbackUrl);
-
   const classNames = {
     "icon-full-text": "w-full flex gap-2 group",
     "icon-name-only": "w-full flex items-center justify-center gap-2",
