@@ -103,21 +103,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
         token.picture = user.image;
-      }
 
-      if (trigger === undefined) {
         const existingUser = await findUserById(token.sub);
         if (!existingUser) {
           return token;
         }
 
         const existingAccount = await doesAccountExistByUserId(existingUser.id);
-
-        token.name = existingUser.name;
-        token.email = existingUser.email;
-        token.role = existingUser.role;
-        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-        token.picture = existingUser.image;
         token.isOAuth = existingAccount;
       }
 

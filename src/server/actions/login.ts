@@ -20,7 +20,7 @@ import {
   getTwoFactorTokenByEmail,
 } from "~/server/data-access/2fa-token";
 import { findUserByEmail } from "~/server/data-access/user";
-import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
+import { generateTwoFactorToken } from "~/server/use-cases/2fa";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
 export const login = async (

@@ -36,22 +36,24 @@ import { toggleTwoFactorAuthentication } from "~/server/actions/toggle-2fa";
 
 export const Toggle2FAForm = () => {
   const { data: session, update } = useSession();
-  const user = session?.user;
-  const isTwoFactorEnabled = user?.isTwoFactorEnabled ?? false;
+  const initialIsTwoFactorEnabled = !!session?.user?.isTwoFactorEnabled;
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showCodeInput, setShowCodeInput] = useState(false);
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState<boolean>(
+    initialIsTwoFactorEnabled,
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [showCodeInput, setShowCodeInput] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
-  const isDisabled = session?.user?.isOAuth ?? isPending;
+
+  const isDisabled = !!session?.user?.isOAuth || isPending;
 
   const toggleTwoFactorAuthenticationForm = useForm<
     z.infer<typeof ToggleTwoFactorAuthenticationSchema>
   >({
     resolver: zodResolver(ToggleTwoFactorAuthenticationSchema),
     defaultValues: {
-      isTwoFactorEnabled: isTwoFactorEnabled,
       code: "",
     },
   });
@@ -88,48 +90,57 @@ export const Toggle2FAForm = () => {
             toast.error("2FA Verification Failed", {
               description: data.error,
             });
-            toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
-            setIsDialogOpen(false);
           }
 
           if (data.success) {
             await update({
-              user: { isTwoFactorEnabled: data.isTwoFactorEnabled },
+              user: {
+                isTwoFactorEnabled: data.isTwoFactorEnabled,
+              },
             });
+
+            setIsTwoFactorEnabled(data.isTwoFactorEnabled!);
+            setShowCodeInput(false);
+
             toggleTwoFactorAuthenticationForm.resetField("code");
             toast.success("2FA Settings Successfully Changed", {
               description: data.success,
             });
-            setIsDialogOpen(false);
-            setShowCodeInput(false);
           }
+
+          setIsDialogOpen(false);
         })
         .catch(() => {
-          toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
+          setShowCodeInput(false);
+          setIsDialogOpen(false);
+
           toast.error("2FA Verification Failed", {
             description:
               "An unknown error occurred while changing your 2FA settings.",
           });
-          setShowCodeInput(false);
-          setIsDialogOpen(false);
         });
     });
+  };
+
+  const handleCheckedChange = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCancelClicked = () => {
+    setMessage(undefined);
+    setError(undefined);
+    setIsDialogOpen(false);
+    setShowCodeInput(false);
+
+    toggleTwoFactorAuthenticationForm.reset();
   };
 
   return (
     <AlertDialog open={isDialogOpen}>
       <Switch
         disabled={isDisabled}
-        checked={
-          toggleTwoFactorAuthenticationForm.getValues().isTwoFactorEnabled
-        }
-        onCheckedChange={(checked) => {
-          toggleTwoFactorAuthenticationForm.setValue(
-            "isTwoFactorEnabled",
-            checked,
-          );
-          setIsDialogOpen(true);
-        }}
+        checked={isTwoFactorEnabled}
+        onCheckedChange={handleCheckedChange}
       />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -164,7 +175,6 @@ export const Toggle2FAForm = () => {
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
-
         <Form {...toggleTwoFactorAuthenticationForm}>
           <form
             className="space-y-4"
@@ -184,12 +194,12 @@ export const Toggle2FAForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        autoComplete="off"
+                        {...field}
                         id="code"
+                        autoComplete="one-time-code"
                         className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                         disabled={isPending}
                         placeholder="123456"
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage className="mt-1 text-sm" />
@@ -202,36 +212,10 @@ export const Toggle2FAForm = () => {
             <AlertDialogFooter>
               <AlertDialogCancel
                 disabled={isDisabled}
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  setShowCodeInput(false);
-                  setMessage(undefined);
-                  setError(undefined);
-                  toggleTwoFactorAuthenticationForm.reset();
-                }}
+                onClick={handleCancelClicked}
               >
                 Cancel
               </AlertDialogCancel>
-              {!showCodeInput && (
-                <FormField
-                  disabled={isDisabled}
-                  control={toggleTwoFactorAuthenticationForm.control}
-                  name="isTwoFactorEnabled"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <input
-                          {...field}
-                          type="hidden"
-                          value={field.value.toString()}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage className="mt-1 text-sm" />
-                    </FormItem>
-                  )}
-                />
-              )}
               <Button
                 type="submit"
                 variant={isTwoFactorEnabled ? "destructive" : "default"}
