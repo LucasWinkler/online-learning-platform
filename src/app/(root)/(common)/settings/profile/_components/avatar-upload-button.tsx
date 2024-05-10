@@ -121,7 +121,7 @@ export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
           <UserRoundIcon className="size-8" />
         </AvatarFallback>
       </Avatar>
-      <input {...getInputProps()} onChange={onSelectFile} />
+      <input {...getInputProps()} autoComplete="off" onChange={onSelectFile} />
     </div>
   );
 };

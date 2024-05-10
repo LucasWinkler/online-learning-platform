@@ -81,6 +81,7 @@ export const ChangeEmailForm = () => {
                     className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                     type="email"
                     placeholder="name@example.com"
+                    autoComplete="off"
                     disabled={isDisabled}
                     {...field}
                   />
