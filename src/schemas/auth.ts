@@ -8,34 +8,63 @@ const email = z
   .min(1, {
     message: "Email is required",
   })
+  .max(254, {
+    message: "Email must be at most 254 characters",
+  })
   .email({
     message: "Invalid email format",
   });
 
-const password = z.string().trim().min(8, {
-  message: "Password must be at least 8 characters",
-});
+const password = z
+  .string()
+  .trim()
+  .min(8, {
+    message: "Password must be at least 8 characters",
+  })
+  .max(128, {
+    message: "Password must be at most 128 characters",
+  });
 
-const newPassword = z.string().trim().min(8, {
-  message: "New password must be at least 8 characters",
-});
+const newPassword = z
+  .string()
+  .trim()
+  .min(8, {
+    message: "New Password must be at least 8 characters",
+  })
+  .max(128, {
+    message: "New Password must be at most 128 characters",
+  });
 
 const confirmPassword = z.string().trim().min(1, {
-  message: "Confirm password is required",
+  message: "Confirm Password is required",
 });
 
 const confirmNewPassword = z.string().trim().min(1, {
-  message: "Confirm new password is required",
+  message: "Confirm New Password is required",
 });
 
-const name = z.string().trim().min(1, {
-  message: "Name is required",
+const name = z
+  .string()
+  .trim()
+  .min(1, {
+    message: "Name is required",
+  })
+  .max(70, {
+    message: "Name must be at most 70 characters",
+  });
+
+const twoFactorCode = z.string().length(6, {
+  message: "Code must be 6 digits",
 });
 
 export const LoginSchema = z.object({
   email: email,
   password: password,
-  code: z.optional(z.string()),
+  code: z.optional(
+    z.string().max(6, {
+      message: "Code must be 6 digits",
+    }),
+  ),
 });
 
 export const RegisterSchema = z
@@ -79,8 +108,7 @@ export const DeleteAccountSchema = z.object({
 });
 
 export const ToggleTwoFactorAuthenticationSchema = z.object({
-  isTwoFactorEnabled: z.boolean(),
-  code: z.optional(z.string()),
+  code: z.union([twoFactorCode, z.literal("")]),
 });
 
 export const ChangeNameSchema = z.object({
@@ -102,6 +130,6 @@ export const ChangePasswordSchema = z
     path: ["confirmNewPassword"],
   })
   .refine((values) => values.currentPassword !== values.newPassword, {
-    message: "New password cannot be the same as the current password",
+    message: "New Password cannot be the same as the Current Password",
     path: ["newPassword"],
   });

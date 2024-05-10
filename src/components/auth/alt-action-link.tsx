@@ -35,8 +35,12 @@ export const AltActionLink = ({
       {href ? (
         <Link
           className={cn(
-            buttonVariants({ variant: "link", size: "xs" }),
-            "text-wrap text-base font-normal xs:text-sm",
+            buttonVariants({
+              variant: "link",
+              size: "xs",
+              weight: "semi-bold",
+            }),
+            "text-wrap text-base xs:text-sm",
           )}
           href={href}
           onClick={onClick}
@@ -46,8 +50,12 @@ export const AltActionLink = ({
       ) : (
         <button
           className={cn(
-            buttonVariants({ variant: "link", size: "xs" }),
-            "text-wrap text-base font-normal xs:text-sm",
+            buttonVariants({
+              variant: "link",
+              size: "xs",
+              weight: "semi-bold",
+            }),
+            "text-wrap text-base xs:text-sm",
           )}
           onClick={onClick}
         >

@@ -11,7 +11,13 @@ import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
-import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { ChangeEmailSchema } from "~/schemas/auth";
 import { changeEmail } from "~/server/actions/change-email";
@@ -70,13 +76,15 @@ export const ChangeEmailForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-1">
-                <Input
-                  disabled={isDisabled}
-                  className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                  type="email"
-                  placeholder="name@example.com"
-                  {...field}
-                />
+                <FormControl>
+                  <Input
+                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                    type="email"
+                    placeholder="name@example.com"
+                    disabled={isDisabled}
+                    {...field}
+                  />
+                </FormControl>
                 <FormMessage className="mt-1 text-sm" />
               </FormItem>
             )}
@@ -90,11 +98,10 @@ export const ChangeEmailForm = () => {
             </p>
           ) : (
             <Button type="submit" disabled={isDisabled} size="sm">
-              {isPending ? (
-                <Loader2Icon className="h-5 w-5 animate-spin" />
-              ) : (
-                "Change email"
+              {isPending && (
+                <Loader2Icon className="mr-1 size-4 animate-spin" />
               )}
+              Update Email
             </Button>
           )}
         </CardFooter>

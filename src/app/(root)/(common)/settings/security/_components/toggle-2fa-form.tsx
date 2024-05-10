@@ -13,6 +13,7 @@ import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -20,14 +21,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
@@ -36,22 +36,24 @@ import { toggleTwoFactorAuthentication } from "~/server/actions/toggle-2fa";
 
 export const Toggle2FAForm = () => {
   const { data: session, update } = useSession();
-  const user = session?.user;
-  const isTwoFactorEnabled = user?.isTwoFactorEnabled ?? false;
+  const initialIsTwoFactorEnabled = !!session?.user?.isTwoFactorEnabled;
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showCodeInput, setShowCodeInput] = useState(false);
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState<boolean>(
+    initialIsTwoFactorEnabled,
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [showCodeInput, setShowCodeInput] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
-  const isDisabled = session?.user?.isOAuth ?? isPending;
+
+  const isDisabled = !!session?.user?.isOAuth || isPending;
 
   const toggleTwoFactorAuthenticationForm = useForm<
     z.infer<typeof ToggleTwoFactorAuthenticationSchema>
   >({
     resolver: zodResolver(ToggleTwoFactorAuthenticationSchema),
     defaultValues: {
-      isTwoFactorEnabled: isTwoFactorEnabled,
       code: "",
     },
   });
@@ -88,48 +90,57 @@ export const Toggle2FAForm = () => {
             toast.error("2FA Verification Failed", {
               description: data.error,
             });
-            toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
-            setIsDialogOpen(false);
           }
 
           if (data.success) {
             await update({
-              user: { isTwoFactorEnabled: data.isTwoFactorEnabled },
+              user: {
+                isTwoFactorEnabled: data.isTwoFactorEnabled,
+              },
             });
+
             toggleTwoFactorAuthenticationForm.resetField("code");
             toast.success("2FA Settings Successfully Changed", {
               description: data.success,
             });
-            setIsDialogOpen(false);
+
+            setIsTwoFactorEnabled(data.isTwoFactorEnabled!);
             setShowCodeInput(false);
           }
+
+          setIsDialogOpen(false);
         })
         .catch(() => {
-          toggleTwoFactorAuthenticationForm.resetField("isTwoFactorEnabled");
+          setShowCodeInput(false);
+          setIsDialogOpen(false);
+
           toast.error("2FA Verification Failed", {
             description:
               "An unknown error occurred while changing your 2FA settings.",
           });
-          setShowCodeInput(false);
-          setIsDialogOpen(false);
         });
     });
+  };
+
+  const handleSwitchChange = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCancelClicked = () => {
+    setMessage(undefined);
+    setError(undefined);
+    setIsDialogOpen(false);
+    setShowCodeInput(false);
+
+    toggleTwoFactorAuthenticationForm.reset();
   };
 
   return (
     <AlertDialog open={isDialogOpen}>
       <Switch
         disabled={isDisabled}
-        checked={
-          toggleTwoFactorAuthenticationForm.getValues().isTwoFactorEnabled
-        }
-        onCheckedChange={(checked) => {
-          toggleTwoFactorAuthenticationForm.setValue(
-            "isTwoFactorEnabled",
-            checked,
-          );
-          setIsDialogOpen(true);
-        }}
+        checked={isTwoFactorEnabled}
+        onCheckedChange={handleSwitchChange}
       />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -164,7 +175,6 @@ export const Toggle2FAForm = () => {
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
-
         <Form {...toggleTwoFactorAuthenticationForm}>
           <form
             className="space-y-4"
@@ -179,20 +189,23 @@ export const Toggle2FAForm = () => {
                 name="code"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-1">
-                    <FormLabel htmlFor="code" className="text-base xs:text-sm">
+                    <FormLabel className="text-base xs:text-sm">
                       Two Factor Code
                     </FormLabel>
                     <FormControl>
                       <Input
-                        autoComplete="off"
-                        id="code"
                         className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                        disabled={isPending}
+                        type="text"
+                        required
+                        maxLength={6}
+                        inputMode="numeric"
                         placeholder="123456"
+                        autoComplete="one-time-code"
+                        disabled={isPending}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="mt-1 text-sm" />
+                    {/* <FormMessage className="mt-1 text-sm" /> */}
                   </FormItem>
                 )}
               />
@@ -202,47 +215,22 @@ export const Toggle2FAForm = () => {
             <AlertDialogFooter>
               <AlertDialogCancel
                 disabled={isDisabled}
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  setShowCodeInput(false);
-                  setMessage(undefined);
-                  setError(undefined);
-                  toggleTwoFactorAuthenticationForm.reset();
-                }}
+                onClick={handleCancelClicked}
               >
                 Cancel
               </AlertDialogCancel>
-              {!showCodeInput && (
-                <FormField
-                  disabled={isDisabled}
-                  control={toggleTwoFactorAuthenticationForm.control}
-                  name="isTwoFactorEnabled"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <input
-                          {...field}
-                          type="hidden"
-                          value={field.value.toString()}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage className="mt-1 text-sm" />
-                    </FormItem>
-                  )}
-                />
-              )}
-              <Button
+              <AlertDialogAction
+                className={buttonVariants({
+                  variant: isTwoFactorEnabled ? "destructive" : "default",
+                })}
                 type="submit"
-                variant={isTwoFactorEnabled ? "destructive" : "default"}
                 disabled={isDisabled}
               >
-                {isPending ? (
-                  <Loader2Icon className="h-5 w-5 animate-spin" />
-                ) : (
-                  `${isTwoFactorEnabled ? "Disable" : "Enable"} 2FA`
+                {isPending && (
+                  <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
-              </Button>
+                {isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
+              </AlertDialogAction>
             </AlertDialogFooter>
           </form>
         </Form>

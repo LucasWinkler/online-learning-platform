@@ -6,6 +6,7 @@ import { createId } from "@paralleldrive/cuid2";
 
 import { sendPasswordResetEmail } from "~/lib/mail";
 import { ForgotPasswordSchema } from "~/schemas/auth";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { createPasswordResetToken } from "~/server/data-access/password-reset-token";
 import { findUserByEmail } from "~/server/data-access/user";
 
@@ -23,6 +24,14 @@ export const forgotPassword = async (
     const existingUser = await findUserByEmail(email);
     if (!existingUser) {
       return { error: "Account with that email was not found." };
+    }
+
+    const doesAccountExist = await doesAccountExistByUserId(existingUser.id);
+    if (!doesAccountExist) {
+      return {
+        error:
+          "You signed in with a third-party social provider. If you need to reset your password please do it through them.",
+      };
     }
 
     const token = createId();

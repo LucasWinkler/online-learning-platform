@@ -16,6 +16,7 @@ import { Link } from "~/components/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -40,6 +41,16 @@ export const LoginForm = () => {
       ? "Please sign in using your original login method to continue."
       : "";
 
+  const altActionHref = (): string => {
+    if (callbackUrl) {
+      return showTwoFactor
+        ? `/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+        : `/auth/register?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+    }
+
+    return showTwoFactor ? "/auth/login" : "/auth/register";
+  };
+
   const loginForm = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -48,6 +59,11 @@ export const LoginForm = () => {
       code: "",
     },
   });
+
+  const emailValue = loginForm.getValues().email;
+  const forgotPasswordHref = emailValue
+    ? `/auth/forgot-password?email=${emailValue}`
+    : "/auth/forgot-password";
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError(undefined);
@@ -98,11 +114,11 @@ export const LoginForm = () => {
 
   return (
     <AuthCard
-      title="Welcome back"
+      title="Welcome Back"
       description="Enter your details to start learning today!"
       altActionText={showTwoFactor ? undefined : "New here?"}
-      altActionLinkText={showTwoFactor ? "Back to login" : "Create account"}
-      altActionHref={showTwoFactor ? "/auth/login" : "/auth/register"}
+      altActionLinkText={showTwoFactor ? "Back to login" : "Sign up"}
+      altActionHref={altActionHref()}
       altActionOnClick={showTwoFactor ? () => onAltActionClick() : undefined}
       showSocialList
       socialListPosition="top"
@@ -117,17 +133,21 @@ export const LoginForm = () => {
                 name="code"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-1">
-                    <FormLabel htmlFor="code" className="text-base xs:text-sm">
+                    <FormLabel className="text-base xs:text-sm">
                       Two Factor Code
                     </FormLabel>
-                    <Input
-                      autoComplete="off"
-                      id="code"
-                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      placeholder="123456"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="text"
+                        maxLength={6}
+                        inputMode="numeric"
+                        placeholder="123456"
+                        autoComplete="one-time-code"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage className="mt-1 text-sm" />
                   </FormItem>
                 )}
@@ -140,20 +160,19 @@ export const LoginForm = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-1">
-                      <FormLabel
-                        htmlFor="email"
-                        className="text-base xs:text-sm"
-                      >
+                      <FormLabel className="text-base xs:text-sm">
                         Email
                       </FormLabel>
-                      <Input
-                        autoComplete="email"
-                        id="email"
-                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                        disabled={isPending}
-                        placeholder="name@example.com"
-                        {...field}
-                      />
+                      <FormControl>
+                        <Input
+                          className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                          type="email"
+                          placeholder="name@example.com"
+                          autoComplete="email"
+                          disabled={isPending}
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage className="mt-1 text-sm" />
                     </FormItem>
                   )}
@@ -163,26 +182,24 @@ export const LoginForm = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-1">
-                      <FormLabel
-                        htmlFor="password"
-                        className="text-base xs:text-sm"
-                      >
+                      <FormLabel className="text-base xs:text-sm">
                         Password
                       </FormLabel>
                       <div className="relative">
-                        <Input
-                          autoComplete="current-password"
-                          id="password"
-                          className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                          disabled={isPending}
-                          placeholder="********"
-                          type="password"
-                          {...field}
-                        />
+                        <FormControl>
+                          <Input
+                            className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                            type="password"
+                            placeholder="********"
+                            autoComplete="current-password"
+                            disabled={isPending}
+                            {...field}
+                          />
+                        </FormControl>
                       </div>
                       <FormMessage className="mt-1 text-sm" />
                       <Link
-                        href={`/auth/forgot-password?email=${loginForm.getValues().email}`}
+                        href={forgotPasswordHref}
                         className={cn(
                           buttonVariants({ variant: "link", size: "sm" }),
                           "mt-2 h-auto self-start px-0 xxs:text-base xs:text-sm",
@@ -204,16 +221,8 @@ export const LoginForm = () => {
             type="submit"
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
-            {isPending ? (
-              <>
-                <span className="sr-only">Signing in...</span>
-                <Loader2Icon className="size-6 animate-spin xs:size-5" />
-              </>
-            ) : showTwoFactor ? (
-              "Confirm"
-            ) : (
-              "Login"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            {showTwoFactor ? "Continue" : "Sign In"}
           </Button>
         </form>
       </Form>

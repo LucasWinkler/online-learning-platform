@@ -26,7 +26,7 @@ export const UT_API_ROUTE_PREFIX = "/api/uploadthing";
  * The route for the unauthorized page
  * This route is used when the user is not authorized to access a page
  */
-export const UNAUTHORIZED_ROUTE = "/auth/unauthorized";
+export const UNAUTHORIZED_ROUTE = "/unauthorized";
 
 /**
  * An array of routes that are accessible to the public

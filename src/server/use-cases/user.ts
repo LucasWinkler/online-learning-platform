@@ -5,6 +5,7 @@ import { type Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { auth } from "~/server/auth";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
 import {
@@ -77,6 +78,14 @@ export const resetUserPasswordWithToken = async (
   const existingUser = await findUserByEmail(existingToken.identifier);
   if (!existingUser) {
     return { error: "User not found" };
+  }
+
+  const doesAccountExist = await doesAccountExistByUserId(existingUser.id);
+  if (!doesAccountExist) {
+    return {
+      error:
+        "You signed in with a third-party social provider. If you need to reset your password please do it through them.",
+    };
   }
 
   const hashedPassword = await hashPassword(newPassword);

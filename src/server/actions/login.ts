@@ -20,7 +20,7 @@ import {
   getTwoFactorTokenByEmail,
 } from "~/server/data-access/2fa-token";
 import { findUserByEmail } from "~/server/data-access/user";
-import { generateTwoFactorToken } from "~/server/use-cases/2fa-token";
+import { generateTwoFactorToken } from "~/server/use-cases/2fa";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
 
 export const login = async (
@@ -66,11 +66,7 @@ export const login = async (
         const twoFactorToken = await getTwoFactorTokenByEmail(
           existingUser.email,
         );
-        if (!twoFactorToken) {
-          return { error: "That 2FA code is invalid." };
-        }
-
-        if (twoFactorToken.token !== code) {
+        if (!twoFactorToken || twoFactorToken.token !== code) {
           return { error: "That 2FA code is invalid." };
         }
 
@@ -84,8 +80,9 @@ export const login = async (
         const existingConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id,
         );
+
         if (existingConfirmation) {
-          await deleteTwoFactorConfirmation(existingConfirmation.id);
+          await deleteTwoFactorConfirmation(existingConfirmation.userId);
         }
 
         await createTwoFactorConfirmation(existingUser.id);
@@ -98,6 +95,7 @@ export const login = async (
           const twoFactorToken = await generateTwoFactorToken(
             existingUser.email,
           );
+
           await sendTwoFactorTokenEmail(
             existingUser.email,
             twoFactorToken.token,

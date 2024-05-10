@@ -31,8 +31,6 @@ export const SocialButton = ({
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  console.log("callbackUrl", callbackUrl);
-
   const classNames = {
     "icon-full-text": "w-full flex gap-2 group",
     "icon-name-only": "w-full flex items-center justify-center gap-2",
@@ -58,15 +56,11 @@ export const SocialButton = ({
       )}
       onClick={handleSignIn}
     >
-      {isPending && (
-        <>
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <span className="sr-only">Signing in...</span>
-            <Loader2Icon className="size-6 animate-spin xs:size-5" />
-          </div>
-        </>
+      {isPending ? (
+        <Loader2Icon className="size-5 animate-spin" />
+      ) : (
+        <social.icon className="size-6 shrink-0 xs:size-5" />
       )}
-      <social.icon className="size-6 shrink-0 xs:size-5" />
       {layoutType !== "icon-only" && (
         <span>
           {layoutType === "icon-name-only"

@@ -1,4 +1,4 @@
-import { UnauthorizedCard } from "~/components/auth/unauthorized-card";
+import { UnauthorizedCard } from "./_components/unauthorized-card";
 
 const UnauthorizedPage = () => {
   return <UnauthorizedCard />;

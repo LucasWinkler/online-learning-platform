@@ -36,11 +36,11 @@ export const ForgotPasswordButton = React.forwardRef(
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
-            disabled={disabled}
-            ref={ref}
             className="text-foreground"
             variant="link"
             size="none"
+            disabled={disabled}
+            ref={ref}
           >
             {children}
           </Button>

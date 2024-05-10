@@ -14,6 +14,7 @@ import {
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmationByUserId,
 } from "~/server/data-access/2fa-confirmation";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
@@ -60,25 +61,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
+      console.log("signing in");
       if (account?.provider !== "credentials") {
+        console.log("not credentials");
         return true;
       }
 
+      console.log("user", user);
+
       const existingUser = await findUserById(user.id!);
+      console.log("existingUser", existingUser);
+
       if (!existingUser?.emailVerified) {
         return false;
       }
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          user.id!,
+          existingUser.id,
         );
 
         if (!twoFactorConfirmation) {
           return false;
         }
 
-        await deleteTwoFactorConfirmation(user.id!);
+        await deleteTwoFactorConfirmation(existingUser.id);
       }
 
       return true;
@@ -102,24 +109,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
         token.picture = user.image;
+
+        const existingUser = await findUserById(token.sub);
+        if (!existingUser) {
+          return token;
+        }
+
+        const existingAccount = await doesAccountExistByUserId(existingUser.id);
+        token.isOAuth = existingAccount;
       }
-
-      // TODO: Enable when issue with neon + ws on edge is fixed
-      // if (trigger === undefined) {
-      //   const existingUser = await findUserById(token.sub);
-      //   if (!existingUser) {
-      //     return token;
-      //   }
-
-      //   const existingAccount = await doesAccountExistByUserId(existingUser.id);
-
-      //   token.name = existingUser.name;
-      //   token.email = existingUser.email;
-      //   token.role = existingUser.role;
-      //   token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      //   token.picture = existingUser.image;
-      //   token.isOAuth = existingAccount;
-      // }
 
       if (trigger === "update" && session) {
         if (session.user.image) {

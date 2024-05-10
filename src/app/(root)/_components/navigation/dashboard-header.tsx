@@ -23,7 +23,7 @@ export const DashboardHeader = async () => {
         <DashboardMobileMenu user={user} />
         <CommandMenu
           user={user}
-          className="hidden w-full flex-1 shrink px-1 xxs:inline-flex md:max-w-[15.625rem] lg:max-w-[20.3125rem] xl:max-w-[23.4375rem]"
+          className="hidden h-9 w-full flex-1 shrink px-1 xxs:inline-flex md:max-w-[15.625rem] lg:max-w-[20.3125rem] xl:max-w-[23.4375rem]"
         />
         <div className="flex items-center justify-end gap-2">
           {user ? (

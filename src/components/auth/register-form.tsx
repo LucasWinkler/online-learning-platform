@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AuthCard } from "~/components/auth/auth-card";
@@ -13,6 +14,7 @@ import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -26,6 +28,12 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [success, setSuccess] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
+  const altActionHref = callbackUrl
+    ? `/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/auth/login";
 
   const registerForm = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -51,11 +59,11 @@ export const RegisterForm = () => {
 
   return (
     <AuthCard
-      title="Create account"
+      title="Sign Up"
       description="Enter your details to start learning today!"
       altActionText="Have an account?"
       altActionLinkText="Login"
-      altActionHref="/auth/login"
+      altActionHref={altActionHref}
       showSocialList
       socialListPosition="top"
       socialListLayoutType="icon-name-only"
@@ -71,16 +79,18 @@ export const RegisterForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel htmlFor="name" className="text-base xs:text-sm">
+                  <FormLabel className="text-base xs:text-sm">
                     Full Name
                   </FormLabel>
-                  <Input
-                    id="name"
-                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                    disabled={isPending}
-                    placeholder="John Doe"
-                    {...field}
-                  />
+                  <FormControl>
+                    <Input
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                      placeholder="John Doe"
+                      autoComplete="name"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
@@ -90,16 +100,17 @@ export const RegisterForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel htmlFor="email" className="text-base xs:text-sm">
-                    Email
-                  </FormLabel>
-                  <Input
-                    id="email"
-                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                    disabled={isPending}
-                    placeholder="name@example.com"
-                    {...field}
-                  />
+                  <FormLabel className="text-base xs:text-sm">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                      type="email"
+                      placeholder="name@example.com"
+                      autoComplete="email"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}
@@ -109,21 +120,20 @@ export const RegisterForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel
-                    htmlFor="password"
-                    className="text-base xs:text-sm"
-                  >
+                  <FormLabel className="text-base xs:text-sm">
                     Password
                   </FormLabel>
                   <div className="relative">
-                    <Input
-                      id="password"
-                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="password"
+                        placeholder="********"
+                        autoComplete="current-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                   </div>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
@@ -134,21 +144,20 @@ export const RegisterForm = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel
-                    htmlFor="confirmPassword"
-                    className="text-base xs:text-sm"
-                  >
+                  <FormLabel className="text-base xs:text-sm">
                     Confirm Password
                   </FormLabel>
                   <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="password"
+                        placeholder="********"
+                        autoComplete="current-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                   </div>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
@@ -162,14 +171,8 @@ export const RegisterForm = () => {
             type="submit"
             className="h-10 w-full py-3 text-base xs:h-9 xs:px-4 xs:py-2 xs:text-sm"
           >
-            {isPending ? (
-              <>
-                <span className="sr-only">Registering...</span>
-                <Loader2Icon className="size-6 animate-spin xs:size-5" />
-              </>
-            ) : (
-              "Register"
-            )}
+            {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
+            Sign Up
           </Button>
         </form>
       </Form>
