@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardDescription,
@@ -7,7 +6,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { DeleteAccountButton } from "./delete-account-button";
+import { DeleteAccountDialogWithTrigger } from "./delete-account-button";
 
 export const DeleteAccountCard = () => {
   return (
@@ -20,7 +19,7 @@ export const DeleteAccountCard = () => {
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
-        <DeleteAccountButton size="sm">Delete Account</DeleteAccountButton>
+        <DeleteAccountDialogWithTrigger />
       </CardFooter>
     </Card>
   );

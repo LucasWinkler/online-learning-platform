@@ -1,6 +1,5 @@
 "use client";
 
-import type { ButtonProps } from "~/components/ui/button";
 import type { z } from "zod";
 
 import React, { useState, useTransition } from "react";
@@ -22,18 +21,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { DELETE_ACCOUNT_PHRASE } from "~/constants";
 import { DeleteAccountSchema } from "~/schemas/auth";
 import { deleteAccount } from "~/server/actions/delete-account";
 
-type DeleteAccountButtonProps = ButtonProps;
-
-export const DeleteAccountButton = ({
-  children,
-  ...props
-}: DeleteAccountButtonProps) => {
+export const DeleteAccountDialogWithTrigger = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
@@ -61,7 +55,8 @@ export const DeleteAccountButton = ({
           }
 
           if (data.success) {
-            setIsDialogOpen(false);
+            handleDialogClose();
+
             void signOut({
               redirect: true,
               callbackUrl: "/auth/account-deleted",
@@ -74,12 +69,21 @@ export const DeleteAccountButton = ({
     });
   };
 
+  const handleDeleteButtonClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <AlertDialog open={isDialogOpen}>
-      <AlertDialogTrigger onClick={() => setIsDialogOpen(true)} asChild>
-        <Button {...props} variant="destructive">
-          {children}
-        </Button>
+      <AlertDialogTrigger
+        className={buttonVariants({ variant: "destructive", size: "sm" })}
+        onClick={handleDeleteButtonClick}
+      >
+        Delete Account
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -118,7 +122,7 @@ export const DeleteAccountButton = ({
             />
             <FormError message={error} />
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+              <AlertDialogCancel onClick={handleDialogClose}>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction

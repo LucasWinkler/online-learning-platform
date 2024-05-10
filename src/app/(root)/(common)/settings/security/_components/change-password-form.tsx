@@ -84,7 +84,7 @@ export const ChangePasswordForm = () => {
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       type="password"
                       placeholder="********"
-                      autoComplete="current-password"
+                      autoComplete="off"
                       disabled={isDisabled}
                       {...field}
                     />
@@ -108,7 +108,7 @@ export const ChangePasswordForm = () => {
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       type="password"
                       placeholder="********"
-                      autoComplete="new-password"
+                      autoComplete="off"
                       disabled={isDisabled}
                       {...field}
                     />
@@ -132,7 +132,7 @@ export const ChangePasswordForm = () => {
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       type="password"
                       placeholder="********"
-                      autoComplete="new-password"
+                      autoComplete="off"
                       disabled={isDisabled}
                       {...field}
                     />
