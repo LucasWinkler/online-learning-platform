@@ -13,6 +13,7 @@ import { FloatingLabelInput } from "~/components/floating-label-input";
 import { FormError } from "~/components/form-error";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -21,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { DELETE_ACCOUNT_PHRASE } from "~/constants";
 import { DeleteAccountSchema } from "~/schemas/auth";
@@ -120,16 +121,16 @@ export const DeleteAccountButton = ({
               <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </AlertDialogCancel>
-              <Button
-                variant="destructive"
+              <AlertDialogAction
                 type="submit"
                 disabled={isPending || !isPhraseCorrect}
+                className={buttonVariants({ variant: "destructive" })}
               >
                 {isPending && (
                   <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
                 Delete Account
-              </Button>
+              </AlertDialogAction>
             </AlertDialogFooter>
           </form>
         </Form>

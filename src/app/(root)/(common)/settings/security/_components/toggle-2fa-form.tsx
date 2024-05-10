@@ -13,6 +13,7 @@ import { FormError } from "~/components/form-error";
 import { FormSuccess } from "~/components/form-success";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -20,21 +21,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import { ToggleTwoFactorAuthenticationSchema } from "~/schemas/auth";
 import { toggleTwoFactorAuthentication } from "~/server/actions/toggle-2fa";
 
-// TODO: Prevent flash of state
 export const Toggle2FAForm = () => {
   const { data: session, update } = useSession();
   const initialIsTwoFactorEnabled = !!session?.user?.isTwoFactorEnabled;
@@ -100,13 +99,13 @@ export const Toggle2FAForm = () => {
               },
             });
 
-            setIsTwoFactorEnabled(data.isTwoFactorEnabled!);
-            setShowCodeInput(false);
-
             toggleTwoFactorAuthenticationForm.resetField("code");
             toast.success("2FA Settings Successfully Changed", {
               description: data.success,
             });
+
+            setIsTwoFactorEnabled(data.isTwoFactorEnabled!);
+            setShowCodeInput(false);
           }
 
           setIsDialogOpen(false);
@@ -123,7 +122,7 @@ export const Toggle2FAForm = () => {
     });
   };
 
-  const handleCheckedChange = () => {
+  const handleSwitchChange = () => {
     setIsDialogOpen(true);
   };
 
@@ -141,7 +140,7 @@ export const Toggle2FAForm = () => {
       <Switch
         disabled={isDisabled}
         checked={isTwoFactorEnabled}
-        onCheckedChange={handleCheckedChange}
+        onCheckedChange={handleSwitchChange}
       />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -206,7 +205,7 @@ export const Toggle2FAForm = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="mt-1 text-sm" />
+                    {/* <FormMessage className="mt-1 text-sm" /> */}
                   </FormItem>
                 )}
               />
@@ -220,16 +219,18 @@ export const Toggle2FAForm = () => {
               >
                 Cancel
               </AlertDialogCancel>
-              <Button
+              <AlertDialogAction
+                className={buttonVariants({
+                  variant: isTwoFactorEnabled ? "destructive" : "default",
+                })}
                 type="submit"
-                variant={isTwoFactorEnabled ? "destructive" : "default"}
                 disabled={isDisabled}
               >
                 {isPending && (
                   <Loader2Icon className="mr-1 size-4 animate-spin" />
                 )}
                 {isTwoFactorEnabled ? "Disable" : "Enable"} 2FA
-              </Button>
+              </AlertDialogAction>
             </AlertDialogFooter>
           </form>
         </Form>

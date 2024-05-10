@@ -47,8 +47,6 @@ export const toggleTwoFactor = async (code?: string) => {
     };
   }
 
-  console.log("existingUser 2fa", existingUser.isTwoFactorEnabled);
-
   const doesUserHaveOAuthAccount = await doesAccountExistByUserId(
     existingUser.id,
   );

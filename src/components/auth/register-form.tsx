@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AuthCard } from "~/components/auth/auth-card";
@@ -27,6 +28,12 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [success, setSuccess] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
+  const altActionHref = callbackUrl
+    ? `/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/auth/login";
 
   const registerForm = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -56,7 +63,7 @@ export const RegisterForm = () => {
       description="Enter your details to start learning today!"
       altActionText="Have an account?"
       altActionLinkText="Login"
-      altActionHref="/auth/login"
+      altActionHref={altActionHref}
       showSocialList
       socialListPosition="top"
       socialListLayoutType="icon-name-only"
@@ -79,6 +86,7 @@ export const RegisterForm = () => {
                     <Input
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       placeholder="John Doe"
+                      autoComplete="name"
                       disabled={isPending}
                       {...field}
                     />
@@ -98,6 +106,7 @@ export const RegisterForm = () => {
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       type="email"
                       placeholder="name@example.com"
+                      autoComplete="email"
                       disabled={isPending}
                       {...field}
                     />
@@ -120,6 +129,7 @@ export const RegisterForm = () => {
                         className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                         type="password"
                         placeholder="********"
+                        autoComplete="current-password"
                         disabled={isPending}
                         {...field}
                       />
@@ -143,6 +153,7 @@ export const RegisterForm = () => {
                         className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                         type="password"
                         placeholder="********"
+                        autoComplete="current-password"
                         disabled={isPending}
                         {...field}
                       />

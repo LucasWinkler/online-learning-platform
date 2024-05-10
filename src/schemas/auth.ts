@@ -60,7 +60,11 @@ const twoFactorCode = z.string().length(6, {
 export const LoginSchema = z.object({
   email: email,
   password: password,
-  code: z.union([twoFactorCode, z.literal("")]),
+  code: z.optional(
+    z.string().max(6, {
+      message: "Code must be 6 digits",
+    }),
+  ),
 });
 
 export const RegisterSchema = z
