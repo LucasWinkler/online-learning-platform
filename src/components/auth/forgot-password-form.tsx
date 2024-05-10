@@ -14,6 +14,7 @@ import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -72,17 +73,17 @@ export const ForgotPasswordForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel htmlFor="email" className="text-base xs:text-sm">
-                    Email
-                  </FormLabel>
-                  <Input
-                    autoComplete="email"
-                    id="email"
-                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                    disabled={isPending}
-                    placeholder="name@example.com"
-                    {...field}
-                  />
+                  <FormLabel className="text-base xs:text-sm">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="name@example.com"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
               )}

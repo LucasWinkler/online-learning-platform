@@ -21,7 +21,6 @@ export const toggleTwoFactorAuthentication = async (
   try {
     const result = await toggleTwoFactor(code);
 
-    console.log("result", result);
 
     return {
       showCodeInput: result.showCodeInput,

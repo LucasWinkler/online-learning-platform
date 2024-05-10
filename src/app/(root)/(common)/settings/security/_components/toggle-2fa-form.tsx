@@ -34,6 +34,7 @@ import { Switch } from "~/components/ui/switch";
 import { ToggleTwoFactorAuthenticationSchema } from "~/schemas/auth";
 import { toggleTwoFactorAuthentication } from "~/server/actions/toggle-2fa";
 
+// TODO: Prevent flash of state
 export const Toggle2FAForm = () => {
   const { data: session, update } = useSession();
   const initialIsTwoFactorEnabled = !!session?.user?.isTwoFactorEnabled;
@@ -189,17 +190,20 @@ export const Toggle2FAForm = () => {
                 name="code"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-1">
-                    <FormLabel htmlFor="code" className="text-base xs:text-sm">
+                    <FormLabel className="text-base xs:text-sm">
                       Two Factor Code
                     </FormLabel>
                     <FormControl>
                       <Input
-                        {...field}
-                        id="code"
-                        autoComplete="one-time-code"
                         className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                        disabled={isPending}
+                        type="text"
+                        required
+                        maxLength={6}
+                        inputMode="numeric"
                         placeholder="123456"
+                        autoComplete="one-time-code"
+                        disabled={isPending}
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage className="mt-1 text-sm" />

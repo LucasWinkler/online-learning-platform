@@ -11,7 +11,13 @@ import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
-import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { ChangeNameSchema } from "~/schemas/auth";
 import { changeName } from "~/server/actions/change-name";
@@ -68,12 +74,15 @@ export const ChangeNameForm = () => {
             name="name"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-1">
-                <Input
-                  className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                  type="text"
-                  placeholder="John Doe"
-                  {...field}
-                />
+                <FormControl>
+                  <Input
+                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                    type="text"
+                    placeholder="John Doe"
+                    disabled={isPending}
+                    {...field}
+                  />
+                </FormControl>
                 <FormMessage className="mt-1 text-sm" />
               </FormItem>
             )}

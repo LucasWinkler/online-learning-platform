@@ -16,6 +16,7 @@ import { Link } from "~/components/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -120,14 +121,19 @@ export const LoginForm = () => {
                     <FormLabel htmlFor="code" className="text-base xs:text-sm">
                       Two Factor Code
                     </FormLabel>
-                    <Input
-                      autoComplete="off"
-                      id="code"
-                      className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      placeholder="123456"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="text"
+                        required
+                        maxLength={6}
+                        inputMode="numeric"
+                        placeholder="123456"
+                        autoComplete="one-time-code"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage className="mt-1 text-sm" />
                   </FormItem>
                 )}

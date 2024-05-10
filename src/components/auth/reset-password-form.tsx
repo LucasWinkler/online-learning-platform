@@ -14,6 +14,7 @@ import { FormSuccess } from "~/components/form-success";
 import { Button } from "~/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -65,22 +66,20 @@ export const ResetPasswordForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel
-                    htmlFor="password"
-                    className="text-base xs:text-sm"
-                  >
+                  <FormLabel className="text-base xs:text-sm">
                     New Password
                   </FormLabel>
                   <div className="relative">
-                    <Input
-                      autoComplete="new-password"
-                      id="password"
-                      className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      placeholder="********"
-                      type="password"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="password"
+                        placeholder="********"
+                        autoComplete="new-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                   </div>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
@@ -91,22 +90,20 @@ export const ResetPasswordForm = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel
-                    htmlFor="confirmPassword"
-                    className="text-base xs:text-sm"
-                  >
+                  <FormLabel className="text-base xs:text-sm">
                     Confirm Password
                   </FormLabel>
                   <div className="relative">
-                    <Input
-                      autoComplete="new-password"
-                      id="confirmPassword"
-                      className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                      disabled={isPending}
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        className="h-10 bg-background py-1 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                        type="password"
+                        placeholder="********"
+                        autoComplete="new-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
                   </div>
                   <FormMessage className="mt-1 text-sm" />
                 </FormItem>
