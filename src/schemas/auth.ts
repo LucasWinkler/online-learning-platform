@@ -60,7 +60,7 @@ const twoFactorCode = z.string().length(6, {
 export const LoginSchema = z.object({
   email: email,
   password: password,
-  code: twoFactorCode,
+  code: z.union([twoFactorCode, z.literal("")]),
 });
 
 export const RegisterSchema = z
