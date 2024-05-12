@@ -29,6 +29,7 @@ const SettingsLayout = async ({ children }: SettingsLayoutProps) => {
       >
         Skip to settings
       </a>
+
       <SettingsNav />
       <SessionProvider session={session}>{children}</SessionProvider>
     </section>
