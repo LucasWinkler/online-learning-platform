@@ -5,10 +5,9 @@ import type { z } from "zod";
 import { currentUser } from "~/lib/auth";
 import { sendVerificationEmail } from "~/lib/mail";
 import { ChangeEmailSchema } from "~/schemas/auth";
-import { findUserByEmail, findUserById } from "~/server/data-access/user";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
+import { findUserByEmail } from "~/server/data-access/user";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
-
-import { doesAccountExistByUserId } from "../data-access/account";
 
 export const changeEmail = async (
   values: z.infer<typeof ChangeEmailSchema>,
@@ -30,13 +29,6 @@ export const changeEmail = async (
       };
     }
 
-    const existingUser = await findUserById(user.id);
-    if (!existingUser) {
-      return {
-        error: "You are not authenticated.",
-      };
-    }
-
     const doesAccountExist = await doesAccountExistByUserId(user.id);
     if (doesAccountExist || user.isOAuth) {
       return {
@@ -45,14 +37,14 @@ export const changeEmail = async (
       };
     }
 
-    if (existingUser.email === email) {
+    if (user.email === email) {
       return {
         error: "You are already using that email.",
       };
     }
 
     const existingUserWithEmail = await findUserByEmail(email);
-    if (existingUserWithEmail && existingUserWithEmail.id !== existingUser.id) {
+    if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
       return {
         error: "That email is already in use.",
       };

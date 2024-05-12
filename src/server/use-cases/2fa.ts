@@ -14,7 +14,6 @@ import {
   getTwoFactorTokenByToken,
 } from "~/server/data-access/2fa-token";
 import { doesAccountExistByUserId } from "~/server/data-access/account";
-import { findUserById } from "~/server/data-access/user";
 import { updateUserProfile } from "~/server/use-cases/user";
 
 export const generateTwoFactorToken = async (email: string) => {
@@ -39,17 +38,7 @@ export const toggleTwoFactor = async (code?: string) => {
     };
   }
 
-  const existingUser = await findUserById(user.id);
-  if (!existingUser) {
-    return {
-      showCodeInput: !!code,
-      error: "You are not authenticated.",
-    };
-  }
-
-  const doesUserHaveOAuthAccount = await doesAccountExistByUserId(
-    existingUser.id,
-  );
+  const doesUserHaveOAuthAccount = await doesAccountExistByUserId(user.id);
   if (doesUserHaveOAuthAccount || user.isOAuth) {
     return {
       showCodeInput: !!code,
@@ -58,11 +47,11 @@ export const toggleTwoFactor = async (code?: string) => {
   }
 
   if (!code) {
-    const existingToken = await getTwoFactorTokenByEmail(existingUser.email);
+    const existingToken = await getTwoFactorTokenByEmail(user.email);
 
     if (!existingToken || existingToken.expiresAt < new Date()) {
-      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-      await sendTwoFactorTokenEmail(existingUser.email, twoFactorToken.token);
+      const twoFactorToken = await generateTwoFactorToken(user.email);
+      await sendTwoFactorTokenEmail(user.email, twoFactorToken.token);
 
       return {
         showCodeInput: true,
@@ -83,8 +72,8 @@ export const toggleTwoFactor = async (code?: string) => {
   }
 
   if (existingToken.expiresAt < new Date()) {
-    const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-    await sendTwoFactorTokenEmail(existingUser.email, twoFactorToken.token);
+    const twoFactorToken = await generateTwoFactorToken(user.email);
+    await sendTwoFactorTokenEmail(user.email, twoFactorToken.token);
 
     return {
       showCodeInput: true,
@@ -100,19 +89,17 @@ export const toggleTwoFactor = async (code?: string) => {
     };
   }
 
-  await deleteTwoFactorToken(existingUser.email, existingToken.token);
+  await deleteTwoFactorToken(user.email, existingToken.token);
 
-  const existingConfirmation = await getTwoFactorConfirmationByUserId(
-    existingUser.id,
-  );
+  const existingConfirmation = await getTwoFactorConfirmationByUserId(user.id);
   if (existingConfirmation) {
-    await deleteTwoFactorConfirmation(existingUser.id);
+    await deleteTwoFactorConfirmation(user.id);
   }
 
-  await createTwoFactorConfirmation(existingUser.id);
+  await createTwoFactorConfirmation(user.id);
 
-  const newIsTwoFactorEnabled = !existingUser.isTwoFactorEnabled;
-  await updateUserProfile(existingUser.id, {
+  const newIsTwoFactorEnabled = !user.isTwoFactorEnabled;
+  await updateUserProfile(user.id, {
     isTwoFactorEnabled: newIsTwoFactorEnabled,
   });
 

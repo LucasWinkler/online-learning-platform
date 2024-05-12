@@ -4,7 +4,7 @@ import { type Prisma } from "@prisma/client";
 // import { hashSync } from "bcrypt-edge";
 import bcrypt from "bcryptjs";
 
-import { auth } from "~/server/auth";
+import { currentUser } from "~/lib/auth";
 import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { getPasswordResetTokenByToken } from "~/server/data-access/password-reset-token";
 import { verifyUserEmailTransaction } from "~/server/data-access/transactions";
@@ -116,8 +116,7 @@ export const verifyUserEmail = async (
     return { error: "That verification token has expired." };
   }
 
-  const session = await auth();
-  const user = session?.user;
+  const user = await currentUser();
 
   // New user is verifying their email
   if (!user) {
@@ -148,12 +147,7 @@ export const verifyUserEmail = async (
 
 export const deleteOwnAccount = async (
   userId: string,
-  userToDeleteId: string,
 ) => {
-  if (userId !== userToDeleteId) {
-    throw new Error("Unauthorized: You can only delete your own account.");
-  }
-
   await deleteUserById(userId);
   return { message: "Your account has been successfully deleted." };
 };
