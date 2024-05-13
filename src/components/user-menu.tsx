@@ -48,7 +48,7 @@ export const UserMenu = ({ user }: UserMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex items-center gap-1 md:gap-2">
-        <Avatar className="size-9">
+        <Avatar className="size-9 [&>*]:transition-all [&>*]:duration-300 [&>*]:ease-out [&>*]:group-hover:scale-[1.15]">
           <AvatarImage src={user.image ?? undefined} />
           <AvatarFallback className="bg-neutral-500 text-neutral-50">
             <UserRoundIcon className="h-4 w-4" />
