@@ -1,5 +1,3 @@
-"use client";
-
 import type { SocialListLayoutType, SocialListPosition } from "~/types/auth";
 
 import { SocialButton } from "~/components/auth/social-button";

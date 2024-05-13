@@ -1,9 +1,5 @@
 import type { Metadata } from "next/types";
 
-import { SessionProvider } from "next-auth/react";
-
-import { auth } from "~/lib/auth";
-
 import { SettingsNav } from "./_components/settings-nav";
 
 export const metadata: Metadata = {
@@ -18,9 +14,7 @@ type SettingsLayoutProps = {
 };
 
 // TODO: Add page for notifications and payments
-const SettingsLayout = async ({ children }: SettingsLayoutProps) => {
-  const session = await auth();
-
+const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   return (
     <section className="relative mx-auto grid h-full w-full max-w-5xl items-start gap-6 rounded-xl bg-gray-50 xs:bg-background xs:p-4 md:p-6 lg:grid-cols-[180px_1fr] lg:gap-8 lg:p-10 xl:grid-cols-[250px_1fr]">
       <a
@@ -30,7 +24,7 @@ const SettingsLayout = async ({ children }: SettingsLayoutProps) => {
         Skip to settings
       </a>
       <SettingsNav />
-      <SessionProvider session={session}>{children}</SessionProvider>
+      {children}
     </section>
   );
 };

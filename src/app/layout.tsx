@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
+import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
@@ -31,7 +32,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       </head>
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
         <NextTopLoader showSpinner={false} />
-        {children}
+        <SessionProvider>{children}</SessionProvider>
         <Toaster closeButton pauseWhenPageIsHidden richColors />
       </body>
     </html>

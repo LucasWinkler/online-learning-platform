@@ -4,8 +4,8 @@ import type { z } from "zod";
 
 import bcrypt from "bcryptjs";
 
-import { currentUser } from "~/lib/auth";
 import { ChangePasswordSchema } from "~/schemas/auth";
+import { auth } from "~/server/auth";
 import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserById } from "~/server/data-access/user";
 import { updateUserPassword } from "~/server/use-cases/user";
@@ -36,7 +36,8 @@ export const changePassword = async (
   }
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
       return {
         error: "You are not authenticated.",

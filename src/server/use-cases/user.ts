@@ -1,7 +1,6 @@
+import type { Prisma } from "@prisma/client";
 import type { RegisterUser } from "~/types/user";
 
-import { type Prisma } from "@prisma/client";
-// import { hashSync } from "bcrypt-edge";
 import bcrypt from "bcryptjs";
 
 import { auth } from "~/server/auth";
@@ -146,14 +145,7 @@ export const verifyUserEmail = async (
   );
 };
 
-export const deleteOwnAccount = async (
-  userId: string,
-  userToDeleteId: string,
-) => {
-  if (userId !== userToDeleteId) {
-    throw new Error("Unauthorized: You can only delete your own account.");
-  }
-
+export const deleteOwnAccount = async (userId: string) => {
   await deleteUserById(userId);
   return { message: "Your account has been successfully deleted." };
 };

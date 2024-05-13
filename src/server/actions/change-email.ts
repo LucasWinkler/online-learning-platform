@@ -2,13 +2,12 @@
 
 import type { z } from "zod";
 
-import { currentUser } from "~/lib/auth";
 import { sendVerificationEmail } from "~/lib/mail";
 import { ChangeEmailSchema } from "~/schemas/auth";
-import { findUserByEmail, findUserById } from "~/server/data-access/user";
+import { auth } from "~/server/auth";
+import { doesAccountExistByUserId } from "~/server/data-access/account";
+import { findUserByEmail } from "~/server/data-access/user";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
-
-import { doesAccountExistByUserId } from "../data-access/account";
 
 export const changeEmail = async (
   values: z.infer<typeof ChangeEmailSchema>,
@@ -23,15 +22,9 @@ export const changeEmail = async (
   const { email } = validatedFields.data;
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
-      return {
-        error: "You are not authenticated.",
-      };
-    }
-
-    const existingUser = await findUserById(user.id);
-    if (!existingUser) {
       return {
         error: "You are not authenticated.",
       };
@@ -45,14 +38,14 @@ export const changeEmail = async (
       };
     }
 
-    if (existingUser.email === email) {
+    if (user.email === email) {
       return {
         error: "You are already using that email.",
       };
     }
 
     const existingUserWithEmail = await findUserByEmail(email);
-    if (existingUserWithEmail && existingUserWithEmail.id !== existingUser.id) {
+    if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
       return {
         error: "That email is already in use.",
       };

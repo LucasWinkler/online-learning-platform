@@ -2,9 +2,8 @@
 
 import type { z } from "zod";
 
-import { currentUser } from "~/lib/auth";
 import { ChangeNameSchema } from "~/schemas/auth";
-import { findUserById } from "~/server/data-access/user";
+import { auth } from "~/server/auth";
 import { updateUserProfile } from "~/server/use-cases/user";
 
 export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
@@ -18,27 +17,21 @@ export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
   const { name } = validatedFields.data;
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
       return {
         error: "You are not authenticated.",
       };
     }
 
-    const existingUser = await findUserById(user.id);
-    if (!existingUser) {
-      return {
-        error: "You are not authenticated.",
-      };
-    }
-
-    if (existingUser.name === name) {
+    if (user.name === name) {
       return {
         error: "You are already using that name.",
       };
     }
 
-    await updateUserProfile(existingUser.id, {
+    await updateUserProfile(user.id, {
       name,
     });
 

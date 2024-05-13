@@ -2,12 +2,10 @@
 
 import type { z } from "zod";
 
-// import { compareSync } from "bcrypt-edge";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "~/lib/mail";
-import { DEFAULT_REDIRECT } from "~/routes";
 import { LoginSchema } from "~/schemas/auth";
 import { signIn } from "~/server/auth";
 import {
@@ -118,7 +116,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl ?? DEFAULT_REDIRECT,
+      redirectTo: callbackUrl ?? undefined,
     });
 
     return { success: "You have been successfully logged in." };

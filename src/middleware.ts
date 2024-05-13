@@ -1,9 +1,9 @@
 import { Role } from "@prisma/client";
 
+import { redirectUrlFromRole } from "~/lib/utils";
 import {
   AUTH_API_ROUTE_PREFIX,
   AUTH_ROUTES,
-  DEFAULT_REDIRECT,
   INSTRUCTOR_ROUTE_PREFIX,
   PUBLIC_ROUTES,
   UNAUTHORIZED_ROUTE,
@@ -29,8 +29,7 @@ export default auth(async (req) => {
   );
 
   const userRole = req.auth?.user.role;
-  const loginRedirectUrl =
-    userRole === Role.ADMIN ? INSTRUCTOR_ROUTE_PREFIX : DEFAULT_REDIRECT;
+  const loginRedirectUrl = redirectUrlFromRole(userRole);
 
   // Ensure anyone can access certain api routes
   if (isAuthApiRoute || isUTApiRoute) {

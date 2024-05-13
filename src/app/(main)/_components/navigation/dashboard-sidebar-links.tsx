@@ -1,25 +1,30 @@
 "use client";
 
+import type { User } from "next-auth";
+
 import React from "react";
 
 import ActiveLink from "~/components/active-link";
 import { SheetClose } from "~/components/ui/sheet";
-import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
+import { useViewPageAs } from "~/hooks/use-view-page-as";
 import { instructorDashboardLinks, studentDashboardLinks } from "~/lib/links";
 
 type DashboardSidebarLinksProps = {
   withSheetClose?: boolean;
+  user?: User;
 };
 
 export const DashboardSidebarLinks = ({
   withSheetClose,
+  user,
 }: DashboardSidebarLinksProps) => {
-  const isInstructorPage = useIsInstructorPage();
-  const links = isInstructorPage
-    ? instructorDashboardLinks
-    : studentDashboardLinks;
+  const viewPageAs = useViewPageAs(user?.role);
+  const links =
+    viewPageAs === "instructor"
+      ? instructorDashboardLinks
+      : studentDashboardLinks;
 
-  const [SheetCloseWrapper, shetCloseWrapperProps] = withSheetClose
+  const [SheetCloseWrapper, sheetCloseWrapperProps] = withSheetClose
     ? [SheetClose, { asChild: true }]
     : [React.Fragment, {}];
 
@@ -27,7 +32,7 @@ export const DashboardSidebarLinks = ({
     <ul className="flex flex-col gap-1">
       {links.map((item) => (
         <li key={item.href}>
-          <SheetCloseWrapper {...shetCloseWrapperProps}>
+          <SheetCloseWrapper {...sheetCloseWrapperProps}>
             <ActiveLink
               className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-secondary"
               activeClassName="bg-secondary"

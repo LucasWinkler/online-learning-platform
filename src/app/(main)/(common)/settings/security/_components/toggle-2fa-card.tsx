@@ -5,12 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { currentUser } from "~/lib/auth";
+import auth from "~/lib/auth";
 
 import { Toggle2FAForm } from "./toggle-2fa-form";
 
 const Toggle2FACard = async () => {
-  const user = await currentUser();
+  const session = await auth();
+  const user = session?.user;
   const isOAuth = !!user?.isOAuth;
 
   return (
