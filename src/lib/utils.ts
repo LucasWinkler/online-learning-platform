@@ -24,5 +24,12 @@ export const formatCourseLength = (lengthInSeconds: number): string => {
   }
 };
 
+export const formatCurrency = (price: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+};
+
 export const redirectUrlFromRole = (role: Role = Role.USER) =>
   role === Role.ADMIN ? INSTRUCTOR_ROUTE_PREFIX : DEFAULT_REDIRECT;
