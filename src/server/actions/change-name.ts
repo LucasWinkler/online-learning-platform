@@ -2,8 +2,8 @@
 
 import type { z } from "zod";
 
-import { currentUser } from "~/lib/auth";
 import { ChangeNameSchema } from "~/schemas/auth";
+import { auth } from "~/server/auth";
 import { updateUserProfile } from "~/server/use-cases/user";
 
 export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
@@ -17,7 +17,8 @@ export const changeName = async (values: z.infer<typeof ChangeNameSchema>) => {
   const { name } = validatedFields.data;
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
       return {
         error: "You are not authenticated.",

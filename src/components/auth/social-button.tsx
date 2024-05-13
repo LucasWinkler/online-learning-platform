@@ -13,7 +13,6 @@ import { useSearchParams } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { DEFAULT_REDIRECT } from "~/routes";
 
 type SocialButtonProps = {
   layoutType: SocialListLayoutType;
@@ -40,7 +39,7 @@ export const SocialButton = ({
   const handleSignIn = () => {
     setIsPending(true);
     void signIn(social.provider, {
-      callbackUrl: callbackUrl ?? DEFAULT_REDIRECT,
+      callbackUrl: callbackUrl ?? undefined,
     });
   };
 

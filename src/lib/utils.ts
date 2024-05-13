@@ -1,7 +1,10 @@
 import type { ClassValue } from "clsx";
 
+import { Role } from "@prisma/client";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import { DEFAULT_REDIRECT, INSTRUCTOR_ROUTE_PREFIX } from "~/routes";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -21,6 +24,5 @@ export const formatCourseLength = (lengthInSeconds: number): string => {
   }
 };
 
-export const isInstructorPage = (pathname: string) => {
-  return pathname.startsWith("/manage") || pathname.startsWith("/settings");
-};
+export const redirectUrlFromRole = (role: Role = Role.USER) =>
+  role === Role.ADMIN ? INSTRUCTOR_ROUTE_PREFIX : DEFAULT_REDIRECT;

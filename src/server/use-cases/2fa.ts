@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
-import { currentUser } from "~/lib/auth";
 import { sendTwoFactorTokenEmail } from "~/lib/mail";
+import { auth } from "~/server/auth";
 import {
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmation,
@@ -30,7 +30,8 @@ export const generateTwoFactorToken = async (email: string) => {
 };
 
 export const toggleTwoFactor = async (code?: string) => {
-  const user = await currentUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) {
     return {
       showCodeInput: !!code,

@@ -2,9 +2,9 @@
 
 import type { z } from "zod";
 
-import { currentUser } from "~/lib/auth";
 import { sendVerificationEmail } from "~/lib/mail";
 import { ChangeEmailSchema } from "~/schemas/auth";
+import { auth } from "~/server/auth";
 import { doesAccountExistByUserId } from "~/server/data-access/account";
 import { findUserByEmail } from "~/server/data-access/user";
 import { generateVerificationToken } from "~/server/use-cases/verification-token";
@@ -22,7 +22,8 @@ export const changeEmail = async (
   const { email } = validatedFields.data;
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
       return {
         error: "You are not authenticated.",

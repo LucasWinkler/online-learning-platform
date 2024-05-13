@@ -8,10 +8,12 @@ import {
   PowerIcon,
   UserRoundIcon,
 } from "lucide-react";
+import { type User } from "next-auth";
 
 import { LogoutButton } from "~/components/auth/logout-button";
 import { Link } from "~/components/link";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,50 +23,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useIsInstructorPage } from "~/hooks/use-is-instructor-page";
+import { useViewPageAs } from "~/hooks/use-view-page-as";
 import {
   commonUserMenuLinks,
   instructorDashboardLinks,
   studentDashboardLinks,
 } from "~/lib/links";
 
-import { Badge } from "./ui/badge";
-
 type UserMenuProps = {
-  fullName: string;
-  email: string;
-  avatarImage?: string | null;
-  role: Role;
+  user: User;
 };
 
-export const UserMenu = ({
-  fullName,
-  email,
-  role,
-  avatarImage,
-}: UserMenuProps) => {
-  const isInstructor = role === Role.ADMIN;
-  const isInstructorPage = useIsInstructorPage();
-  const links = isInstructorPage
-    ? instructorDashboardLinks
-    : studentDashboardLinks;
+export const UserMenu = ({ user }: UserMenuProps) => {
+  const viewPageAs = useViewPageAs(user?.role);
+  const links =
+    viewPageAs === "instructor"
+      ? instructorDashboardLinks
+      : studentDashboardLinks;
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex items-center gap-1 md:gap-2">
         <Avatar className="size-9">
-          <AvatarImage src={avatarImage ?? undefined} />
+          <AvatarImage src={user.image ?? undefined} />
           <AvatarFallback className="bg-neutral-500 text-neutral-50">
             <UserRoundIcon className="h-4 w-4" />
           </AvatarFallback>
         </Avatar>
         <div className="hidden flex-col items-start md:flex">
           <span className="max-w-[6.5625rem] truncate text-sm font-medium">
-            {fullName}
+            {user.name}
           </span>
-          {isInstructor ? (
+          {user.role === Role.ADMIN ? (
             <>
-              {isInstructorPage ? (
+              {viewPageAs === "instructor" ? (
                 <span className="rounded bg-primary/10 p-1 text-xs font-medium text-primary/80">
                   Instructor View
                 </span>
@@ -76,7 +72,7 @@ export const UserMenu = ({
             </>
           ) : (
             <span className="max-w-[6.5625rem] truncate text-xs font-normal text-neutral-500">
-              {email}
+              {user.email}
             </span>
           )}
         </div>
@@ -86,8 +82,10 @@ export const UserMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col">
-          <span className="text-sm font-semibold">{fullName}</span>
-          <span className="text-xs font-normal text-neutral-500">{email}</span>
+          <span className="text-sm font-semibold">{user.name}</span>
+          <span className="text-xs font-normal text-neutral-500">
+            {user.email}
+          </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-1">
@@ -104,16 +102,16 @@ export const UserMenu = ({
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
-        {isInstructor && (
+        {user.role === Role.ADMIN && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuGroup className="space-y-1">
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <Link
                   className="flex items-center gap-2"
-                  href={isInstructorPage ? "/" : "/manage"}
+                  href={viewPageAs === "instructor" ? "/" : "/manage"}
                 >
-                  {isInstructorPage ? (
+                  {viewPageAs === "instructor" ? (
                     <>
                       <ArrowRightLeftIcon className="size-4" />
                       <span>View as</span>
@@ -124,7 +122,7 @@ export const UserMenu = ({
                       <span>View as</span>
                     </>
                   )}
-                  {isInstructorPage ? (
+                  {viewPageAs === "instructor" ? (
                     <>
                       <Badge variant="student">Student</Badge>
                     </>

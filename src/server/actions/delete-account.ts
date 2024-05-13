@@ -2,8 +2,8 @@
 
 import type { z } from "zod";
 
-import { currentUser } from "~/lib/auth";
 import { DeleteAccountSchema } from "~/schemas/auth";
+import { auth } from "~/server/auth";
 import { deleteOwnAccount } from "~/server/use-cases/user";
 
 export const deleteAccount = async (
@@ -15,7 +15,8 @@ export const deleteAccount = async (
   }
 
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
     if (!user) {
       return { error: "You are not authenticated." };
     }
