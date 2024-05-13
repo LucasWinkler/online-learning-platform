@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { Link } from "~/components/link";
 import { cn } from "~/lib/utils";
+import { INSTRUCTOR_ROUTE_PREFIX } from "~/routes";
 
 type ActiveLinkProps = {
   activeClassName?: string;
@@ -14,16 +15,17 @@ type ActiveLinkProps = {
 
 const ActiveLink: React.FC<ActiveLinkProps> = ({
   href = "",
-  className,
   activeClassName = "",
+  className,
   children,
   ...props
 }) => {
   const pathname = usePathname();
-  const classNames = cn(
-    className,
-    href.toString() === pathname && activeClassName,
-  );
+  const isActive =
+    href === "/" || href === INSTRUCTOR_ROUTE_PREFIX
+      ? pathname === href
+      : pathname.startsWith(href);
+  const classNames = cn(className, isActive && activeClassName);
 
   return (
     <Link {...props} className={classNames} href={href}>

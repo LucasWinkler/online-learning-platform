@@ -34,8 +34,8 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <section>
-      <h1>Course details</h1>
+    <section className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold">Course details</h2>
       <p>Title: {course.title}</p>
       <p>Description: {course.description}</p>
       <p>Slug: {course.slug}</p>
