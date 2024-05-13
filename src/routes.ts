@@ -37,6 +37,7 @@ export const PUBLIC_ROUTES = [
   "/courses",
   "/auth/email-verification",
   "/auth/account-deleted",
+  "/unauthorized",
 ];
 
 /**
