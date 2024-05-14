@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 // Warn that user that they can not change their slug again.
 const Courses = () => {
   return (
-    <section>
+    <div>
       <h1>All your courses</h1>
       <Button>Create Course</Button>
-    </section>
+    </div>
   );
 };
 

@@ -69,7 +69,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 xxs:p-5 xs:p-6 sm:gap-5 lg:gap-6 xl:gap-9">
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 xxs:p-5 xs:p-6 sm:gap-5 lg:gap-6 xl:gap-9">
       <div className="flex flex-col gap-2">
         <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
           <PrimaryHeading>Course Details</PrimaryHeading>
@@ -171,7 +171,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
           </Card>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

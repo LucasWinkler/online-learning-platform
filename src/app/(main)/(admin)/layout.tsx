@@ -6,10 +6,10 @@ type AdminLayoutProps = {
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
-    <>
+    <section className="mx-auto h-full w-full max-w-5xl">
       <DashboardBreadcrumb />
       {children}
-    </>
+    </section>
   );
 };
 
