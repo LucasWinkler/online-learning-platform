@@ -33,7 +33,7 @@ export const DashboardBreadcrumb = () => {
   }
 
   return (
-    <Breadcrumb className="mb-2 sm:mb-4 sm:mt-1 lg:mb-5">
+    <Breadcrumb className="mb-4 sm:mb-5 sm:mt-1 lg:mb-6">
       <BreadcrumbList>
         {pathNames.map((path, index) => (
           <React.Fragment key={path}>
