@@ -33,3 +33,7 @@ export const formatCurrency = (price: number) => {
 
 export const redirectUrlFromRole = (role: Role = Role.USER) =>
   role === Role.ADMIN ? INSTRUCTOR_ROUTE_PREFIX : DEFAULT_REDIRECT;
+
+export const toTitleCase = (str: string) => {
+  return str.replace(/\b\w/g, (l) => l.toUpperCase());
+};

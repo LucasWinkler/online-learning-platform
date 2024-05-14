@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
-import { formatCurrency } from "~/lib/utils";
+import { cn, formatCurrency } from "~/lib/utils";
 import {
   findCourseSlugs,
   findCourseWithChaptersBySlug,
@@ -90,7 +90,17 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
           <p className="text-sm font-medium text-gray-600">
             Required Fields ({validFieldsCount}/{requiredFields.length})
           </p>
-          <Progress className="h-4 w-full" value={progressPercentage} />
+          <Progress
+            className={cn(
+              "h-4 w-full [&>*]:bg-yellow-500",
+              progressPercentage < 100 && "[&>*]:animate-pulse",
+              progressPercentage === 100 && "[&>*]:bg-emerald-500",
+              progressPercentage === 100 &&
+                !isPublished &&
+                "[&>*]:animate-pulse",
+            )}
+            value={progressPercentage}
+          />
         </div>
       </div>
       <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
