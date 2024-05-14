@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { cache } from "react";
 import { SquarePenIcon, SquarePlusIcon, Trash2 } from "lucide-react";
 
 import { PrimaryHeading } from "~/app/(main)/_components/primary-heading";
@@ -35,14 +36,13 @@ export const generateMetadata = async ({
 
   return {
     title: course?.title ?? "Course not found",
+    description: course?.description ?? "Course not found",
   };
 };
 
-const fetchCourse = async (slug: string) => {
-  const course = await findCourseWithChaptersBySlug(slug);
-
-  return course;
-};
+const fetchCourse = cache(async (slug: string) => {
+  return await findCourseWithChaptersBySlug(slug);
+});
 
 const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
