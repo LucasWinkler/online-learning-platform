@@ -48,6 +48,19 @@ export const deleteCourse = async (id: string) => {
   return await db.course.delete({ where: { id: id } });
 };
 
+export const findCourseSlugs = async () => {
+  return db.course.findMany({
+    select: { slug: true },
+  });
+};
+
+export const findCourseWithChaptersBySlug = async (slug: string) => {
+  return db.course.findUnique({
+    where: { slug: slug },
+    include: { chapters: true },
+  });
+};
+
 export const findPublishedCourses = async (select?: Prisma.CourseSelect) => {
   return db.course.findMany({
     where: {
