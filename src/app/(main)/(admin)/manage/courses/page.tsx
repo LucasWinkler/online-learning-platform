@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Button } from "~/components/ui/button";
+import { CreateCourseDialog } from "./_components/create-course-dialog";
 
 export const metadata: Metadata = {
   title: "Manage Courses",
@@ -12,7 +12,7 @@ const Courses = () => {
   return (
     <div>
       <h1>All your courses</h1>
-      <Button>Create Course</Button>
+      <CreateCourseDialog />
     </div>
   );
 };
