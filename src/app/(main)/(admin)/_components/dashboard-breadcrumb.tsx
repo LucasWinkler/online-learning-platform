@@ -32,7 +32,7 @@ export const DashboardBreadcrumb = () => {
     <Breadcrumb className="mb-4 sm:mb-5 sm:mt-1 lg:mb-6">
       <BreadcrumbList>
         {displayPaths.map((path, index) => {
-          const titleCasedPath = toTitleCase(path);
+          const titleCasedPath = toTitleCase(path).replace(/-/g, " ");
           const isLast = index === displayPaths.length - 1;
           const href = `/${pathNames.slice(0, index + 2).join("/")}`;
 
