@@ -44,8 +44,12 @@ export const updateCourse = async (
   });
 };
 
-export const deleteCourse = async (id: string) => {
+export const deleteCourseById = async (id: string) => {
   return await db.course.delete({ where: { id: id } });
+};
+
+export const deleteCourseBySlug = async (slug: string) => {
+  return await db.course.delete({ where: { slug: slug } });
 };
 
 export const findCourseSlugs = async () => {

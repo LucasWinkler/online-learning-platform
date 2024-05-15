@@ -9,7 +9,7 @@ import {
   countCourseEnrollments,
   countPublishedLessonsInPublishedChapters,
   createCourse,
-  deleteCourse,
+  deleteCourseById,
   doesCourseExistBySlug,
   findFilteredPublishedCourses,
 } from "~/server/data-access/course";
@@ -92,8 +92,10 @@ export const deleteCourseIfAuthorized = async (
 ) => {
   const authorized = await isAuthorizedForCourseManagement(courseId, userId);
   if (!authorized) {
-    throw new Error("Unauthorized access");
+    const error = new Error("Unauthorized access");
+    error.name = "UnauthorizedError";
+    throw error;
   }
 
-  return await deleteCourse(courseId);
+  return await deleteCourseById(courseId);
 };

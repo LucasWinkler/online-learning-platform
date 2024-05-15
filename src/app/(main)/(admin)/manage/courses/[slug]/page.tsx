@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import { cache } from "react";
-import { SquarePenIcon, SquarePlusIcon, Trash2 } from "lucide-react";
+import { SquarePenIcon, SquarePlusIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 import { PrimaryHeading } from "~/app/(main)/_components/primary-heading";
 import { Button } from "~/components/ui/button";
@@ -13,11 +14,15 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
+import { UnauthorizedCard } from "~/components/unauthorized-card";
+import auth from "~/lib/auth";
 import { cn, formatCurrency } from "~/lib/utils";
 import {
   findCourseSlugs,
   findCourseWithChaptersBySlug,
 } from "~/server/data-access/course";
+
+import { DeleteCourseDialog } from "./_components/delete-course-dialog";
 
 export const generateStaticParams = async () => {
   const slugs = await findCourseSlugs();
@@ -45,11 +50,21 @@ const fetchCourse = cache(async (slug: string) => {
 });
 
 const CourseDetails = async ({ params }: { params: { slug: string } }) => {
+  const session = await auth();
+  const user = session?.user;
   const { slug } = params;
   const course = await fetchCourse(slug);
 
+  if (!user) {
+    redirect(`/login?callbackUrl=/manage/courses/${slug}`);
+  }
+
   if (!course) {
-    return <span>Course not found</span>;
+    redirect("/manage/courses");
+  }
+
+  if (course.instructorId !== user.id) {
+    return <UnauthorizedCard />;
   }
 
   const isPublished = !!course.publishedAt;
@@ -80,10 +95,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
             >
               {isPublished ? "Unpublish" : "Publish"}
             </Button>
-            <Button variant="destructive-outline" size="icon">
-              <span className="sr-only">Delete Course</span>
-              <Trash2 className="size-5" />
-            </Button>
+            <DeleteCourseDialog courseId={course.id} courseSlug={course.slug} />
           </div>
         </div>
         <div className="flex flex-col gap-2">
