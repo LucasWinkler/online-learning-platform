@@ -183,6 +183,23 @@ export const findDashboardCourses = async ({
   });
 };
 
+export const findCoursesForInstructor = async (instructorId: string) => {
+  return db.course.findMany({
+    where: {
+      instructorId,
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      description: true,
+      price: true,
+      publishedAt: true,
+      _count: { select: { courseEnrollments: true } },
+    },
+  });
+};
+
 export const doesCourseExistBySlug = async (slug: string) => {
   return (await db.course.count({ where: { slug: slug } })) > 0;
 };

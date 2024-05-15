@@ -1,4 +1,4 @@
-import { PrimaryHeading } from "~/app/(main)/_components/primary-heading";
+import { PrimaryHeading } from "~/components/primary-heading";
 
 type SettingsWrapperProps = {
   title: string;

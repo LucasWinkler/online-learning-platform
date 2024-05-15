@@ -33,7 +33,10 @@ export const env = createEnv({
     UPLOADTHING_SECRET: z.string(),
   },
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_VERCEL_URL:
+      process.env.NODE_ENV === "production"
+        ? z.string()
+        : z.string().optional(),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -48,7 +51,7 @@ export const env = createEnv({
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

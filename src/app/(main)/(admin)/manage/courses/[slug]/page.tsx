@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
-import { cache } from "react";
 import { SquarePenIcon, SquarePlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import { PrimaryHeading } from "~/app/(main)/_components/primary-heading";
+import { PrimaryHeading } from "~/components/primary-heading";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -45,9 +44,9 @@ export const generateMetadata = async ({
   };
 };
 
-const fetchCourse = cache(async (slug: string) => {
+const fetchCourse = async (slug: string) => {
   return await findCourseWithChaptersBySlug(slug);
-});
+};
 
 const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   const session = await auth();
@@ -104,7 +103,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
           </p>
           <Progress
             className={cn(
-              "h-4 w-full [&>*]:bg-yellow-500",
+              "h-4 w-full lg:h-5 [&>*]:bg-yellow-500",
               progressPercentage < 100 && "[&>*]:animate-pulse",
               progressPercentage === 100 && "[&>*]:bg-emerald-500",
               progressPercentage === 100 &&
@@ -129,7 +128,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
               <p className="text-sm text-gray-600">{course.title}</p>
             </CardContent>
             <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 md:justify-start">
-              The display name of your course.
+              The maximum length of your title is 60 characters.
             </CardFooter>
           </Card>
           <Card className="border-0 bg-gray-50">
