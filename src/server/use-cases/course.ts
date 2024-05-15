@@ -21,9 +21,10 @@ export const createNewCourse = async ({
   instructorId,
 }: CourseCreationParams) => {
   const exists = await doesCourseExistBySlug(slug);
-
   if (exists) {
-    throw new Error(`Course already exists with the slug: ${slug}`);
+    const error = new Error(`Course already exists with the title: ${title}.`);
+    error.name = "CourseExistsError";
+    throw error;
   }
 
   return await createCourse({ title, slug, instructorId });
