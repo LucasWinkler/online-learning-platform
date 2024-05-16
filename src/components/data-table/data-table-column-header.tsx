@@ -21,12 +21,14 @@ interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title?: string;
+  align?: "left" | "center" | "right";
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
+  align = "left",
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return (
@@ -37,13 +39,23 @@ export function DataTableColumnHeader<TData, TValue>({
   }
 
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
+    <div
+      className={cn(
+        "flex items-center space-x-2",
+        align === "center"
+          ? "justify-center"
+          : align === "right"
+            ? "justify-end"
+            : "justify-start",
+        className,
+      )}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 px-0 data-[state=open]:bg-accent"
+            className={cn("h-8 px-2 data-[state=open]:bg-accent")}
           >
             <span className="capitalize">{title ? title : column.id}</span>
             {column.getIsSorted() === "desc" ? (

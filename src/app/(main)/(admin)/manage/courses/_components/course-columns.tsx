@@ -40,24 +40,24 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => (
-      <DataTableColumnHeader className="justify-end" column={column} />
+      <DataTableColumnHeader align="right" column={column} />
     ),
     cell: ({ row }) => {
       if (!row.getValue("price") || row.getValue("price") === 0) {
-        return <div className="text-right">Free</div>;
+        return <div className="mr-3 text-right">Free</div>;
       }
 
       const price = parseFloat(row.getValue("price"));
       const formatted = formatCurrency(price);
 
-      return <div className="text-right">{formatted}</div>;
+      return <div className="mr-3 text-right">{formatted}</div>;
     },
   },
   {
     accessorKey: "_count",
     id: "students",
     header: ({ column }) => (
-      <DataTableColumnHeader className="justify-end" column={column} />
+      <DataTableColumnHeader align="right" column={column} />
     ),
     cell: ({ row }) => {
       const students =
@@ -65,7 +65,7 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
           "students",
         ).courseEnrollments;
 
-      return <div className="text-right">{students}</div>;
+      return <div className="mr-3 text-right">{students}</div>;
     },
   },
   {
