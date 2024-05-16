@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Role } from "@prisma/client";
 import { SquarePenIcon, SquarePlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -13,7 +14,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
-import { UnauthorizedCard } from "~/components/unauthorized-card";
 import auth from "~/lib/auth";
 import { cn, formatCurrency } from "~/lib/utils";
 import {
@@ -52,10 +52,11 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   const session = await auth();
   const user = session?.user;
   const { slug } = params;
+
   const course = await fetchCourse(slug);
 
-  if (!user) {
-    redirect(`/login?callbackUrl=/manage/courses/${slug}`);
+  if (user?.role !== Role.ADMIN) {
+    redirect("/unauthorized");
   }
 
   if (!course) {
@@ -63,7 +64,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   }
 
   if (course.instructorId !== user.id) {
-    return <UnauthorizedCard />;
+    redirect("/manage/courses");
   }
 
   const isPublished = !!course.publishedAt;

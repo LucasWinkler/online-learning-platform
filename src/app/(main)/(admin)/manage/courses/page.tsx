@@ -2,6 +2,7 @@ import type { CoursesForInstructorResult } from "~/types/course";
 import type { Metadata } from "next";
 
 import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 import { DataTable } from "~/components/data-table/data-table";
 import { PrimaryHeading } from "~/components/primary-heading";
@@ -28,7 +29,7 @@ const Courses = async () => {
   const user = session?.user;
 
   if (user?.role !== Role.ADMIN) {
-    return null;
+    redirect("/unauthorized");
   }
 
   const courses = await fetchCourses(user.id);
@@ -40,14 +41,12 @@ const Courses = async () => {
           <PrimaryHeading>Courses</PrimaryHeading>
         </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <DataTable
-          action={<CreateCourseDialog />}
-          columns={courseColumns}
-          data={courses}
-          searchColumn="title"
-        />
-      </div>
+      <DataTable
+        action={<CreateCourseDialog />}
+        columns={courseColumns}
+        data={courses}
+        searchColumn="title"
+      />
     </div>
   );
 };

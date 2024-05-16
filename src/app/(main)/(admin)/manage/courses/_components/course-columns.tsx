@@ -22,59 +22,59 @@ import { formatCurrency } from "~/lib/utils";
 
 export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   {
-    accessorKey: "slug",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Slug" />
-    ),
-  },
-  {
     accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Title" />
     ),
   },
   {
-    accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
-    ),
-    cell: ({ row }) => {
-      if (!row.getValue("price") || row.getValue("price") === 0) {
-        return "Free";
-      }
-
-      const price = parseFloat(row.getValue("price"));
-      const formatted = formatCurrency(price);
-
-      return formatted;
-    },
-  },
-  {
     accessorKey: "publishedAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Published" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       return (
-        <Badge
-          variant={row.getValue("publishedAt") ? "success" : "outline"}
-          className=""
-        >
+        <Badge variant={row.getValue("publishedAt") ? "success" : "outline"}>
           {row.getValue("publishedAt") ? "Published" : "Draft"}
         </Badge>
       );
     },
   },
+
+  {
+    accessorKey: "price",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="justify-end"
+        column={column}
+        title="Price"
+      />
+    ),
+    cell: ({ row }) => {
+      if (!row.getValue("price") || row.getValue("price") === 0) {
+        return <div className="text-right">Free</div>;
+      }
+
+      const price = parseFloat(row.getValue("price"));
+      const formatted = formatCurrency(price);
+
+      return <div className="text-right">{formatted}</div>;
+    },
+  },
   {
     accessorKey: "_count",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Students" />
+      <DataTableColumnHeader
+        className="justify-end"
+        column={column}
+        title="Students"
+      />
     ),
     cell: ({ row }) => {
       const students =
         row.getValue<CourseForInstructor["_count"]>("_count").courseEnrollments;
 
-      return students;
+      return <div className="text-right">{students}</div>;
     },
   },
   {
