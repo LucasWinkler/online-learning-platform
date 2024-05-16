@@ -27,7 +27,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@plaiceholder/next": "^3.0.0",
     "@prisma/adapter-neon": "^5.13.0",
-    "@prisma/client": "^5.13.0",
+    "@prisma/client": "^5.14.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -94,7 +94,7 @@
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "prisma": "^5.13.0",
+    "prisma": "^5.14.0",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.7.2",
     "typescript": "^5.4.2"
