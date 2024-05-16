@@ -3,17 +3,17 @@
 import type { z } from "zod";
 
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import slug from "slug";
 
 import { CreateCourseSchema, DeleteCourseSchema } from "~/schemas/course";
 import { auth } from "~/server/auth";
-import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
-import { createNewCourse } from "~/server/use-cases/course";
-
 import {
   countCourseEnrollments,
   deleteCourseById,
-} from "../data-access/course";
+} from "~/server/data-access/course";
+import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
+import { createNewCourse } from "~/server/use-cases/course";
 
 export const createCourse = async (
   values: z.infer<typeof CreateCourseSchema>,
@@ -39,6 +39,8 @@ export const createCourse = async (
       slug: generatedSlug,
       instructorId: user.id,
     });
+
+    revalidatePath("/manage/courses");
 
     return {
       success: "Course has been created successfully.",
