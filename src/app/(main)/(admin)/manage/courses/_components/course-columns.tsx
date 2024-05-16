@@ -81,8 +81,12 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
     id: "actions",
     cell: ({ row }) => {
       const course = row.original;
-      const publicCourseUrl = `${env.NEXT_PUBLIC_VERCEL_URL ?? "http://localhost:3000"}/courses/${course.slug}`;
-      const editCourseUrl = `${env.NEXT_PUBLIC_VERCEL_URL ?? "http://localhost:3000"}/manage/courses/${course.slug}`;
+
+      const baseUrl = env.NEXT_PUBLIC_VERCEL_URL
+        ? `https://${env.NEXT_PUBLIC_VERCEL_URL}`
+        : "http://localhost:3000";
+      const publicCourseUrl = `${baseUrl}/courses/${course.slug}`;
+      const editCourseUrl = `${baseUrl}/manage/courses/${course.slug}`;
 
       return (
         <DropdownMenu>

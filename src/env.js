@@ -33,10 +33,10 @@ export const env = createEnv({
     UPLOADTHING_SECRET: z.string(),
   },
   client: {
-    NEXT_PUBLIC_VERCEL_URL:
-      process.env.NODE_ENV === "production"
-        ? z.string()
-        : z.string().optional(),
+    NEXT_PUBLIC_VERCEL_URL: z.preprocess(
+      (str) => process.env.VERCEL_URL ?? str,
+      process.env.VERCEL ? z.string() : z.string().optional(),
+    ),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
