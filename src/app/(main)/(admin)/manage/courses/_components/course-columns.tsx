@@ -29,18 +29,18 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   },
   {
     accessorKey: "publishedAt",
+    id: "status",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       return (
-        <Badge variant={row.getValue("publishedAt") ? "success" : "outline"}>
-          {row.getValue("publishedAt") ? "Published" : "Draft"}
+        <Badge variant={row.getValue("status") ? "default" : "outline"}>
+          {row.getValue("status") ? "Published" : "Draft"}
         </Badge>
       );
     },
   },
-
   {
     accessorKey: "price",
     header: ({ column }) => (
@@ -63,6 +63,7 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   },
   {
     accessorKey: "_count",
+    id: "students",
     header: ({ column }) => (
       <DataTableColumnHeader
         className="justify-end"
@@ -72,7 +73,9 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
     ),
     cell: ({ row }) => {
       const students =
-        row.getValue<CourseForInstructor["_count"]>("_count").courseEnrollments;
+        row.getValue<CourseForInstructor["_count"]>(
+          "students",
+        ).courseEnrollments;
 
       return <div className="text-right">{students}</div>;
     },
