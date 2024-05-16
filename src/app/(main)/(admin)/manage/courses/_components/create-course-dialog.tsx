@@ -34,7 +34,11 @@ import { cn } from "~/lib/utils";
 import { CreateCourseSchema } from "~/schemas/course";
 import { createCourse } from "~/server/actions/course";
 
-export const CreateCourseDialog = () => {
+type CreateCourseDialogProps = {
+  trigger?: React.ReactNode;
+};
+
+export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
@@ -79,10 +83,14 @@ export const CreateCourseDialog = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" size="sm">
-          <PlusIcon className="mr-2 size-4" />
-          New
-        </Button>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button variant="default" size="sm">
+            <PlusIcon className="mr-2 size-4" />
+            New
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { buttonVariants } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { DeleteCourseSchema } from "~/schemas/course";
 import { deleteCourse } from "~/server/actions/course";
@@ -30,11 +30,13 @@ import { deleteCourse } from "~/server/actions/course";
 type DeleteCourseDialogProps = {
   courseId: string;
   courseSlug: string;
+  trigger?: React.ReactNode;
 };
 
 export const DeleteCourseDialog = ({
   courseId,
   courseSlug,
+  trigger,
 }: DeleteCourseDialogProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -80,15 +82,15 @@ export const DeleteCourseDialog = ({
 
   return (
     <AlertDialog open={isDialogOpen}>
-      <AlertDialogTrigger
-        className={buttonVariants({
-          variant: "destructive-outline",
-          size: "icon",
-        })}
-        onClick={() => setIsDialogOpen(true)}
-      >
-        <span className="sr-only">Delete Course</span>
-        <Trash2 className="size-5" />
+      <AlertDialogTrigger asChild onClick={() => setIsDialogOpen(true)}>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button variant="destructive-outline" size="icon">
+            <span className="sr-only">Delete Course</span>
+            <Trash2 className="size-5" />
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

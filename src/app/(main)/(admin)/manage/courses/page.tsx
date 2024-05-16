@@ -37,6 +37,7 @@ const Courses = async () => {
         columns={courseColumns}
         data={courses}
         searchColumn="title"
+        emptyState="You have no courses yet."
       />
     </div>
   );
