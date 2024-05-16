@@ -78,6 +78,12 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
 
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
 
+  const requiredText = `Required Fields (${validFieldsCount}/${requiredFields.length})`;
+  const progressText =
+    progressPercentage === 100
+      ? "Ready to publish!"
+      : `${progressPercentage.toFixed(0)}% complete`;
+
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 xxs:p-5 xs:p-6 sm:gap-5 lg:gap-6 xl:gap-9">
       <div className="flex flex-col gap-2">
@@ -94,9 +100,10 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-gray-600">
-            Required Fields ({validFieldsCount}/{requiredFields.length})
-          </p>
+          <div className="flex justify-between gap-2">
+            <p className="text-sm font-medium text-gray-600">{requiredText}</p>
+            <p className="text-xs text-gray-600">{progressText}</p>
+          </div>
           <Progress
             className={cn(
               "h-4 w-full lg:h-5 [&>*]:bg-yellow-500",
