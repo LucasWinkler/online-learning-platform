@@ -23,16 +23,12 @@ import { formatCurrency } from "~/lib/utils";
 export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   {
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
   },
   {
     accessorKey: "publishedAt",
     id: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <Badge variant={row.getValue("status") ? "default" : "outline"}>
@@ -44,11 +40,7 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        className="justify-end"
-        column={column}
-        title="Price"
-      />
+      <DataTableColumnHeader className="justify-end" column={column} />
     ),
     cell: ({ row }) => {
       if (!row.getValue("price") || row.getValue("price") === 0) {
@@ -65,11 +57,7 @@ export const courseColumns: ColumnDef<CourseForInstructor>[] = [
     accessorKey: "_count",
     id: "students",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        className="justify-end"
-        column={column}
-        title="Students"
-      />
+      <DataTableColumnHeader className="justify-end" column={column} />
     ),
     cell: ({ row }) => {
       const students =

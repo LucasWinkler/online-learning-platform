@@ -20,7 +20,7 @@ import { cn } from "~/lib/utils";
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
-  title: string;
+  title?: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -29,7 +29,11 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return (
+      <div className={cn("capitalize", className)}>
+        {title ? title : column.id}
+      </div>
+    );
   }
 
   return (
@@ -41,7 +45,7 @@ export function DataTableColumnHeader<TData, TValue>({
             size="sm"
             className="h-8 px-0 data-[state=open]:bg-accent"
           >
-            <span>{title}</span>
+            <span className="capitalize">{title ? title : column.id}</span>
             {column.getIsSorted() === "desc" ? (
               <ArrowDownIcon className="ml-2 h-4 w-4" />
             ) : column.getIsSorted() === "asc" ? (
