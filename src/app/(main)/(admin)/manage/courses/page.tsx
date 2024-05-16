@@ -1,4 +1,3 @@
-import type { CoursesForInstructorResult } from "~/types/course";
 import type { Metadata } from "next";
 
 import { Role } from "@prisma/client";
@@ -16,14 +15,6 @@ export const metadata: Metadata = {
   title: "Manage Courses",
 };
 
-const fetchCourses = async (
-  userId: string,
-): Promise<CoursesForInstructorResult> => {
-  const courses = await findCoursesForInstructor(userId);
-
-  return courses;
-};
-
 const Courses = async () => {
   const session = await auth();
   const user = session?.user;
@@ -32,7 +23,7 @@ const Courses = async () => {
     redirect("/unauthorized");
   }
 
-  const courses = await fetchCourses(user.id);
+  const courses = await findCoursesForInstructor(user.id);
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 xxs:p-5 xs:p-6 sm:gap-5 lg:gap-6 xl:gap-9">

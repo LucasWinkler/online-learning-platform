@@ -22,6 +22,9 @@ export function DataTableFilter<TData>({
 
   return (
     <Input
+      id={`filter-${columnName}`}
+      name={`filter-${columnName}`}
+      autoComplete="off"
       placeholder={`Search ${columnName}...`}
       value={(table.getColumn(columnName)?.getFilterValue() as string) ?? ""}
       onChange={(event) =>

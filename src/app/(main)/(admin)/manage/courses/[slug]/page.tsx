@@ -59,16 +59,11 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
     redirect("/unauthorized");
   }
 
-  if (!course) {
-    redirect("/manage/courses");
-  }
-
-  if (course.instructorId !== user.id) {
+  if (!course || course.instructorId !== user.id) {
     redirect("/manage/courses");
   }
 
   const isPublished = !!course.publishedAt;
-
   const requiredFields = [
     course.title,
     course.description,
