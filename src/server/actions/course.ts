@@ -92,6 +92,8 @@ export const deleteCourse = async (
 
     const deletedCourse = await deleteCourseById(id);
 
+    revalidatePath("/manage/courses");
+
     return {
       success: `${deletedCourse.title} has been successfully deleted.`,
     };
