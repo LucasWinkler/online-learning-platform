@@ -61,13 +61,16 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   }
 
   const isPublished = !!course.publishedAt;
+  const hasPublishedChapters = course.chapters.some(
+    (chapter) => !!chapter.publishedAt,
+  );
 
   const requiredFields = [
     course.title,
     course.description,
     course.price,
     course.image,
-    course.chapters.some((chapter) => !!chapter.publishedAt),
+    hasPublishedChapters,
   ];
 
   const validFieldsCount = requiredFields.filter(Boolean).length;
@@ -128,7 +131,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
         <div className="flex flex-col gap-4 xl:gap-9">
           <CourseChaptersCard
             chapters={course.chapters}
-            completed={course.chapters.some((chapter) => chapter.publishedAt)}
+            completed={hasPublishedChapters}
           />
           <CoursePriceCard
             id={course.id}
