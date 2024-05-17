@@ -12,6 +12,7 @@ export default function Loading() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <Skeleton className="h-8 w-full max-w-sm" />
+          <Skeleton className="h-8 w-[3.375rem]" />
           <Skeleton className="ml-auto h-8 w-[4.75rem]" />
           <Skeleton className="h-8 w-[4.75rem]" />
         </div>
