@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import slug from "slug";
 
 import {
+  ChangeCourseDescriptionSchema,
   ChangeCourseTitleSchema,
   CreateCourseSchema,
   DeleteCourseSchema,
@@ -121,7 +122,6 @@ export const changeCourseTitle = async (
 ) => {
   try {
     const validatedFields = ChangeCourseTitleSchema.safeParse(values);
-
     if (!validatedFields.success) {
       return { error: "Invalid title" };
     }
@@ -155,11 +155,58 @@ export const changeCourseTitle = async (
     revalidatePath(`/manage/courses/${updatedCourse.slug}`);
 
     return {
-      success: `Title has successfully been changed to ${updatedCourse.title}.`,
+      success: "Title has successfully been changed.",
     };
   } catch (error) {
     return {
       error: "An unknown error occurred while changing your title.",
+    };
+  }
+};
+
+export const changeCourseDescription = async (
+  values: z.infer<typeof ChangeCourseDescriptionSchema>,
+) => {
+  try {
+    const validatedFields = ChangeCourseDescriptionSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid title" };
+    }
+
+    const session = await auth();
+    const user = session?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const { id, description } = validatedFields.data;
+    const course = await findCourseById(id);
+
+    if (course?.instructorId !== user.id) {
+      return {
+        error: "You are not authorized",
+      };
+    }
+
+    if (course.description === description) {
+      return {
+        error: "Description is the same as the current one",
+      };
+    }
+
+    const updatedCourse = await updateCourse(id, {
+      description,
+    });
+
+    revalidatePath(`/manage/courses/${updatedCourse.slug}`);
+
+    return {
+      success: "Description has successfully been changed.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while changing your description.",
     };
   }
 };

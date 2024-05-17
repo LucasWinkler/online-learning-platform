@@ -126,7 +126,10 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
       <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
         <div className="flex flex-col gap-4 xl:gap-9">
           <CourseTitleCard id={course.id} title={course.title} />
-          <CourseDescriptionCard description={course.description} />
+          <CourseDescriptionCard
+            id={course.id}
+            description={course.description}
+          />
         </div>
         <div className="flex flex-col gap-4 xl:gap-9">
           <CourseChaptersCard chapters={course.chapters} />

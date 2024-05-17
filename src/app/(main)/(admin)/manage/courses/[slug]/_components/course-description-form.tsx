@@ -19,20 +19,25 @@ import {
   FormItem,
   FormMessage,
 } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { ChangeCourseTitleSchema } from "~/schemas/course";
-import { changeCourseTitle } from "~/server/actions/course";
+import { Textarea } from "~/components/ui/textarea";
+import { ChangeCourseDescriptionSchema } from "~/schemas/course";
+import { changeCourseDescription } from "~/server/actions/course";
 
-type CourseTitleFormProps = {
+type CourseDescriptionFormProps = {
   id: string;
-  title: string;
+  description: string | null;
   onCancel: () => void;
   onPendingStateChange: (isPending: boolean) => void;
 };
 
-export const CourseTitleForm = forwardRef(
+export const CourseDescriptionForm = forwardRef(
   (
-    { id, title, onCancel, onPendingStateChange }: CourseTitleFormProps,
+    {
+      id,
+      description,
+      onCancel,
+      onPendingStateChange,
+    }: CourseDescriptionFormProps,
     ref,
   ) => {
     const [isPending, startTransition] = useTransition();
@@ -41,59 +46,60 @@ export const CourseTitleForm = forwardRef(
       onPendingStateChange(isPending);
     }, [isPending, onPendingStateChange]);
 
-    const changeCourseTitleForm = useForm<
-      z.infer<typeof ChangeCourseTitleSchema>
+    const changeCourseDescriptionForm = useForm<
+      z.infer<typeof ChangeCourseDescriptionSchema>
     >({
-      resolver: zodResolver(ChangeCourseTitleSchema),
+      resolver: zodResolver(ChangeCourseDescriptionSchema),
       defaultValues: {
         id: id,
-        title: title,
+        description: description ?? "",
       },
     });
 
-    const onSubmit = (values: z.infer<typeof ChangeCourseTitleSchema>) => {
+    const onSubmit = (
+      values: z.infer<typeof ChangeCourseDescriptionSchema>,
+    ) => {
       startTransition(async () => {
-        await changeCourseTitle(values)
+        await changeCourseDescription(values)
           .then(async (data) => {
             if (data?.error) {
-              toast.error("Title Change Failed", {
+              toast.error("Description Change Failed", {
                 description: data.error,
               });
             }
 
             if (data?.success) {
               onCancel();
-              toast.success("Title Changed", {
+              toast.success("Description Changed", {
                 description: data.success,
               });
             }
           })
           .catch(() => {
-            toast.error("Title Change Failed", {
+            toast.error("Description Change Failed", {
               description:
-                "An unknown error occurred while changing your title.",
+                "An unknown error occurred while changing your description.",
             });
           });
       });
     };
 
     useImperativeHandle(ref, () => ({
-      submitForm: () => changeCourseTitleForm.handleSubmit(onSubmit)(),
+      submitForm: () => changeCourseDescriptionForm.handleSubmit(onSubmit)(),
     }));
 
     return (
-      <Form {...changeCourseTitleForm}>
-        <form onSubmit={changeCourseTitleForm.handleSubmit(onSubmit)}>
+      <Form {...changeCourseDescriptionForm}>
+        <form onSubmit={changeCourseDescriptionForm.handleSubmit(onSubmit)}>
           <FormField
-            control={changeCourseTitleForm.control}
-            name="title"
+            control={changeCourseDescriptionForm.control}
+            name="description"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-1">
                 <FormControl>
-                  <Input
-                    className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
-                    type="text"
-                    placeholder="Enter your course title"
+                  <Textarea
+                    className="bg-background py-2 xxs:text-base xs:py-1 xs:text-sm"
+                    placeholder="Describe your course"
                     autoComplete="off"
                     disabled={isPending}
                     {...field}
@@ -109,4 +115,4 @@ export const CourseTitleForm = forwardRef(
   },
 );
 
-CourseTitleForm.displayName = "CourseTitleForm";
+CourseDescriptionForm.displayName = "CourseDescriptionForm";
