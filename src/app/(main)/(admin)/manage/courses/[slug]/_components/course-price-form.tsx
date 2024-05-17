@@ -94,7 +94,7 @@ export const CoursePriceForm = forwardRef(
                 </span>
                 <FormControl>
                   <Input
-                    className="h-10 bg-background py-2 pl-6 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
+                    className="h-10 bg-background py-2 pl-7 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                     type="number"
                     min={0}
                     step={0.01}

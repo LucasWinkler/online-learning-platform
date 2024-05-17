@@ -244,7 +244,7 @@ export const changeCoursePrice = async (
     }
 
     const updatedCourse = await updateCourse(id, {
-      price,
+      price: +price,
     });
 
     revalidatePath(`/manage/courses/${updatedCourse.slug}`);
