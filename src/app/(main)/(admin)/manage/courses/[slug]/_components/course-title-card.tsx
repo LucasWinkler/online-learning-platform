@@ -49,7 +49,7 @@ export const CourseTitleCard = ({ id, title }: CourseTitleCardProps) => {
             onClick={handleCancel}
             disabled={isPending}
           >
-            Undo
+            Cancel
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
