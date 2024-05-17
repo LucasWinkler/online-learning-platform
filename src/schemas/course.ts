@@ -3,8 +3,8 @@ import { z } from "zod";
 const title = z
   .string()
   .trim()
-  .min(1, {
-    message: "Title is required",
+  .min(10, {
+    message: "Title must be at least 10 characters",
   })
   .max(60, {
     message: "Title must be less than 60 characters",

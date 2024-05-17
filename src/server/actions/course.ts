@@ -121,8 +121,6 @@ export const changeCourseTitle = async (
 ) => {
   try {
     const validatedFields = ChangeCourseTitleSchema.safeParse(values);
-    console.log(values);
-    console.log(validatedFields);
 
     if (!validatedFields.success) {
       return { error: "Invalid title" };
@@ -160,14 +158,6 @@ export const changeCourseTitle = async (
       success: `Title has successfully been changed to ${updatedCourse.title}.`,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.name === "CourseNotFoundError") {
-        return {
-          error: error.message,
-        };
-      }
-    }
-
     return {
       error: "An unknown error occurred while changing your title.",
     };
