@@ -6,11 +6,17 @@ import { Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import slug from "slug";
 
-import { CreateCourseSchema, DeleteCourseSchema } from "~/schemas/course";
+import {
+  ChangeCourseTitleSchema,
+  CreateCourseSchema,
+  DeleteCourseSchema,
+} from "~/schemas/course";
 import { auth } from "~/server/auth";
 import {
   countCourseEnrollments,
   deleteCourseById,
+  findCourseById,
+  updateCourse,
 } from "~/server/data-access/course";
 import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
 import { createNewCourse } from "~/server/use-cases/course";
@@ -107,5 +113,63 @@ export const deleteCourse = async (
     }
 
     throw error;
+  }
+};
+
+export const changeCourseTitle = async (
+  values: z.infer<typeof ChangeCourseTitleSchema>,
+) => {
+  try {
+    const validatedFields = ChangeCourseTitleSchema.safeParse(values);
+    console.log(values);
+    console.log(validatedFields);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid title" };
+    }
+
+    const session = await auth();
+    const user = session?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const { id, title } = validatedFields.data;
+    const course = await findCourseById(id);
+
+    if (course?.instructorId !== user.id) {
+      return {
+        error: "You are not authorized",
+      };
+    }
+
+    if (course.title === title) {
+      return {
+        error: "Title is the same as the current one",
+      };
+    }
+
+    const updatedCourse = await updateCourse(id, {
+      title,
+    });
+
+    revalidatePath(`/manage/courses/${updatedCourse.slug}`);
+
+    return {
+      success: `Title has successfully been changed to ${updatedCourse.title}.`,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.name === "CourseNotFoundError") {
+        return {
+          error: error.message,
+        };
+      }
+    }
+
+    return {
+      error: "An unknown error occurred while changing your title.",
+    };
   }
 };

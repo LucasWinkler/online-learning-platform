@@ -96,7 +96,8 @@ export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
         <DialogHeader>
           <DialogTitle>Create a New Course</DialogTitle>
           <DialogDescription>
-            Fill out the form below to create a new course.
+            Heads up: Your course URL is generated from your title and cannot be
+            changed after creation.
           </DialogDescription>
         </DialogHeader>
         <Form {...createCourseForm}>
