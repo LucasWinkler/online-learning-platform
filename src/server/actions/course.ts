@@ -8,6 +8,7 @@ import slug from "slug";
 
 import {
   ChangeCourseDescriptionSchema,
+  ChangeCoursePriceSchema,
   ChangeCourseTitleSchema,
   CreateCourseSchema,
   DeleteCourseSchema,
@@ -197,6 +198,53 @@ export const changeCourseDescription = async (
 
     const updatedCourse = await updateCourse(id, {
       description,
+    });
+
+    revalidatePath(`/manage/courses/${updatedCourse.slug}`);
+
+    return {
+      success: "Description has successfully been changed.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while changing your description.",
+    };
+  }
+};
+
+export const changeCoursePrice = async (
+  values: z.infer<typeof ChangeCoursePriceSchema>,
+) => {
+  try {
+    const validatedFields = ChangeCoursePriceSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid price" };
+    }
+
+    const session = await auth();
+    const user = session?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const { id, price } = validatedFields.data;
+    const course = await findCourseById(id);
+
+    if (course?.instructorId !== user.id) {
+      return {
+        error: "You are not authorized",
+      };
+    }
+
+    if (course.price === price) {
+      return {
+        error: "Price is the same as the current one",
+      };
+    }
+
+    const updatedCourse = await updateCourse(id, {
+      price,
     });
 
     revalidatePath(`/manage/courses/${updatedCourse.slug}`);

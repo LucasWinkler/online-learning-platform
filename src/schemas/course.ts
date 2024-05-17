@@ -10,6 +10,17 @@ const title = z
     message: "Title must be less than 60 characters",
   });
 
+const priceSchema = z
+  .union([z.string(), z.number()])
+  .transform((value) => {
+    if (value === "") return 0;
+    const parsed = parseFloat(value.toString());
+    return isNaN(parsed) ? value : parsed;
+  })
+  .refine((value) => typeof value === "number" && value >= 0, {
+    message: "Price must be a non-negative number",
+  });
+
 export const CreateCourseSchema = z.object({
   title: title,
 });
@@ -37,4 +48,9 @@ export const ChangeCourseDescriptionSchema = z.object({
     .max(250, {
       message: "Description must be less than 250 characters",
     }),
+});
+
+export const ChangeCoursePriceSchema = z.object({
+  id: z.string(),
+  price: priceSchema,
 });
