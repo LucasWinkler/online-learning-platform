@@ -14,19 +14,13 @@ import {
 import { formatCurrency } from "~/lib/utils";
 
 import { CoursePriceForm } from "./course-price-form";
-import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
 
 type CoursePriceCardProps = {
   id: string;
   price: number | null;
-  completed: boolean;
 };
 
-export const CoursePriceCard = ({
-  id,
-  price,
-  completed,
-}: CoursePriceCardProps) => {
+export const CoursePriceCard = ({ id, price }: CoursePriceCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const formRef = useRef<{ submitForm: () => void }>(null);
@@ -46,8 +40,7 @@ export const CoursePriceCard = ({
   };
 
   return (
-    <Card className="relative border-0 bg-gray-50">
-      <IncompleteFieldIndicator completed={completed} />
+    <Card className="border-0 bg-gray-50">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Course Price</CardTitle>
         {isEditing ? (

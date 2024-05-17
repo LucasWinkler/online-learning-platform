@@ -120,7 +120,6 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
           <CourseTitleCard
             id={course.id}
             title={course.title}
-            completed={!!course.title}
           />
           <CourseDescriptionCard
             id={course.id}
@@ -133,11 +132,7 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
             chapters={course.chapters}
             completed={hasPublishedChapters}
           />
-          <CoursePriceCard
-            id={course.id}
-            price={course.price}
-            completed={!!course.price}
-          />
+          <CoursePriceCard id={course.id} price={course.price} />
         </div>
       </div>
     </CourseWrapper>
