@@ -103,7 +103,7 @@ model Course {
   title         String
   slug          String  @unique
   description   String?
-  price         Float?
+  price         Float?  @default(0)
   image         String?
   imageBlurData String?
 

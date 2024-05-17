@@ -10,6 +10,7 @@ const title = z
     message: "Title must be less than 60 characters",
   });
 
+// Accepts both string and number to handle empty input as 0.
 const priceSchema = z
   .union([z.string(), z.number()])
   .transform((value) => {

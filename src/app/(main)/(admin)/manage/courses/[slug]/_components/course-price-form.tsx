@@ -102,7 +102,6 @@ export const CoursePriceForm = forwardRef(
                     autoComplete="off"
                     disabled={isPending}
                     {...field}
-                    value={field.value ?? 0}
                   />
                 </FormControl>
                 <FormMessage className="mt-1 text-sm" />
