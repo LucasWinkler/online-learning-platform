@@ -13,15 +13,18 @@ import {
 } from "~/components/ui/card";
 
 import { CourseDescriptionForm } from "./course-description-form";
+import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
 
 type CourseDescriptionCardProps = {
   id: string;
   description: string | null;
+  completed: boolean;
 };
 
 export const CourseDescriptionCard = ({
   id,
   description,
+  completed,
 }: CourseDescriptionCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
@@ -42,7 +45,8 @@ export const CourseDescriptionCard = ({
   };
 
   return (
-    <Card className="border-0 bg-gray-50">
+    <Card className="relative border-0 bg-gray-50">
+      <IncompleteFieldIndicator completed={completed} />
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Course Description</CardTitle>
         {isEditing ? (

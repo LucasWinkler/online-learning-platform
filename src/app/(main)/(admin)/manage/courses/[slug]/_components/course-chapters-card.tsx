@@ -11,13 +11,20 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
+import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
+
 type CourseChaptersCardProps = {
   chapters: Chapter[];
+  completed: boolean;
 };
 
-export const CourseChaptersCard = ({ chapters }: CourseChaptersCardProps) => {
+export const CourseChaptersCard = ({
+  chapters,
+  completed,
+}: CourseChaptersCardProps) => {
   return (
-    <Card className="border-0 bg-gray-50">
+    <Card className="relative border-0 bg-gray-50">
+      <IncompleteFieldIndicator completed={completed} />
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Course Chapters</CardTitle>
         <Button variant="outline" size="icon">

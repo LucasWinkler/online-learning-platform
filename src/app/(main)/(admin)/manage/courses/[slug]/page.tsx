@@ -114,15 +114,27 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
       </div>
       <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
         <div className="flex flex-col gap-4 xl:gap-9">
-          <CourseTitleCard id={course.id} title={course.title} />
+          <CourseTitleCard
+            id={course.id}
+            title={course.title}
+            completed={!!course.title}
+          />
           <CourseDescriptionCard
             id={course.id}
             description={course.description}
+            completed={!!course.description}
           />
         </div>
         <div className="flex flex-col gap-4 xl:gap-9">
-          <CourseChaptersCard chapters={course.chapters} />
-          <CoursePriceCard id={course.id} price={course.price} />
+          <CourseChaptersCard
+            chapters={course.chapters}
+            completed={course.chapters.some((chapter) => chapter.publishedAt)}
+          />
+          <CoursePriceCard
+            id={course.id}
+            price={course.price}
+            completed={!!course.price}
+          />
         </div>
       </div>
     </CourseWrapper>
