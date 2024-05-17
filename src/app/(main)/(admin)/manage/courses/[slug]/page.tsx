@@ -20,14 +20,6 @@ import { CoursePriceCard } from "./_components/course-price-card";
 import { CourseTitleCard } from "./_components/course-title-card";
 import { DeleteCourseDialog } from "./_components/delete-course-dialog";
 
-type RequiredField =
-  | string
-  | number
-  | Date
-  | null
-  | RequiredField[]
-  | { [key: string]: RequiredField };
-
 export const generateStaticParams = async () => {
   const slugs = await findCourseSlugs();
 
@@ -70,18 +62,15 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
 
   const isPublished = !!course.publishedAt;
 
-  const requiredFields: RequiredField[] = [
+  const requiredFields = [
     course.title,
     course.description,
     course.price,
     course.image,
-    course.chapters,
+    course.chapters.some((chapter) => !!chapter.publishedAt),
   ];
 
-  const validFieldsCount = requiredFields.filter(
-    (field) => field != null && field !== "",
-  ).length;
-
+  const validFieldsCount = requiredFields.filter(Boolean).length;
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
 
   const requiredText = `Required Fields (${validFieldsCount}/${requiredFields.length})`;
