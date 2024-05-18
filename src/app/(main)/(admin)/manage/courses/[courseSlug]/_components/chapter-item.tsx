@@ -40,8 +40,6 @@ export const ChapterItem = ({
     transition,
   };
 
-  console.log(isDragging);
-
   return (
     <li
       className={cn(
