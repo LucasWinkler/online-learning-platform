@@ -141,6 +141,7 @@ const CourseDetails = async ({ params }: CourseDetailsProps) => {
           />
           <CourseChaptersCard
             courseId={course.id}
+            courseSlug={course.slug}
             chapters={course.chapters}
             completed={hasPublishedChapters}
           />

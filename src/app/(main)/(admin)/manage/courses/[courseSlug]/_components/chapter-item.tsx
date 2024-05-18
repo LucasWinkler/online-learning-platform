@@ -4,18 +4,27 @@ import type { Chapter, Lesson } from "@prisma/client";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripIcon } from "lucide-react";
+import { GripIcon, SquarePenIcon } from "lucide-react";
 
+import { Link } from "~/components/link";
+import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 type ChapterItemProps = {
   chapter: Chapter & {
     lessons: Lesson[];
   };
+  courseSlug: string;
   isPending: boolean;
+  isSelected?: boolean;
 };
 
-export const ChapterItem = ({ chapter, isPending }: ChapterItemProps) => {
+export const ChapterItem = ({
+  chapter,
+  courseSlug,
+  isPending,
+  isSelected,
+}: ChapterItemProps) => {
   const {
     attributes,
     listeners,
@@ -27,28 +36,46 @@ export const ChapterItem = ({ chapter, isPending }: ChapterItemProps) => {
 
   const style = {
     opacity: isDragging ? 0.5 : 1,
-    cursor: isDragging ? "grabbing" : "grab",
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
+  console.log(isDragging);
+
   return (
     <li
-      className={cn("flex items-center gap-4 rounded-lg bg-background p-4", {
-        "shadow-md": isDragging,
-        "opacity-50": isPending,
-      })}
-      ref={setNodeRef}
+      className={cn(
+        "flex w-full items-center gap-4 rounded-lg bg-background shadow transition-all duration-150 ease-out",
+        {
+          "opacity-50": isDragging || isPending,
+          "opacity-100": !isDragging,
+          "shadow-md": isSelected,
+        },
+      )}
       style={style}
-      {...attributes}
-      {...listeners}
+      ref={setNodeRef}
     >
-      <GripIcon className="size-4 shrink-0" />
+      <div
+        {...attributes}
+        {...listeners}
+        className={cn(
+          "shrink-0 border-r border-border p-4",
+          isDragging || isSelected ? "cursor-grabbing" : "cursor-grab",
+        )}
+      >
+        <span className="sr-only">Reorder Chapter {chapter.order + 1}</span>
+        <GripIcon className="size-4" />
+      </div>
       <div className="text-sm">
         <span className="font-medium">Chapter {chapter.order + 1}:</span>{" "}
         <span>{chapter.title}</span>
       </div>
-      <span className="ml-auto">{chapter.lessons.length} lessons</span>
+      <Button variant="ghost" size="icon" className="ml-auto mr-1.5" asChild>
+        <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
+          <span className="sr-only">Edit Chapter: {chapter.title}</span>
+          <SquarePenIcon className="size-4" />
+        </Link>
+      </Button>
     </li>
   );
 };

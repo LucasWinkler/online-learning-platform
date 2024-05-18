@@ -1,11 +1,12 @@
 "use client";
 
-import type { DragEndEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import type { Chapter, Lesson } from "@prisma/client";
 
 import { useState } from "react";
 import {
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
@@ -26,17 +27,28 @@ import { ChapterItem } from "./chapter-item";
 
 type ChapterListProps = {
   courseId: string;
+  courseSlug: string;
   chapters: (Chapter & {
     lessons: Lesson[];
   })[];
 };
 
-export const ChapterList = ({ courseId, chapters }: ChapterListProps) => {
+export const ChapterList = ({
+  courseId,
+  courseSlug,
+  chapters,
+}: ChapterListProps) => {
   const [localChapters, setLocalChapters] = useState<
     (Chapter & {
       lessons: Lesson[];
     })[]
   >(chapters);
+  const [selectedChapter, setSelectedChapter] = useState<
+    | (Chapter & {
+        lessons: Lesson[];
+      })
+    | undefined
+  >(undefined);
   const [isPending, setIsPending] = useState(false);
 
   const sensors = useSensors(
@@ -47,16 +59,35 @@ export const ChapterList = ({ courseId, chapters }: ChapterListProps) => {
     }),
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setSelectedChapter(
+      localChapters.find((chapter) => chapter.id === active.id),
+    );
+  };
+
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
+      const selectedChapter = localChapters.find(
+        (chapter) => chapter.id === active.id,
+      );
+      const overChapter = localChapters.find(
+        (chapter) => chapter.id === over.id,
+      );
+
+      if (!selectedChapter || !overChapter) {
+        return;
+      }
+
       const currentIndex = localChapters.findIndex(
         (chapter) => chapter.id === active.id,
       );
       const newIndex = localChapters.findIndex(
         (chapter) => chapter.id === over.id,
       );
+
       const newChapters = arrayMove(localChapters, currentIndex, newIndex).map(
         (chapter, index) => ({
           ...chapter,
@@ -90,12 +121,23 @@ export const ChapterList = ({ courseId, chapters }: ChapterListProps) => {
         })
         .finally(() => {
           setIsPending(false);
+          setSelectedChapter(undefined);
         });
     }
   };
 
+  const handleDragCancel = () => {
+    setSelectedChapter(undefined);
+  };
+
   return localChapters.length > 0 ? (
-    <DndContext id="chapter-list" sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      id="chapter-list"
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       <SortableContext disabled={isPending} items={localChapters}>
         <ol
           className={cn("flex flex-col gap-2", {
@@ -105,12 +147,23 @@ export const ChapterList = ({ courseId, chapters }: ChapterListProps) => {
           {localChapters.map((chapter) => (
             <ChapterItem
               key={chapter.id}
+              courseSlug={courseSlug}
               isPending={isPending}
               chapter={chapter}
             />
           ))}
         </ol>
       </SortableContext>
+      <DragOverlay adjustScale>
+        {selectedChapter && (
+          <ChapterItem
+            courseSlug={courseSlug}
+            isPending={isPending}
+            chapter={selectedChapter}
+            isSelected
+          />
+        )}
+      </DragOverlay>
     </DndContext>
   ) : (
     <p className="text-sm text-gray-600">No chapters yet</p>

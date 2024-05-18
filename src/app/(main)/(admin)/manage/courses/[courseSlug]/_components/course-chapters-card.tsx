@@ -17,6 +17,7 @@ import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
 
 type CourseChaptersCardProps = {
   courseId: string;
+  courseSlug: string;
   chapters: (Chapter & {
     lessons: Lesson[];
   })[];
@@ -25,6 +26,7 @@ type CourseChaptersCardProps = {
 
 export const CourseChaptersCard = ({
   courseId,
+  courseSlug,
   chapters,
   completed,
 }: CourseChaptersCardProps) => {
@@ -47,7 +49,11 @@ export const CourseChaptersCard = ({
         {chapters.length === 0 ? (
           <p className="text-sm text-gray-600">No chapters</p>
         ) : (
-          <ChapterList courseId={courseId} chapters={chapters} />
+          <ChapterList
+            courseId={courseId}
+            courseSlug={courseSlug}
+            chapters={chapters}
+          />
         )}
       </CardContent>
       <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 md:justify-start">
