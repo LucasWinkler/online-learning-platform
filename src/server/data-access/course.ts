@@ -61,7 +61,20 @@ export const findCourseSlugs = async () => {
 export const findCourseWithChaptersBySlug = async (slug: string) => {
   return db.course.findUnique({
     where: { slug: slug },
-    include: { chapters: true },
+    include: {
+      chapters: {
+        orderBy: {
+          order: "asc",
+        },
+        include: {
+          lessons: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      },
+    },
   });
 };
 

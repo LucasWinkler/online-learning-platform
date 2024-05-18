@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2Icon, SquarePenIcon } from "lucide-react";
+import { Loader2Icon, SquarePenIcon, SquarePlusIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -60,8 +60,17 @@ export const CourseDescriptionCard = ({
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
-            <span className="sr-only">Edit Description</span>
-            <SquarePenIcon className="size-4" />
+            {description ? (
+              <>
+                <span className="sr-only">Edit Description</span>
+                <SquarePenIcon className="size-4" />
+              </>
+            ) : (
+              <>
+                <span className="sr-only">Add Description</span>
+                <SquarePlusIcon className="size-4" />
+              </>
+            )}
           </Button>
         )}
       </CardHeader>

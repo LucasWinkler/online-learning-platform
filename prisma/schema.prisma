@@ -131,13 +131,12 @@ model Chapter {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@unique([courseId, order])
+  // @@unique([courseId, order])
 }
 
 model Lesson {
   id          String  @id @default(cuid())
   title       String
-  slug        String
   description String?
   video       String?
   length      Int? /// Lesson length in seconds
@@ -153,7 +152,6 @@ model Lesson {
   updatedAt   DateTime  @updatedAt
 
   @@unique([chapterId, order])
-  @@unique([chapterId, slug])
 }
 
 model CourseEnrollment {

@@ -5,9 +5,7 @@ import type { z } from "zod";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon, PlusIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import slug from "slug";
 import { toast } from "sonner";
 
 import { FormError } from "~/components/form-error";
@@ -31,36 +29,35 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { cn } from "~/lib/utils";
-import { CreateCourseSchema } from "~/schemas/course";
-import { createCourse } from "~/server/actions/course";
+import { CreateChapterSchema } from "~/schemas/chapter";
+import { createChapter } from "~/server/actions/chapter";
 
-type CreateCourseDialogProps = {
+type CreateChapterDialogProps = {
   trigger?: React.ReactNode;
+  courseId: string;
 };
 
-export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
+export const CreateChapterDialog = ({
+  trigger,
+  courseId,
+}: CreateChapterDialogProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
-  const createCourseForm = useForm<z.infer<typeof CreateCourseSchema>>({
-    resolver: zodResolver(CreateCourseSchema),
+  const createChapterForm = useForm<z.infer<typeof CreateChapterSchema>>({
+    resolver: zodResolver(CreateChapterSchema),
     defaultValues: {
+      courseId: courseId,
       title: "",
     },
   });
 
-  const { watch } = createCourseForm;
-  const title = watch("title");
-  const generatedSlug = slug(title);
-
-  const onSubmit = (values: z.infer<typeof CreateCourseSchema>) => {
+  const onSubmit = (values: z.infer<typeof CreateChapterSchema>) => {
     setError(undefined);
 
     startTransition(async () => {
-      await createCourse(values)
+      await createChapter(values)
         .then(async (data) => {
           if (data?.error) {
             setError(data.error);
@@ -68,15 +65,14 @@ export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
 
           if (data?.success) {
             setIsDialogOpen(false);
-            createCourseForm.reset();
-            toast.success("Course Successfully Created", {
+            createChapterForm.reset();
+            toast.success("Chapter Successfully Created", {
               description: data.success,
             });
-            router.push(`/manage/courses/${data.slug}`);
           }
         })
         .catch(() => {
-          setError("An unknown error occurred while creating your course.");
+          setError("An unknown error occurred while creating your chapter.");
         });
     });
   };
@@ -95,42 +91,34 @@ export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create a New Course</DialogTitle>
+          <DialogTitle>Create a New Chapter</DialogTitle>
           <DialogDescription>
-            Heads up: Your course URL is generated from your title and cannot be
-            changed after creation.
+            A chapter is a collection of lessons that are grouped together to
+            form a complete course.
           </DialogDescription>
         </DialogHeader>
-        <Form {...createCourseForm}>
+        <Form {...createChapterForm}>
           <form
             className="flex flex-col gap-4"
-            onSubmit={createCourseForm.handleSubmit(onSubmit)}
+            onSubmit={createChapterForm.handleSubmit(onSubmit)}
           >
             <FormField
-              control={createCourseForm.control}
+              control={createChapterForm.control}
               name="title"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
-                  <FormLabel>Course Title</FormLabel>
+                  <FormLabel>Chapter Title</FormLabel>
                   <FormControl>
                     <Input
                       className="h-10 bg-background py-2 xxs:text-base xs:h-9 xs:py-1 xs:text-sm"
                       type="text"
-                      placeholder="My Course"
+                      placeholder="My Chapter"
                       autoComplete="off"
                       disabled={isPending}
                       {...field}
                     />
                   </FormControl>
                   <FormMessage className="text-sm" />
-                  <p
-                    className={cn(
-                      "invisible text-sm text-muted-foreground",
-                      generatedSlug && "visible",
-                    )}
-                  >
-                    URL: /{generatedSlug}
-                  </p>
                 </FormItem>
               )}
             />
@@ -145,7 +133,7 @@ export const CreateCourseDialog = ({ trigger }: CreateCourseDialogProps) => {
                 {isPending && (
                   <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Create Course
+                Create Chapter
               </Button>
             </DialogFooter>
           </form>

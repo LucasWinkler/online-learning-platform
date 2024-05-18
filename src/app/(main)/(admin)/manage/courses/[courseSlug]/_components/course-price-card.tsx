@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2Icon, SquarePenIcon } from "lucide-react";
+import { Loader2Icon, SquarePenIcon, SquarePlusIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -17,7 +17,7 @@ import { CoursePriceForm } from "./course-price-form";
 
 type CoursePriceCardProps = {
   id: string;
-  price: number | null;
+  price: number;
 };
 
 export const CoursePriceCard = ({ id, price }: CoursePriceCardProps) => {
@@ -54,8 +54,17 @@ export const CoursePriceCard = ({ id, price }: CoursePriceCardProps) => {
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
-            <span className="sr-only">Edit Price</span>
-            <SquarePenIcon className="size-4" />
+            {price > 0 ? (
+              <>
+                <span className="sr-only">Edit Price</span>
+                <SquarePenIcon className="size-4" />
+              </>
+            ) : (
+              <>
+                <span className="sr-only">Add Price</span>
+                <SquarePlusIcon className="size-4" />
+              </>
+            )}
           </Button>
         )}
       </CardHeader>

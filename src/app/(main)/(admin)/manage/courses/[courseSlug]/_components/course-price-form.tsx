@@ -25,7 +25,7 @@ import { changeCoursePrice } from "~/server/actions/course";
 
 type CoursePriceFormProps = {
   id: string;
-  price: number | null;
+  price: number;
   onCancel: () => void;
   onPendingStateChange: (isPending: boolean) => void;
 };

@@ -92,7 +92,6 @@ async function main() {
         await db.lesson.create({
           data: {
             title: `Lesson ${k} for Chapter ${j} of Course ${i}`,
-            slug: `lesson-${k}-chapter-${j}-course-${i}`,
             description: `Description for Lesson ${k} of Chapter ${j} for Course ${i}`,
             video: "https://www.example.com/video",
             length: Math.floor(Math.random() * 900) + 240,

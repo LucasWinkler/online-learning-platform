@@ -17,6 +17,7 @@ import { CourseWrapper } from "../_components/course-wrapper";
 import { CourseChaptersCard } from "./_components/course-chapters-card";
 import { CourseDescriptionCard } from "./_components/course-description-card";
 import { CoursePriceCard } from "./_components/course-price-card";
+import { CourseThumbnailCard } from "./_components/course-thumbnail-card";
 import { CourseTitleCard } from "./_components/course-title-card";
 import { DeleteCourseDialog } from "./_components/delete-course-dialog";
 
@@ -24,16 +25,16 @@ export const generateStaticParams = async () => {
   const slugs = await findCourseSlugs();
 
   return slugs.map((course) => ({
-    slug: course.slug,
+    courseSlug: course.slug,
   }));
 };
 
 export const generateMetadata = async ({
   params,
 }: {
-  params: { slug: string };
+  params: CourseDetailsParams;
 }): Promise<Metadata> => {
-  const course = await fetchCourse(params.slug);
+  const course = await fetchCourse(params.courseSlug);
 
   return {
     title: course?.title ?? "Course not found",
@@ -45,12 +46,18 @@ const fetchCourse = async (slug: string) => {
   return await findCourseWithChaptersBySlug(slug);
 };
 
-const CourseDetails = async ({ params }: { params: { slug: string } }) => {
+type CourseDetailsParams = { courseSlug: string };
+
+type CourseDetailsProps = {
+  params: CourseDetailsParams;
+};
+
+const CourseDetails = async ({ params }: CourseDetailsProps) => {
   const session = await auth();
   const user = session?.user;
-  const { slug } = params;
+  const { courseSlug } = params;
 
-  const course = await fetchCourse(slug);
+  const course = await fetchCourse(courseSlug);
 
   if (user?.role !== Role.ADMIN) {
     redirect("/unauthorized");
@@ -68,7 +75,6 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
   const requiredFields = [
     course.title,
     course.description,
-    course.price,
     course.image,
     hasPublishedChapters,
   ];
@@ -117,22 +123,27 @@ const CourseDetails = async ({ params }: { params: { slug: string } }) => {
       </div>
       <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
         <div className="flex flex-col gap-4 xl:gap-9">
-          <CourseTitleCard
-            id={course.id}
-            title={course.title}
-          />
+          <CourseTitleCard id={course.id} title={course.title} />
           <CourseDescriptionCard
             id={course.id}
             description={course.description}
             completed={!!course.description}
           />
+          <CoursePriceCard id={course.id} price={course.price} />
         </div>
         <div className="flex flex-col gap-4 xl:gap-9">
+          <CourseThumbnailCard
+            id={course.id}
+            image={course.image}
+            blurDataURL={course.imageBlurData}
+            slug={course.slug}
+            completed={!!course.image}
+          />
           <CourseChaptersCard
+            courseId={course.id}
             chapters={course.chapters}
             completed={hasPublishedChapters}
           />
-          <CoursePriceCard id={course.id} price={course.price} />
         </div>
       </div>
     </CourseWrapper>

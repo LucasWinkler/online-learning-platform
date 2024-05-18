@@ -29,7 +29,7 @@ export const createCourse = async (
   try {
     const validatedFields = CreateCourseSchema.safeParse(values);
     if (!validatedFields.success) {
-      return { error: "Invalid title or slug" };
+      return { error: "Invalid title" };
     }
 
     const session = await auth();
@@ -94,7 +94,7 @@ export const deleteCourse = async (
     if (enrollmentCount > 0) {
       return {
         error:
-          "Can not delete course with enrolled students. You may unpublish the course instead.",
+          "You can not delete a course with students. You may unpublish the course instead, but those students will still have access to the course.",
       };
     }
 
