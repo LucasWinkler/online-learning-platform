@@ -67,7 +67,7 @@ export const ChapterItem = ({
         <span className="sr-only">Reorder Chapter: {chapter.title}</span>
         <GripIcon className="size-4" />
       </div>
-      <div className="text-sm">
+      <div className="overflow-x-scroll text-nowrap text-sm">
         <span className="font-medium">Chapter {chapter.order + 1}:</span>{" "}
         <span>{chapter.title}</span>
       </div>
