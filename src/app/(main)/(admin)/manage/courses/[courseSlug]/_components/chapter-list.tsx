@@ -18,6 +18,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
+import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "~/lib/utils";
@@ -145,8 +146,60 @@ export const ChapterList = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
+      accessibility={{
+        screenReaderInstructions: {
+          draggable:
+            "To pick up a chapter item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.",
+        },
+        announcements: {
+          onDragStart(id) {
+            const chapter = chapters.find(
+              (chapter) => chapter.id === id.active.id,
+            );
+            return `Picked up chapter (${chapter?.order}) ${chapter?.title ?? id.active.id}.`;
+          },
+          onDragOver({ active, over }) {
+            const chapter = chapters.find(
+              (chapter) => chapter.id === active.id,
+            );
+            if (over) {
+              const overChapter = chapters.find(
+                (chapter) => chapter.id === over.id,
+              );
+              return `Dragging chapter (${chapter?.order}) ${chapter?.title ?? active.id} over chapter (${overChapter?.order}) ${overChapter?.title ?? over.id}.`;
+            }
+            return `Dragging chapter (${chapter?.order}) ${chapter?.title ?? active.id}.`;
+          },
+          onDragEnd({ active, over }) {
+            const chapter = chapters.find(
+              (chapter) => chapter.id === active.id,
+            );
+
+            if (over?.id) {
+              const overChapter = chapters.find(
+                (chapter) => chapter.id === over.id,
+              );
+              return `Chapter (${chapter?.order}) ${chapter?.title ?? active.id} was dropped over chapter (${overChapter?.order}) ${overChapter?.title ?? over.id}.`;
+            }
+
+            return `Chapter (${chapter?.order}) ${chapter?.title ?? active.id} was dropped.`;
+          },
+          onDragCancel({ active }) {
+            const chapter = chapters.find(
+              (chapter) => chapter.id === active.id,
+            );
+            return `Dragging was cancelled. Chapter (${chapter?.order}) ${chapter?.title ?? active.id} was dropped.`;
+          },
+        },
+      }}
     >
       <SortableContext disabled={isPending} items={chapters}>
+        {isPending && (
+          <div className="absolute left-0 top-0 z-[1] flex h-full w-full items-center justify-center">
+            <span className="sr-only">Updating chapter orders...</span>
+            <Loader2Icon className="size-6 animate-spin" />
+          </div>
+        )}
         <ol
           className={cn("flex flex-col gap-2", {
             "opacity-50": isPending,

@@ -64,7 +64,7 @@ export const ChapterItem = ({
           isDragging || isSelected ? "cursor-grabbing" : "cursor-grab",
         )}
       >
-        <span className="sr-only">Reorder Chapter {chapter.order + 1}</span>
+        <span className="sr-only">Reorder Chapter: {chapter.title}</span>
         <GripIcon className="size-4" />
       </div>
       <div className="text-sm">
