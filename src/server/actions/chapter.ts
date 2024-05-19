@@ -10,8 +10,8 @@ import {
   CreateChapterSchema,
 } from "~/schemas/chapter";
 import { auth } from "~/server/auth";
+import { updateChapterOrders } from "~/server/data-access/chapter";
 import { findCourseById } from "~/server/data-access/course";
-import { db } from "~/server/db";
 import { createNewChapter } from "~/server/use-cases/chapter";
 
 export const createChapter = async (
@@ -84,15 +84,7 @@ export const updateChapterOrder = async (
       return { error: "You are not authorized" };
     }
 
-    const chaptersToUpdate = chapterOrderUpdates.map((chapter) =>
-      db.chapter.update({
-        where: { id: chapter.id },
-        data: { order: chapter.order },
-      }),
-    );
-
-    await db.$transaction(chaptersToUpdate);
-
+    await updateChapterOrders(chapterOrderUpdates);
     revalidatePath(`/manage/courses/${courseId}`);
 
     return {

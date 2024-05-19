@@ -1,13 +1,10 @@
 import type { Prisma } from "@prisma/client";
 import type { ChapterCreationParams } from "~/types/chapter";
 
+import { type z } from "zod";
 
-
+import { type ChangeChapterOrderSchema } from "~/schemas/chapter";
 import { db } from "~/server/db";
-
-
-
-
 
 export const findChapters = async () => {
   return await db.course.findMany();
@@ -88,5 +85,18 @@ export const doesChapterExistOnCourse = async (
   return (
     (await db.chapter.count({ where: { title: title, courseId: courseId } })) >
     0
+  );
+};
+
+export const updateChapterOrders = async (
+  chapters: z.infer<typeof ChangeChapterOrderSchema>["chapterOrderUpdates"],
+) => {
+  return await db.$transaction(
+    chapters.map((chapter) =>
+      db.chapter.update({
+        where: { id: chapter.id },
+        data: { order: chapter.order },
+      }),
+    ),
   );
 };
