@@ -7,6 +7,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripIcon, SquarePenIcon } from "lucide-react";
 
 import { Link } from "~/components/link";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -40,6 +41,8 @@ export const ChapterItem = ({
     transition,
   };
 
+  const isPublished = !!chapter.publishedAt;
+
   return (
     <li
       className={cn(
@@ -68,12 +71,17 @@ export const ChapterItem = ({
         <span className="font-medium">Chapter {chapter.order + 1}:</span>{" "}
         <span>{chapter.title}</span>
       </div>
-      <Button variant="ghost" size="icon" className="ml-auto mr-1.5" asChild>
-        <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
-          <span className="sr-only">Edit Chapter: {chapter.title}</span>
-          <SquarePenIcon className="size-4" />
-        </Link>
-      </Button>
+      <div className="ml-auto flex items-center gap-2">
+        <Badge variant={isPublished ? "default" : "outline"}>
+          {isPublished ? "Published" : "Draft"}
+        </Badge>
+        <Button variant="ghost" size="icon" className="ml-auto mr-1.5" asChild>
+          <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
+            <span className="sr-only">Edit Chapter: {chapter.title}</span>
+            <SquarePenIcon className="size-4" />
+          </Link>
+        </Button>
+      </div>
     </li>
   );
 };

@@ -26,3 +26,13 @@ export const ChangeChapterTitleSchema = z.object({
   id: z.string(),
   title: title,
 });
+
+export const ChangeChapterOrderSchema = z.object({
+  courseId: z.string(),
+  chapterOrderUpdates: z.array(
+    z.object({
+      id: z.string(),
+      order: z.number(),
+    }),
+  ),
+});

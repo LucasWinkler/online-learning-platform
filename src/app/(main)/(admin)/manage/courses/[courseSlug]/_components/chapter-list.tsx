@@ -28,7 +28,7 @@ import { ChapterItem } from "./chapter-item";
 type ChapterListProps = {
   courseId: string;
   courseSlug: string;
-  chapters: (Chapter & {
+  initialChapters: (Chapter & {
     lessons: Lesson[];
   })[];
 };
@@ -36,13 +36,13 @@ type ChapterListProps = {
 export const ChapterList = ({
   courseId,
   courseSlug,
-  chapters,
+  initialChapters,
 }: ChapterListProps) => {
-  const [localChapters, setLocalChapters] = useState<
+  const [chapters, setChapters] = useState<
     (Chapter & {
       lessons: Lesson[];
     })[]
-  >(chapters);
+  >(initialChapters);
   const [selectedChapter, setSelectedChapter] = useState<
     | (Chapter & {
         lessons: Lesson[];
@@ -61,60 +61,64 @@ export const ChapterList = ({
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setSelectedChapter(
-      localChapters.find((chapter) => chapter.id === active.id),
-    );
+    setSelectedChapter(chapters.find((chapter) => chapter.id === active.id));
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const selectedChapter = localChapters.find(
+      const selectedChapter = chapters.find(
         (chapter) => chapter.id === active.id,
       );
-      const overChapter = localChapters.find(
-        (chapter) => chapter.id === over.id,
-      );
+      const overChapter = chapters.find((chapter) => chapter.id === over.id);
 
       if (!selectedChapter || !overChapter) {
         return;
       }
 
-      const currentIndex = localChapters.findIndex(
+      const currentIndex = chapters.findIndex(
         (chapter) => chapter.id === active.id,
       );
-      const newIndex = localChapters.findIndex(
-        (chapter) => chapter.id === over.id,
-      );
+      const newIndex = chapters.findIndex((chapter) => chapter.id === over.id);
 
-      const newChapters = arrayMove(localChapters, currentIndex, newIndex).map(
-        (chapter, index) => ({
-          ...chapter,
-          order: index,
-        }),
-      );
+      const movedChapters = arrayMove(chapters, currentIndex, newIndex);
 
-      setLocalChapters(newChapters);
+      // The full chapter object used to display the chapters in the UI
+      const newChapters = movedChapters.map((chapter, index) => ({
+        ...chapter,
+        order: index,
+      }));
+
+      // The chapter object with just the id and new order used to update the order in the database
+      const chapterOrderUpdates = movedChapters.map((chapter, index) => ({
+        id: chapter.id,
+        order: index,
+      }));
+
+      setChapters(newChapters);
       setIsPending(true);
 
-      await updateChapterOrder(courseId, newChapters)
-        .then((res) => {
-          if (res.error) {
-            setLocalChapters(chapters);
+      await updateChapterOrder({
+        courseId,
+        chapterOrderUpdates,
+      })
+        .then((data) => {
+          if (data.error) {
+            setChapters(initialChapters);
             toast.error("Chapter Update Failed", {
-              description: res.error,
+              description: data.error,
             });
           }
 
-          if (res.success) {
+          if (data.success) {
             toast.success("Chapter Updated Successfully", {
-              description: res.success,
+              description: data.success,
             });
           }
         })
         .catch(() => {
-          setLocalChapters(chapters);
+          setChapters(initialChapters);
           toast.error("Chapter Update Failed", {
             description: "An error occurred while updating the chapters.",
           });
@@ -130,7 +134,7 @@ export const ChapterList = ({
     setSelectedChapter(undefined);
   };
 
-  return localChapters.length > 0 ? (
+  return chapters.length > 0 ? (
     <DndContext
       id="chapter-list"
       sensors={sensors}
@@ -138,13 +142,13 @@ export const ChapterList = ({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <SortableContext disabled={isPending} items={localChapters}>
+      <SortableContext disabled={isPending} items={chapters}>
         <ol
           className={cn("flex flex-col gap-2", {
             "opacity-50": isPending,
           })}
         >
-          {localChapters.map((chapter) => (
+          {chapters.map((chapter) => (
             <ChapterItem
               key={chapter.id}
               courseSlug={courseSlug}

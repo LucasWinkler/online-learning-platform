@@ -52,7 +52,7 @@ export const CourseChaptersCard = ({
           <ChapterList
             courseId={courseId}
             courseSlug={courseSlug}
-            chapters={chapters}
+            initialChapters={chapters}
           />
         )}
       </CardContent>

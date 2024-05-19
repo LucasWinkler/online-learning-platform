@@ -1,12 +1,14 @@
 "use server";
 
-import type { Chapter, Lesson } from "@prisma/client";
 import type { z } from "zod";
 
 import { Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-import { CreateChapterSchema } from "~/schemas/chapter";
+import {
+  ChangeChapterOrderSchema,
+  CreateChapterSchema,
+} from "~/schemas/chapter";
 import { auth } from "~/server/auth";
 import { findCourseById } from "~/server/data-access/course";
 import { db } from "~/server/db";
@@ -56,20 +58,40 @@ export const createChapter = async (
 };
 
 export const updateChapterOrder = async (
-  courseId: string,
-  chapters: (Chapter & {
-    lessons: Lesson[];
-  })[],
+  values: z.infer<typeof ChangeChapterOrderSchema>,
 ) => {
   try {
-    const updates = chapters.map((chapter) =>
+    const validatedFields = ChangeChapterOrderSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid input" };
+    }
+
+    const session = await auth();
+    const user = session?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const { courseId, chapterOrderUpdates } = validatedFields.data;
+
+    const course = await findCourseById(courseId);
+    if (!course) {
+      return { error: "Course not found" };
+    }
+
+    if (course.instructorId !== user.id) {
+      return { error: "You are not authorized" };
+    }
+
+    const chaptersToUpdate = chapterOrderUpdates.map((chapter) =>
       db.chapter.update({
         where: { id: chapter.id },
         data: { order: chapter.order },
       }),
     );
 
-    await db.$transaction(updates);
+    await db.$transaction(chaptersToUpdate);
 
     revalidatePath(`/manage/courses/${courseId}`);
 
