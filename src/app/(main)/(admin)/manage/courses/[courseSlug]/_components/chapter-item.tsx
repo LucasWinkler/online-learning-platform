@@ -46,7 +46,7 @@ export const ChapterItem = ({
   return (
     <li
       className={cn(
-        "flex w-full items-center gap-4 rounded-lg bg-background shadow transition-all duration-150 ease-out",
+        "flex items-center rounded-lg bg-background shadow transition-all duration-150 ease-out",
         {
           "opacity-50": isDragging || isPending,
           "opacity-100": !isDragging,
@@ -60,27 +60,36 @@ export const ChapterItem = ({
         {...attributes}
         {...listeners}
         className={cn(
-          "shrink-0 border-r border-border p-4",
+          "shrink-0 p-4",
           isDragging || isSelected ? "cursor-grabbing" : "cursor-grab",
         )}
       >
         <span className="sr-only">Reorder Chapter: {chapter.title}</span>
         <GripIcon className="size-4" />
       </div>
-      <div className="overflow-x-scroll text-nowrap text-sm">
-        <span className="font-medium">Chapter {chapter.order + 1}:</span>{" "}
-        <span>{chapter.title}</span>
-      </div>
-      <div className="ml-auto flex items-center gap-2">
-        <Badge variant={isPublished ? "default" : "outline"}>
-          {isPublished ? "Published" : "Draft"}
-        </Badge>
-        <Button variant="ghost" size="icon" className="ml-auto mr-1.5" asChild>
-          <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
-            <span className="sr-only">Edit Chapter: {chapter.title}</span>
-            <SquarePenIcon className="size-4" />
-          </Link>
-        </Button>
+      <div className="flex w-full items-center justify-between border-l border-border">
+        <div className="p-4 pr-0">
+          <p className="line-clamp-2 break-words text-sm">{chapter.title}</p>
+        </div>
+        <div className="flex items-center gap-1 pr-4">
+          <Badge
+            className="hidden xs:flex sm:hidden md:flex"
+            variant={isPublished ? "default" : "outline"}
+          >
+            {isPublished ? "Published" : "Draft"}
+          </Badge>
+          <Button
+            className="hover:text-neutral-600"
+            variant="ghost"
+            size="icon"
+            asChild
+          >
+            <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
+              <span className="sr-only">Edit Chapter: {chapter.title}</span>
+              <SquarePenIcon className="size-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </li>
   );

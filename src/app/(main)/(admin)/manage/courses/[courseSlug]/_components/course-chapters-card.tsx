@@ -45,7 +45,7 @@ export const CourseChaptersCard = ({
           courseId={courseId}
         />
       </CardHeader>
-      <CardContent className="relative flex flex-col gap-2 text-sm">
+      <CardContent className="relative text-sm">
         {chapters.length === 0 ? (
           <p className="text-sm text-gray-600">No chapters</p>
         ) : (
