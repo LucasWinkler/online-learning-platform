@@ -3,7 +3,7 @@
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import type { Chapter, Lesson } from "@prisma/client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -50,6 +50,10 @@ export const ChapterList = ({
     | undefined
   >(undefined);
   const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    setChapters(initialChapters);
+  }, [initialChapters]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
