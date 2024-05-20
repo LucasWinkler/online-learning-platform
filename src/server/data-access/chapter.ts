@@ -50,6 +50,13 @@ export const deleteChapterById = async (id: string) => {
   return await db.chapter.delete({ where: { id: id } });
 };
 
+export const findLastChapter = async (courseId: string) => {
+  return await db.chapter.findFirst({
+    where: { courseId: courseId },
+    orderBy: { order: "desc" },
+  });
+};
+
 export const doesChapterExistById = async (id: string) => {
   return (await db.chapter.count({ where: { id: id } })) > 0;
 };
@@ -59,8 +66,15 @@ export const doesChapterExistOnCourse = async (
   courseId: string,
 ) => {
   return (
-    (await db.chapter.count({ where: { title: title, courseId: courseId } })) >
-    0
+    (await db.chapter.count({
+      where: {
+        title: {
+          equals: title,
+          mode: "insensitive",
+        },
+        courseId: courseId,
+      },
+    })) > 0
   );
 };
 

@@ -1,4 +1,4 @@
-import type { Chapter, Lesson } from "@prisma/client";
+import type { Lesson } from "@prisma/client";
 
 import { SquarePlusIcon } from "lucide-react";
 
@@ -11,53 +11,55 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { CourseChapterList } from "./course-chapter-list";
-import { CreateChapterDialog } from "./create-chapter-dialog";
-import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
+import { IncompleteFieldIndicator } from "../../_components/incomplete-field-indicator";
+import { ChapterLessonList } from "./chapter-lesson-list";
+import { CreateLessonDialog } from "./create-lesson-dialog";
 
-type CourseChaptersCardProps = {
+type ChapterLessonsCardProps = {
   courseId: string;
   courseSlug: string;
-  chapters: (Chapter & {
-    lessons: Lesson[];
-  })[];
+  lessons: Lesson[];
+  chapterId: string;
   completed: boolean;
 };
 
-export const CourseChaptersCard = ({
+export const ChapterLessonsCard = ({
   courseId,
   courseSlug,
-  chapters,
+  lessons,
+  chapterId,
   completed,
-}: CourseChaptersCardProps) => {
+}: ChapterLessonsCardProps) => {
   return (
     <Card className="relative border-0 bg-gray-50">
       <IncompleteFieldIndicator completed={completed} />
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle>Course Chapters</CardTitle>
-        <CreateChapterDialog
+        <CardTitle>Chapter Lessons</CardTitle>
+        <CreateLessonDialog
           trigger={
             <Button variant="outline" size="icon">
-              <span className="sr-only">Add Chapter</span>
+              <span className="sr-only">Add Lesson</span>
               <SquarePlusIcon className="size-4" />
             </Button>
           }
           courseId={courseId}
+          chapterId={chapterId}
         />
       </CardHeader>
       <CardContent className="relative text-sm">
-        {chapters.length === 0 ? (
-          <p className="text-sm text-gray-600">No chapters</p>
+        {lessons.length === 0 ? (
+          <p className="text-sm text-gray-600">No lessons</p>
         ) : (
-          <CourseChapterList
+          <ChapterLessonList
             courseId={courseId}
             courseSlug={courseSlug}
-            initialChapters={chapters}
+            chapterId={chapterId}
+            initialLessons={lessons}
           />
         )}
       </CardContent>
       <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 md:justify-start">
-        You can drag and drop chapters to reorder them.
+        You can drag and drop lessons to reorder them.
       </CardFooter>
     </Card>
   );

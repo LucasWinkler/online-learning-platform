@@ -24,9 +24,9 @@ import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { updateChapterOrder } from "~/server/actions/chapter";
 
-import { ChapterItem } from "./chapter-item";
+import { CourseChapterItem } from "./course-chapter-item";
 
-type ChapterListProps = {
+type CourseChapterListProps = {
   courseId: string;
   courseSlug: string;
   initialChapters: (Chapter & {
@@ -34,11 +34,11 @@ type ChapterListProps = {
   })[];
 };
 
-export const ChapterList = ({
+export const CourseChapterList = ({
   courseId,
   courseSlug,
   initialChapters,
-}: ChapterListProps) => {
+}: CourseChapterListProps) => {
   const [chapters, setChapters] = useState<
     (Chapter & {
       lessons: Lesson[];
@@ -206,7 +206,7 @@ export const ChapterList = ({
           })}
         >
           {chapters.map((chapter) => (
-            <ChapterItem
+            <CourseChapterItem
               key={chapter.id}
               courseSlug={courseSlug}
               isPending={isPending}
@@ -217,7 +217,7 @@ export const ChapterList = ({
       </SortableContext>
       <DragOverlay adjustScale>
         {selectedChapter && (
-          <ChapterItem
+          <CourseChapterItem
             courseSlug={courseSlug}
             isPending={isPending}
             chapter={selectedChapter}

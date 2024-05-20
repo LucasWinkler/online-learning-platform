@@ -15,6 +15,12 @@ export const findCourses = async () => {
 export const findCourseById = async (id: string) => {
   return await db.course.findUnique({ where: { id: id } });
 };
+export const findCourseWithChaptersAndLessonsById = async (id: string) => {
+  return await db.course.findUnique({
+    where: { id: id },
+    include: { chapters: { include: { lessons: true } } },
+  });
+};
 
 export const findCourseBySlug = async (slug: string) => {
   return await db.course.findUnique({ where: { slug: slug } });

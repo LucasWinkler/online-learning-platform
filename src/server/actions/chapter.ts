@@ -24,9 +24,8 @@ import {
   countCourseEnrollments,
   findCourseById,
 } from "~/server/data-access/course";
+import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
 import { createNewChapter } from "~/server/use-cases/chapter";
-
-import { isAuthorizedForCourseManagement } from "../use-cases/authorization";
 
 export const createChapter = async (
   values: z.infer<typeof CreateChapterSchema>,
@@ -99,7 +98,7 @@ export const updateChapterOrder = async (
     }
 
     await updateChapterOrders(chapterOrderUpdates);
-    revalidatePath(`/manage/courses/${courseId}`);
+    revalidatePath(`/manage/courses/${course.slug}`);
 
     return {
       success: "Chapter order has been successfully updated.",

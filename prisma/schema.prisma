@@ -150,8 +150,6 @@ model Lesson {
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  @@unique([chapterId, order])
 }
 
 model CourseEnrollment {

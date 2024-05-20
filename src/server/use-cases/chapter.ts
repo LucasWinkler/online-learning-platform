@@ -1,11 +1,10 @@
-import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
-
 import {
   createChapter,
   deleteChapterById,
   doesChapterExistOnCourse,
   findLastChapter,
-} from "../data-access/chapter";
+} from "~/server/data-access/chapter";
+import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
 
 export const createNewChapter = async (title: string, courseId: string) => {
   const exists = await doesChapterExistOnCourse(title, courseId);

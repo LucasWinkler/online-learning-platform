@@ -1,6 +1,6 @@
 "use client";
 
-import type { Chapter, Lesson } from "@prisma/client";
+import type { Lesson } from "@prisma/client";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -11,21 +11,21 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-type ChapterItemProps = {
-  chapter: Chapter & {
-    lessons: Lesson[];
-  };
+type ChapterLessonItemProps = {
+  lesson: Lesson;
+  chapterId: string;
   courseSlug: string;
   isPending: boolean;
   isSelected?: boolean;
 };
 
-export const ChapterItem = ({
-  chapter,
+export const ChapterLessonItem = ({
+  lesson,
+  chapterId,
   courseSlug,
   isPending,
   isSelected,
-}: ChapterItemProps) => {
+}: ChapterLessonItemProps) => {
   const {
     attributes,
     listeners,
@@ -33,7 +33,7 @@ export const ChapterItem = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: chapter.id });
+  } = useSortable({ id: lesson.id });
 
   const style = {
     opacity: isDragging ? 0.5 : 1,
@@ -41,7 +41,7 @@ export const ChapterItem = ({
     transition,
   };
 
-  const isPublished = !!chapter.publishedAt;
+  const isPublished = !!lesson.publishedAt;
 
   return (
     <li
@@ -64,12 +64,12 @@ export const ChapterItem = ({
           isDragging || isSelected ? "cursor-grabbing" : "cursor-grab",
         )}
       >
-        <span className="sr-only">Reorder Chapter: {chapter.title}</span>
+        <span className="sr-only">Reorder Lesson: {lesson.title}</span>
         <GripIcon className="size-4" />
       </div>
       <div className="flex w-full items-center justify-between border-l border-border">
         <div className="p-4 pr-0">
-          <p className="line-clamp-2 break-words text-sm">{chapter.title}</p>
+          <p className="line-clamp-2 break-words text-sm">{lesson.title}</p>
         </div>
         <div className="flex items-center gap-1 pr-4">
           <Badge
@@ -84,8 +84,10 @@ export const ChapterItem = ({
             size="icon"
             asChild
           >
-            <Link href={`/manage/courses/${courseSlug}/chapter/${chapter.id}`}>
-              <span className="sr-only">Edit Chapter: {chapter.title}</span>
+            <Link
+              href={`/manage/courses/${courseSlug}/chapter/${chapterId}/lesson/${lesson.id}`}
+            >
+              <span className="sr-only">Edit Lesson: {lesson.title}</span>
               <SquarePenIcon className="size-4" />
             </Link>
           </Button>

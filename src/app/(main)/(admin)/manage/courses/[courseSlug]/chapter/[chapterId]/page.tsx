@@ -13,6 +13,7 @@ import {
   findChapterWithLessonsAndCourseById,
 } from "~/server/data-access/chapter";
 
+import { ChapterLessonsCard } from "../_components/chapter-lessons-card";
 import { ChapterTitleCard } from "../_components/chapter-title-card";
 import { DeleteChapterDialog } from "../_components/delete-chapter-dialog";
 import { CourseWrapper } from "../../../_components/course-wrapper";
@@ -50,13 +51,13 @@ type ChapterSetupProps = {
 const ChapterSetup = async ({ params }: ChapterSetupProps) => {
   const session = await auth();
   const user = session?.user;
-  const { chapterId } = params;
-
-  const chapter = await fetchChapter(chapterId);
 
   if (user?.role !== Role.ADMIN) {
     redirect("/unauthorized");
   }
+
+  const { chapterId } = params;
+  const chapter = await fetchChapter(chapterId);
 
   if (!chapter || chapter.course.instructorId !== user.id) {
     redirect("/manage/courses");
@@ -124,13 +125,13 @@ const ChapterSetup = async ({ params }: ChapterSetupProps) => {
           />
         </div>
         <div className="flex flex-col gap-4 xl:gap-9">
-          {/* <CourseLessonsCard
-            courseId={course.id}
-            courseSlug={course.slug}
-            chapters={course.chapters}
-            completed={hasPublishedChapters}
-          /> */}
-          List of lessons
+          <ChapterLessonsCard
+            courseId={chapter.course.id}
+            courseSlug={chapter.course.slug}
+            chapterId={chapter.id}
+            lessons={chapter.lessons}
+            completed={hasPublishedLessons}
+          />
         </div>
       </div>
     </CourseWrapper>
