@@ -17,12 +17,13 @@ export const CreateChapterSchema = z.object({
 
 export const DeleteChapterSchema = z.object({
   id: z.string(),
-  slug: z.string().trim().min(1, {
-    message: "Course Slug is required",
+  title: z.string().trim().min(1, {
+    message: "Chapter Title is required",
   }),
 });
 
 export const ChangeChapterTitleSchema = z.object({
+  courseId: z.string(),
   id: z.string(),
   title: title,
 });

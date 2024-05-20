@@ -7,7 +7,7 @@ import { type ChangeChapterOrderSchema } from "~/schemas/chapter";
 import { db } from "~/server/db";
 
 export const findChapters = async () => {
-  return await db.course.findMany();
+  return await db.chapter.findMany();
 };
 
 export const findChaptersByCourseId = async (courseId: string) => {
@@ -19,7 +19,7 @@ export const findChaptersByCourseSlug = async (slug: string) => {
 };
 
 export const findChapterById = async (id: string) => {
-  return await db.course.findUnique({ where: { id: id } });
+  return await db.chapter.findUnique({ where: { id: id } });
 };
 
 export const createChapter = async ({
@@ -47,31 +47,7 @@ export const updateChapter = async (
 };
 
 export const deleteChapterById = async (id: string) => {
-  return await db.course.delete({ where: { id: id } });
-};
-
-export const findLastChapter = async (courseId: string) => {
-  return await db.chapter.findFirst({
-    where: { courseId: courseId },
-    orderBy: { order: "desc" },
-  });
-};
-
-export const findCoursesForInstructor = async (instructorId: string) => {
-  return db.course.findMany({
-    where: {
-      instructorId,
-    },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      description: true,
-      price: true,
-      publishedAt: true,
-      _count: { select: { courseEnrollments: true } },
-    },
-  });
+  return await db.chapter.delete({ where: { id: id } });
 };
 
 export const doesChapterExistById = async (id: string) => {
@@ -99,4 +75,26 @@ export const updateChapterOrders = async (
       }),
     ),
   );
+};
+
+export const findChapterWithLessonsAndCourseById = async (id: string) => {
+  return await db.chapter.findUnique({
+    where: { id: id },
+    include: {
+      course: {
+        select: {
+          id: true,
+          slug: true,
+          instructorId: true,
+        },
+      },
+      lessons: true,
+    },
+  });
+};
+
+export const findChapterIds = async () => {
+  return db.chapter.findMany({
+    select: { id: true },
+  });
 };

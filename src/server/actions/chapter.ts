@@ -7,12 +7,26 @@ import { revalidatePath } from "next/cache";
 
 import {
   ChangeChapterOrderSchema,
+  ChangeChapterTitleSchema,
   CreateChapterSchema,
+  DeleteChapterSchema,
 } from "~/schemas/chapter";
 import { auth } from "~/server/auth";
-import { updateChapterOrders } from "~/server/data-access/chapter";
-import { findCourseById } from "~/server/data-access/course";
+import {
+  deleteChapterById,
+  doesChapterExistOnCourse,
+  findChapterById,
+  findChapterWithLessonsAndCourseById,
+  updateChapter,
+  updateChapterOrders,
+} from "~/server/data-access/chapter";
+import {
+  countCourseEnrollments,
+  findCourseById,
+} from "~/server/data-access/course";
 import { createNewChapter } from "~/server/use-cases/chapter";
+
+import { isAuthorizedForCourseManagement } from "../use-cases/authorization";
 
 export const createChapter = async (
   values: z.infer<typeof CreateChapterSchema>,
@@ -97,100 +111,129 @@ export const updateChapterOrder = async (
   }
 };
 
-// export const deleteCourse = async (
-//   values: z.infer<typeof DeleteCourseSchema>,
-// ) => {
-//   try {
-//     const validatedFields = DeleteCourseSchema.safeParse(values);
-//     if (!validatedFields.success) {
-//       return { error: "Invalid course slug" };
-//     }
+export const deleteChapter = async (
+  values: z.infer<typeof DeleteChapterSchema>,
+) => {
+  try {
+    const validatedFields = DeleteChapterSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid input" };
+    }
 
-//     const session = await auth();
-//     const user = session?.user;
+    const session = await auth();
+    const user = session?.user;
 
-//     if (user?.role !== Role.ADMIN) {
-//       return { error: "You are not authorized" };
-//     }
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
 
-//     const { id } = validatedFields.data;
-//     const authorized = await isAuthorizedForCourseManagement(id, user.id);
+    const { id, title } = validatedFields.data;
+    const chapter = await findChapterWithLessonsAndCourseById(id);
+    if (!chapter) {
+      return { error: "Chapter not found" };
+    }
 
-//     if (!authorized) {
-//       return { error: "You are not authorized" };
-//     }
+    if (title.toLowerCase() !== chapter.title.toLowerCase()) {
+      return { error: "Invalid chapter title" };
+    }
 
-//     const enrollmentCount = await countCourseEnrollments(id);
-//     if (enrollmentCount > 0) {
-//       return {
-//         error:
-//           "You can not delete a course with students. You may unpublish the course instead, but those students will still have access to the course.",
-//       };
-//     }
+    const courseId = chapter.courseId;
+    const courseSlug = chapter.course.slug;
 
-//     const deletedCourse = await deleteCourseById(id);
+    const authorized = await isAuthorizedForCourseManagement(courseId, user.id);
+    if (!authorized) {
+      return { error: "You are not authorized" };
+    }
 
-//     revalidatePath("/manage/courses");
+    const enrollmentCount = await countCourseEnrollments(courseId);
+    if (enrollmentCount > 0) {
+      return {
+        error:
+          "You can not delete a chapter with students. You may unpublish the chapter instead, but those students will still have access to the chapter.",
+      };
+    }
 
-//     return {
-//       success: `${deletedCourse.title} has been successfully deleted.`,
-//     };
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       if (error.name === "CourseNotFoundError") {
-//         return {
-//           error: error.message,
-//         };
-//       }
-//     }
+    await deleteChapterById(id);
+    revalidatePath(`/manage/courses/${courseSlug}`);
 
-//     throw error;
-//   }
-// };
+    return {
+      success: `${chapter.title} has been successfully deleted.`,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.name === "CourseNotFoundError") {
+        return {
+          error: error.message,
+        };
+      }
+    }
 
-// export const changeCourseTitle = async (
-//   values: z.infer<typeof ChangeCourseTitleSchema>,
-// ) => {
-//   try {
-//     const validatedFields = ChangeCourseTitleSchema.safeParse(values);
-//     if (!validatedFields.success) {
-//       return { error: "Invalid title" };
-//     }
+    throw error;
+  }
+};
 
-//     const session = await auth();
-//     const user = session?.user;
+export const changeChapterTitle = async (
+  values: z.infer<typeof ChangeChapterTitleSchema>,
+) => {
+  try {
+    const validatedFields = ChangeChapterTitleSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid input" };
+    }
 
-//     if (user?.role !== Role.ADMIN) {
-//       return { error: "You are not authorized" };
-//     }
+    const session = await auth();
+    const user = session?.user;
 
-//     const { id, title } = validatedFields.data;
-//     const course = await findCourseById(id);
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
 
-//     if (course?.instructorId !== user.id) {
-//       return {
-//         error: "You are not authorized",
-//       };
-//     }
+    const { courseId, id, title } = validatedFields.data;
 
-//     if (course.title === title) {
-//       return {
-//         error: "Title is the same as the current one",
-//       };
-//     }
+    const course = await findCourseById(courseId);
+    if (course?.instructorId !== user.id) {
+      return {
+        error: "You are not authorized",
+      };
+    }
 
-//     const updatedCourse = await updateCourse(id, {
-//       title,
-//     });
+    const chapter = await findChapterById(id);
+    if (!chapter) {
+      return {
+        error: "Chapter not found",
+      };
+    }
 
-//     revalidatePath(`/manage/courses/${updatedCourse.slug}`);
+    if (chapter.title === title) {
+      return {
+        error: "Title is the same as the current one",
+      };
+    }
 
-//     return {
-//       success: "Title has successfully been changed.",
-//     };
-//   } catch (error) {
-//     return {
-//       error: "An unknown error occurred while changing your title.",
-//     };
-//   }
-// };
+    const doesChapterExistWithTitle = await doesChapterExistOnCourse(
+      title,
+      course.id,
+    );
+    if (doesChapterExistWithTitle) {
+      return {
+        error: "Chapter with the same title already exists",
+      };
+    }
+
+    const updatedChapter = await updateChapter(id, {
+      title,
+    });
+
+    revalidatePath(
+      `/manage/courses/${course.slug}/chapter/${updatedChapter.id}`,
+    );
+
+    return {
+      success: "Title has successfully been changed.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while changing your title.",
+    };
+  }
+};

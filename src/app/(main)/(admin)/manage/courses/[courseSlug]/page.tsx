@@ -32,7 +32,7 @@ export const generateStaticParams = async () => {
 export const generateMetadata = async ({
   params,
 }: {
-  params: CourseDetailsParams;
+  params: CourseSetupParams;
 }): Promise<Metadata> => {
   const course = await fetchCourse(params.courseSlug);
 
@@ -46,13 +46,13 @@ const fetchCourse = async (slug: string) => {
   return await findCourseWithChaptersBySlug(slug);
 };
 
-type CourseDetailsParams = { courseSlug: string };
+type CourseSetupParams = { courseSlug: string };
 
-type CourseDetailsProps = {
-  params: CourseDetailsParams;
+type CourseSetupProps = {
+  params: CourseSetupParams;
 };
 
-const CourseDetails = async ({ params }: CourseDetailsProps) => {
+const CourseSetup = async ({ params }: CourseSetupProps) => {
   const session = await auth();
   const user = session?.user;
   const { courseSlug } = params;
@@ -76,6 +76,7 @@ const CourseDetails = async ({ params }: CourseDetailsProps) => {
     course.title,
     course.description,
     course.image,
+    course.price,
     hasPublishedChapters,
   ];
 
@@ -92,7 +93,7 @@ const CourseDetails = async ({ params }: CourseDetailsProps) => {
     <CourseWrapper>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
-          <PrimaryHeading>Course Details</PrimaryHeading>
+          <PrimaryHeading>Course Setup</PrimaryHeading>
           <div className="flex gap-2 xs:gap-4">
             <Button
               variant={isPublished ? "outline" : "default"}
@@ -151,4 +152,4 @@ const CourseDetails = async ({ params }: CourseDetailsProps) => {
   );
 };
 
-export default CourseDetails;
+export default CourseSetup;

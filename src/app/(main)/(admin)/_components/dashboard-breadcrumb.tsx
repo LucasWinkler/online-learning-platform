@@ -18,7 +18,16 @@ export const DashboardBreadcrumb = () => {
   const pathname = usePathname();
 
   const { displayPaths, pathNames } = useMemo(() => {
-    const pathNames = pathname.split("/").filter(Boolean);
+    let pathNames = pathname.split("/").filter(Boolean);
+
+    const chapterIndex = pathNames.indexOf("chapter");
+    if (chapterIndex !== -1) {
+      pathNames = [
+        ...pathNames.slice(0, chapterIndex),
+        ...pathNames.slice(chapterIndex + 1),
+      ];
+    }
+
     const displayPaths = pathNames.slice(1);
 
     return { displayPaths, pathNames };
