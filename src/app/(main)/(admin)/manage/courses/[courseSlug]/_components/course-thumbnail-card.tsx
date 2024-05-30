@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { CameraIcon, SquarePenIcon, SquarePlusIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -33,7 +33,6 @@ export const CourseThumbnailCard = ({
 }: CourseThumbnailCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
-  const formRef = useRef<{ submitForm: () => void }>(null);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -76,9 +75,8 @@ export const CourseThumbnailCard = ({
       <CardContent className="relative">
         {isEditing ? (
           <CourseThumbnailForm
-            ref={formRef}
             id={id}
-            image={image}
+            slug={slug}
             onCancel={handleCancel}
             onPendingStateChange={setIsPending}
           />

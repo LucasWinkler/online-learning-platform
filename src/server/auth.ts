@@ -19,7 +19,7 @@ import { findUserByEmail, findUserById } from "~/server/data-access/user";
 import { db } from "~/server/db";
 import { updateUserEmailVerified } from "~/server/use-cases/user";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [
     Google,

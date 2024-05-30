@@ -4,12 +4,14 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { ImageUpIcon, Loader2Icon, UserRoundIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useUploadThing } from "~/lib/uploadthing";
 import { cn } from "~/lib/utils";
+import { updateUserProfileImage } from "~/server/actions/update-user-profile-image";
 
 type AvatarUploadButtonProps = {
   className?: string;
@@ -18,22 +20,26 @@ type AvatarUploadButtonProps = {
 export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
   const [isPending, setIsPending] = useState(false);
   const { data: session, update } = useSession();
+  const router = useRouter();
   const image = session?.user?.image;
 
   const { startUpload, permittedFileInfo } = useUploadThing("profilePicture", {
-    onClientUploadComplete: (res) => {
-      const image = res[0]?.url;
+    onClientUploadComplete: ([uploadedFile]) => {
+      if (!uploadedFile?.url) {
+        toast.error("Profile Picture Change Failed.", {
+          description:
+            "An unknown error occurred while changing your profile picture.",
+        });
+        return;
+      }
 
-      update({
-        user: {
-          ...session?.user,
-          image: image,
-        },
-      })
+      updateUserProfileImage(uploadedFile.url)
         .then(() => {
+          void update({ user: { image: uploadedFile.url } });
           toast.success("Profile Picture Changed.", {
             description: "Your profile picture has been successfully changed.",
           });
+          router.refresh();
         })
         .catch(() => {
           toast.error("Profile Picture Change Failed.", {
