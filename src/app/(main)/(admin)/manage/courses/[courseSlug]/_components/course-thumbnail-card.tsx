@@ -103,7 +103,7 @@ export const CourseThumbnailCard = ({
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col flex-wrap items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
+      <CardFooter className="flex flex-col items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
         The thumbnail should be 1280x720 (16:9) pixels and must not be larger
         than 2MB.
       </CardFooter>

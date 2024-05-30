@@ -71,7 +71,7 @@ export const CourseTitleCard = ({ id, title }: CourseTitleCardProps) => {
           <p className="text-sm text-gray-600">{title}</p>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col flex-wrap items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
+      <CardFooter className="flex flex-col items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
         The maximum length of your title is 60 characters.
         {isEditing && (
           <Button

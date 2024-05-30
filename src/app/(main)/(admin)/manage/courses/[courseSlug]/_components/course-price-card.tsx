@@ -83,7 +83,7 @@ export const CoursePriceCard = ({ id, price }: CoursePriceCardProps) => {
           </p>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col flex-wrap items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
+      <CardFooter className="flex flex-col items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
         To make the course free, leave this empty or 0.
         {isEditing && (
           <Button
