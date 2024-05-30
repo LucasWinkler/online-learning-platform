@@ -78,7 +78,7 @@ const CourseSetup = async ({ params }: CourseSetupProps) => {
     course.title,
     course.description,
     course.image,
-    course.price,
+    course.price !== null && course.price !== undefined,
     hasPublishedChapters,
   ];
 

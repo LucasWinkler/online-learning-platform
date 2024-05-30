@@ -12,19 +12,14 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { ChapterTitleForm } from "./chapter-title-form";
+import { LessonTitleForm } from "./lesson-title-form";
 
-type ChapterTitleCardProps = {
-  courseId: string;
+type LessonTitleCardProps = {
   id: string;
   title: string;
 };
 
-export const ChapterTitleCard = ({
-  courseId,
-  id,
-  title,
-}: ChapterTitleCardProps) => {
+export const LessonTitleCard = ({ id, title }: LessonTitleCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const formRef = useRef<{ submitForm: () => void }>(null);
@@ -46,7 +41,7 @@ export const ChapterTitleCard = ({
   return (
     <Card className="border-0 bg-gray-50">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle>Chapter Title</CardTitle>
+        <CardTitle>Lesson Title</CardTitle>
         {isEditing ? (
           <Button
             size="sm"
@@ -65,9 +60,8 @@ export const ChapterTitleCard = ({
       </CardHeader>
       <CardContent>
         {isEditing ? (
-          <ChapterTitleForm
+          <LessonTitleForm
             ref={formRef}
-            courseId={courseId}
             id={id}
             title={title}
             onCancel={handleCancel}

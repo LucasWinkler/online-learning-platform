@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2Icon, SquarePenIcon } from "lucide-react";
+import { Loader2Icon, SquarePenIcon, SquarePlusIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -12,19 +12,17 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { ChapterTitleForm } from "./chapter-title-form";
+import { LessonDescriptionForm } from "./lesson-description-form";
 
-type ChapterTitleCardProps = {
-  courseId: string;
+type LessonDescriptionCardProps = {
   id: string;
-  title: string;
+  description: string;
 };
 
-export const ChapterTitleCard = ({
-  courseId,
+export const LessonDescriptionCard = ({
   id,
-  title,
-}: ChapterTitleCardProps) => {
+  description,
+}: LessonDescriptionCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const formRef = useRef<{ submitForm: () => void }>(null);
@@ -46,7 +44,7 @@ export const ChapterTitleCard = ({
   return (
     <Card className="border-0 bg-gray-50">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle>Chapter Title</CardTitle>
+        <CardTitle>Lesson Description</CardTitle>
         {isEditing ? (
           <Button
             size="sm"
@@ -58,27 +56,37 @@ export const ChapterTitleCard = ({
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
-            <span className="sr-only">Edit Title</span>
-            <SquarePenIcon className="size-4" />
+            {description ? (
+              <>
+                <span className="sr-only">Edit Description</span>
+                <SquarePenIcon className="size-4" />
+              </>
+            ) : (
+              <>
+                <span className="sr-only">Add Description</span>
+                <SquarePlusIcon className="size-4" />
+              </>
+            )}
           </Button>
         )}
       </CardHeader>
       <CardContent>
         {isEditing ? (
-          <ChapterTitleForm
+          <LessonDescriptionForm
             ref={formRef}
-            courseId={courseId}
             id={id}
-            title={title}
+            description={description}
             onCancel={handleCancel}
             onPendingStateChange={setIsPending}
           />
         ) : (
-          <p className="text-sm text-gray-600">{title}</p>
+          <p className="text-sm text-gray-600">
+            {description ?? "No description."}
+          </p>
         )}
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
-        The maximum length of your title is 60 characters.
+        The maximum length of your description is 250 characters.
         {isEditing && (
           <Button
             onClick={handleFormSubmit}

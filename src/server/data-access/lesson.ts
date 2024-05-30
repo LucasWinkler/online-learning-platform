@@ -2,6 +2,8 @@ import type { ChangeLessonOrderSchema } from "~/schemas/lesson";
 import type { LessonCreationParams } from "~/types/lesson";
 import type { z } from "zod";
 
+import { type Prisma } from "@prisma/client";
+
 import { db } from "~/server/db";
 
 export const createLesson = async ({
@@ -52,6 +54,16 @@ export const doesLessonExistOnChapter = async (
   );
 };
 
+export const updateLesson = async (
+  id: string,
+  updatedLessonData: Prisma.LessonUpdateInput,
+) => {
+  return await db.lesson.update({
+    where: { id: id },
+    data: updatedLessonData,
+  });
+};
+
 export const updateLessonOrders = async (
   lessons: z.infer<typeof ChangeLessonOrderSchema>["lessonOrderUpdates"],
 ) => {
@@ -63,4 +75,11 @@ export const updateLessonOrders = async (
       }),
     ),
   );
+};
+
+export const findLessonByIdWithCourseAndChapters = async (id: string) => {
+  return await db.lesson.findUnique({
+    where: { id: id },
+    include: { course: true, chapter: true },
+  });
 };
