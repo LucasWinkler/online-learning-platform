@@ -21,6 +21,8 @@ import { CourseThumbnailCard } from "./_components/course-thumbnail-card";
 import { CourseTitleCard } from "./_components/course-title-card";
 import { DeleteCourseDialog } from "./_components/delete-course-dialog";
 
+export const dynamic = "force-dynamic";
+
 export const generateStaticParams = async () => {
   const slugs = await findCourseSlugs();
 
