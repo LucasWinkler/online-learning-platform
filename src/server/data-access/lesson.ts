@@ -27,6 +27,14 @@ export const findLastLesson = async (chapterId: string) => {
   });
 };
 
+export const findLessonById = async (id: string) => {
+  return await db.lesson.findUnique({ where: { id: id } });
+};
+
+export const findLessonIds = async () => {
+  return await db.lesson.findMany({ select: { id: true } });
+};
+
 export const doesLessonExistOnChapter = async (
   title: string,
   chapterId: string,

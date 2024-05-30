@@ -18,6 +18,8 @@ import { ChapterTitleCard } from "../_components/chapter-title-card";
 import { DeleteChapterDialog } from "../_components/delete-chapter-dialog";
 import { CourseWrapper } from "../../../_components/course-wrapper";
 
+export const dynamic = "force-dynamic";
+
 export const generateStaticParams = async () => {
   const ids = await findChapterIds();
 
