@@ -15,7 +15,11 @@ import {
   findLessonByIdWithCourseAndChaptersAndMuxData,
   updateLesson,
 } from "~/server/data-access/lesson";
-import { db } from "~/server/db";
+import {
+  createMuxData,
+  deleteMuxDataById,
+  findMuxDataByLessonId,
+} from "~/server/data-access/mux-data";
 import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
 import { updateUserProfile } from "~/server/use-cases/user";
 
@@ -183,19 +187,10 @@ export const ourFileRouter = {
       const videoUrl = file.url;
 
       try {
-        const existingMuxData = await db.muxData.findFirst({
-          where: {
-            lessonId: metadata.lessonId,
-          },
-        });
-
+        const existingMuxData = await findMuxDataByLessonId(metadata.lessonId);
         if (existingMuxData) {
           await mux.video.assets.delete(existingMuxData.assetId);
-          await db.muxData.delete({
-            where: {
-              id: existingMuxData.id,
-            },
-          });
+          await deleteMuxDataById(existingMuxData.id);
         }
 
         const asset = await mux.video.assets.create({
@@ -204,12 +199,10 @@ export const ourFileRouter = {
           test: false,
         });
 
-        await db.muxData.create({
-          data: {
-            lessonId: metadata.lessonId,
-            assetId: asset.id,
-            playbackId: asset.playback_ids?.[0]?.id,
-          },
+        await createMuxData({
+          assetId: asset.id,
+          playbackId: asset.playback_ids?.[0]?.id,
+          lessonId: metadata.lessonId,
         });
 
         await updateLesson(metadata.lessonId, {
