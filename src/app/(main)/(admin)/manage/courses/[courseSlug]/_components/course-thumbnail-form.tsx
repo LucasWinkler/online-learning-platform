@@ -37,9 +37,7 @@ export const CourseThumbnailForm = ({
           description: "Your course thumbnail has been successfully changed.",
         });
       }}
-      onUploadError={(error) => {
-        console.error("Thumbnail Upload Error", error);
-
+      onUploadError={() => {
         toast.error("Course Thumbnail Change Failed.", {
           description:
             "An unknown error occurred while changing your course thumbnail.",

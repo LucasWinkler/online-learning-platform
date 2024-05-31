@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 
 import { DashboardBackLink } from "~/app/(main)/(admin)/_components/dashboard-back-link";
 import { PrimaryHeading } from "~/components/primary-heading";
-import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 import auth from "~/lib/auth";
 import { cn } from "~/lib/utils";
@@ -17,6 +16,7 @@ import {
 import { ChapterLessonsCard } from "../_components/chapter-lessons-card";
 import { ChapterTitleCard } from "../_components/chapter-title-card";
 import { DeleteChapterDialog } from "../_components/delete-chapter-dialog";
+import { ToggleChapterPublishForm } from "../_components/toggle-chapter-publish-form";
 import { CourseWrapper } from "../../../_components/course-wrapper";
 
 export const dynamic = "force-dynamic";
@@ -75,10 +75,12 @@ const ChapterSetup = async ({ params }: ChapterSetupProps) => {
 
   const validFieldsCount = requiredFields.filter(Boolean).length;
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
+  const isChapterComplete = requiredFields.every(Boolean);
 
   const requiredText = `Required Fields (${validFieldsCount}/${requiredFields.length})`;
-  const progressText =
-    progressPercentage === 100
+  const progressText = isPublished
+    ? "Chapter published!"
+    : isChapterComplete
       ? "Ready to publish!"
       : `${progressPercentage.toFixed(0)}% complete`;
 
@@ -93,12 +95,11 @@ const ChapterSetup = async ({ params }: ChapterSetupProps) => {
           <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
             <PrimaryHeading>Chapter Setup</PrimaryHeading>
             <div className="flex gap-2 xs:gap-4">
-              <Button
-                variant={isPublished ? "outline" : "default"}
-                disabled={progressPercentage < 100}
-              >
-                {isPublished ? "Unpublish" : "Publish"}
-              </Button>
+              <ToggleChapterPublishForm
+                chapterId={chapter.id}
+                publishedAt={chapter.publishedAt}
+                isChapterComplete={hasPublishedLessons}
+              />
               <DeleteChapterDialog
                 courseSlug={chapter.course.slug}
                 chapterId={chapter.id}

@@ -12,6 +12,7 @@ import {
   ChangeCourseTitleSchema,
   CreateCourseSchema,
   DeleteCourseSchema,
+  ToggleCoursePublishSchema,
 } from "~/schemas/course";
 import { auth } from "~/server/auth";
 import {
@@ -255,6 +256,55 @@ export const changeCoursePrice = async (
   } catch (error) {
     return {
       error: "An unknown error occurred while changing your description.",
+    };
+  }
+};
+
+export const toggleCoursePublish = async (
+  values: z.infer<typeof ToggleCoursePublishSchema>,
+) => {
+  const validatedFields = ToggleCoursePublishSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid input" };
+  }
+
+  const { id } = validatedFields.data;
+
+  try {
+    const user = (await auth())?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const course = await findCourseById(id);
+    if (!course) {
+      return { error: "Course not found" };
+    }
+
+    if (course.instructorId !== user.id) {
+      return { error: "You are not authorized" };
+    }
+
+    const enrollmentCount = await countCourseEnrollments(course.id);
+    if (enrollmentCount > 0 && course.publishedAt) {
+      return {
+        error: "You can not unpublish a course with students.",
+      };
+    }
+
+    await updateCourse(id, {
+      publishedAt: course.publishedAt ? null : new Date(),
+    });
+
+    revalidatePath(`/manage/courses/${course.slug}`);
+
+    return {
+      success: "Course has been successfully published.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while toggling course publish.",
     };
   }
 };

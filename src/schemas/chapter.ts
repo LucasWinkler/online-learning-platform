@@ -37,3 +37,7 @@ export const ChangeChapterOrderSchema = z.object({
     }),
   ),
 });
+
+export const ToggleChapterPublishSchema = z.object({
+  id: z.string(),
+});

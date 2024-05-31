@@ -55,3 +55,7 @@ export const ChangeCoursePriceSchema = z.object({
   id: z.string(),
   price: priceSchema,
 });
+
+export const ToggleCoursePublishSchema = z.object({
+  id: z.string(),
+});

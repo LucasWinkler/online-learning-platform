@@ -51,3 +51,7 @@ export const DeleteLessonSchema = z.object({
     message: "Lesson Title is required",
   }),
 });
+
+export const ToggleLessonPublishSchema = z.object({
+  id: z.string(),
+});

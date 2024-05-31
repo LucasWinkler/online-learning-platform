@@ -10,6 +10,7 @@ import {
   ChangeChapterTitleSchema,
   CreateChapterSchema,
   DeleteChapterSchema,
+  ToggleChapterPublishSchema,
 } from "~/schemas/chapter";
 import { auth } from "~/server/auth";
 import {
@@ -233,6 +234,61 @@ export const changeChapterTitle = async (
   } catch (error) {
     return {
       error: "An unknown error occurred while changing your title.",
+    };
+  }
+};
+
+export const toggleChapterPublish = async (
+  values: z.infer<typeof ToggleChapterPublishSchema>,
+) => {
+  const validatedFields = ToggleChapterPublishSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid input" };
+  }
+
+  const { id } = validatedFields.data;
+
+  try {
+    const user = (await auth())?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const chapter = await findChapterWithLessonsAndCourseById(id);
+    if (!chapter) {
+      return { error: "Chapter not found" };
+    }
+
+    if (chapter.course.instructorId !== user.id) {
+      return { error: "You are not authorized" };
+    }
+
+    const enrollmentCount = await countCourseEnrollments(chapter.course.id);
+    if (enrollmentCount > 0 && chapter.publishedAt) {
+      return {
+        error: "You can not unpublish a chapter with students.",
+      };
+    }
+
+    if (chapter.course.publishedAt && !!chapter.publishedAt) {
+      return {
+        error: "You can not unpublish a chapter if the course is published.",
+      };
+    }
+
+    await updateChapter(id, {
+      publishedAt: chapter.publishedAt ? null : new Date(),
+    });
+
+    revalidatePath(`/manage/courses/${chapter.course.slug}/chapter/${id}`);
+
+    return {
+      success: "Chapter has been successfully published.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while toggling chapter publish.",
     };
   }
 };

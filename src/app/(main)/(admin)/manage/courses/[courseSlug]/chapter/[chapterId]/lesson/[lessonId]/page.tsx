@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 
 import { DashboardBackLink } from "~/app/(main)/(admin)/_components/dashboard-back-link";
 import { PrimaryHeading } from "~/components/primary-heading";
-import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 import auth from "~/lib/auth";
 import { cn } from "~/lib/utils";
@@ -18,6 +17,7 @@ import { DeleteLessonDialog } from "../_components/delete-lesson-dialog";
 import { LessonDescriptionCard } from "../_components/lesson-description-card";
 import { LessonTitleCard } from "../_components/lesson-title-card";
 import { LessonVideoCard } from "../_components/lesson-video-card";
+import { ToggleLessonPublishForm } from "../_components/toggle-lesson-publish-form";
 import { CourseWrapper } from "../../../../../_components/course-wrapper";
 
 export const dynamic = "force-dynamic";
@@ -67,15 +67,15 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
   }
 
   const isPublished = !!lesson.publishedAt;
-
   const requiredFields = [lesson.title, lesson.description, lesson.video];
-
   const validFieldsCount = requiredFields.filter(Boolean).length;
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
+  const isLessonComplete = requiredFields.every(Boolean);
 
   const requiredText = `Required Fields (${validFieldsCount}/${requiredFields.length})`;
-  const progressText =
-    progressPercentage === 100
+  const progressText = isPublished
+    ? "Lesson published!"
+    : isLessonComplete
       ? "Ready to publish!"
       : `${progressPercentage.toFixed(0)}% complete`;
 
@@ -90,12 +90,11 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
           <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
             <PrimaryHeading>Lesson Setup</PrimaryHeading>
             <div className="flex gap-2 xs:gap-4">
-              <Button
-                variant={isPublished ? "outline" : "default"}
-                disabled={progressPercentage < 100}
-              >
-                {isPublished ? "Unpublish" : "Publish"}
-              </Button>
+              <ToggleLessonPublishForm
+                lessonId={lesson.id}
+                publishedAt={lesson.publishedAt}
+                isLessonComplete={isLessonComplete}
+              />
               <DeleteLessonDialog
                 courseSlug={lesson.course.slug}
                 chapterId={lesson.chapter.id}

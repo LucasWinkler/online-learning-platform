@@ -4,7 +4,6 @@ import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 import { PrimaryHeading } from "~/components/primary-heading";
-import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 import auth from "~/lib/auth";
 import { cn } from "~/lib/utils";
@@ -21,6 +20,7 @@ import { CoursePriceCard } from "./_components/course-price-card";
 import { CourseThumbnailCard } from "./_components/course-thumbnail-card";
 import { CourseTitleCard } from "./_components/course-title-card";
 import { DeleteCourseDialog } from "./_components/delete-course-dialog";
+import { ToggleCoursePublishForm } from "./_components/toggle-course-publish-form";
 
 export const dynamic = "force-dynamic";
 
@@ -85,10 +85,12 @@ const CourseSetup = async ({ params }: CourseSetupProps) => {
 
   const validFieldsCount = requiredFields.filter(Boolean).length;
   const progressPercentage = (validFieldsCount / requiredFields.length) * 100;
+  const isCourseComplete = requiredFields.every(Boolean);
 
   const requiredText = `Required Fields (${validFieldsCount}/${requiredFields.length})`;
-  const progressText =
-    progressPercentage === 100
+  const progressText = isPublished
+    ? "Course published!"
+    : isCourseComplete
       ? "Ready to publish!"
       : `${progressPercentage.toFixed(0)}% complete`;
 
@@ -100,12 +102,11 @@ const CourseSetup = async ({ params }: CourseSetupProps) => {
           <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
             <PrimaryHeading>Course Setup</PrimaryHeading>
             <div className="flex gap-2 xs:gap-4">
-              <Button
-                variant={isPublished ? "outline" : "default"}
-                disabled={progressPercentage < 100}
-              >
-                {isPublished ? "Unpublish" : "Publish"}
-              </Button>
+              <ToggleCoursePublishForm
+                courseId={course.id}
+                publishedAt={course.publishedAt}
+                isCourseComplete={isCourseComplete}
+              />
               <DeleteCourseDialog
                 courseId={course.id}
                 courseSlug={course.slug}

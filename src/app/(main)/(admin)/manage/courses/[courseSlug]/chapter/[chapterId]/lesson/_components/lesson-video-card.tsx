@@ -66,7 +66,7 @@ export const LessonVideoCard = ({
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
-            {video ? (
+            {video && muxData ? (
               <>
                 <span className="sr-only">Edit Video</span>
                 <SquarePenIcon className="size-4" />
@@ -90,7 +90,7 @@ export const LessonVideoCard = ({
           />
         ) : (
           <div className="h-auto w-full overflow-hidden rounded-md">
-            {video ? (
+            {video && muxData ? (
               <div className="relative flex aspect-video h-full w-full items-center justify-center rounded-md bg-gray-200">
                 {isLoading ? (
                   <>
@@ -99,7 +99,7 @@ export const LessonVideoCard = ({
                 ) : null}
                 <MuxPlayer
                   className="aspect-video"
-                  playbackId={muxData?.playbackId ?? ""}
+                  playbackId={muxData.playbackId ?? ""}
                   onLoadedData={() => {
                     setIsLoading(false);
                   }}

@@ -11,6 +11,7 @@ import {
   ChangeLessonTitleSchema,
   CreateLessonSchema,
   DeleteLessonSchema,
+  ToggleLessonPublishSchema,
 } from "~/schemas/lesson";
 import { auth } from "~/server/auth";
 import {
@@ -274,8 +275,7 @@ export const deleteLesson = async (
     const enrollmentCount = await countCourseEnrollments(courseId);
     if (enrollmentCount > 0) {
       return {
-        error:
-          "You can not delete a lesson with students. You may unpublish the lesson instead, but those students will still have access to the course.",
+        error: "You can not delete a lesson with students.",
       };
     }
 
@@ -295,5 +295,62 @@ export const deleteLesson = async (
     }
 
     throw error;
+  }
+};
+
+export const toggleLessonPublish = async (
+  values: z.infer<typeof ToggleLessonPublishSchema>,
+) => {
+  const validatedFields = ToggleLessonPublishSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid input" };
+  }
+
+  const { id } = validatedFields.data;
+
+  try {
+    const user = (await auth())?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const lesson = await findLessonByIdWithCourseAndChaptersAndMuxData(id);
+    if (!lesson) {
+      return { error: "Lesson not found" };
+    }
+
+    if (lesson.course.instructorId !== user.id) {
+      return { error: "You are not authorized" };
+    }
+
+    const enrollmentCount = await countCourseEnrollments(lesson.course.id);
+    if (enrollmentCount > 0 && lesson.publishedAt) {
+      return {
+        error: "You can not unpublish a lesson with students.",
+      };
+    }
+
+    if (lesson.course.publishedAt && !!lesson.publishedAt) {
+      return {
+        error: "You can not unpublish a lesson if the course is published.",
+      };
+    }
+
+    await updateLesson(id, {
+      publishedAt: lesson.publishedAt ? null : new Date(),
+    });
+
+    revalidatePath(
+      `/manage/courses/${lesson.course.slug}/chapter/${lesson.chapterId}/lesson/${lesson.id}`,
+    );
+
+    return {
+      success: "Lesson has been successfully published.",
+    };
+  } catch (error) {
+    return {
+      error: "An unknown error occurred while toggling lesson publish.",
+    };
   }
 };
