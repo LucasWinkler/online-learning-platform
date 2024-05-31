@@ -31,6 +31,8 @@ export const env = createEnv({
       process.env.VERCEL ? z.string() : z.string().optional(),
     ),
     UPLOADTHING_SECRET: z.string(),
+    MUX_TOKEN_ID: z.string(),
+    MUX_TOKEN_SECRET: z.string(),
   },
   client: {
     NEXT_PUBLIC_VERCEL_URL: z.preprocess(
@@ -51,6 +53,8 @@ export const env = createEnv({
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    MUX_TOKEN_ID: process.env.MUX_TOKEN_ID,
+    MUX_TOKEN_SECRET: process.env.MUX_TOKEN_SECRET,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 
 import { Link } from "~/components/link";
 import { buttonVariants } from "~/components/ui/button";
@@ -19,7 +19,7 @@ export const DashboardBackLink = ({ href, title }: DashboardBackLinkProps) => {
       href={href}
       aria-label={title ? `Back to ${title}` : "Go back"}
     >
-      <ArrowLeft className="size-4" />
+      <ArrowLeftIcon className="size-4" />
       <span className="ml-1 font-semibold">
         {title ? `Back to ${title}` : "Back"}
       </span>

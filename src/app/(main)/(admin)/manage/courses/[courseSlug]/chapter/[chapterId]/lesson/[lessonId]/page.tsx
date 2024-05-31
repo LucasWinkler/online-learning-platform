@@ -10,13 +10,14 @@ import { Progress } from "~/components/ui/progress";
 import auth from "~/lib/auth";
 import { cn } from "~/lib/utils";
 import {
-  findLessonByIdWithCourseAndChapters,
+  findLessonByIdWithCourseAndChaptersAndMuxData,
   findLessonIds,
 } from "~/server/data-access/lesson";
 
 import { DeleteLessonDialog } from "../_components/delete-lesson-dialog";
 import { LessonDescriptionCard } from "../_components/lesson-description-card";
 import { LessonTitleCard } from "../_components/lesson-title-card";
+import { LessonVideoCard } from "../_components/lesson-video-card";
 import { CourseWrapper } from "../../../../../_components/course-wrapper";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export const generateMetadata = async ({
 };
 
 const fetchLesson = async (id: string) => {
-  return await findLessonByIdWithCourseAndChapters(id);
+  return await findLessonByIdWithCourseAndChaptersAndMuxData(id);
 };
 
 type LessonSetupParams = { lessonId: string };
@@ -132,7 +133,15 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
               completed={!!lesson.description}
             />
           </div>
-          <div className="flex flex-col gap-4 xl:gap-9">LessonVideoCard</div>
+          <div className="flex flex-col gap-4 xl:gap-9">
+            <LessonVideoCard
+              id={lesson.id}
+              video={lesson.video}
+              muxData={lesson.muxData}
+              courseId={lesson.course.id}
+              completed={!!lesson.video}
+            />
+          </div>
         </div>
       </CourseWrapper>
     </>

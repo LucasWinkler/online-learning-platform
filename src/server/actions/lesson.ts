@@ -20,7 +20,7 @@ import {
 import {
   deleteLessonById,
   doesLessonExistOnChapter,
-  findLessonByIdWithCourseAndChapters,
+  findLessonByIdWithCourseAndChaptersAndMuxData,
   updateLesson,
   updateLessonOrders,
 } from "~/server/data-access/lesson";
@@ -147,7 +147,7 @@ export const changeLessonTitle = async (
 
     const { id, title } = validatedFields.data;
 
-    const lesson = await findLessonByIdWithCourseAndChapters(id);
+    const lesson = await findLessonByIdWithCourseAndChaptersAndMuxData(id);
     if (!lesson) {
       return {
         error: "Chapter not found",
@@ -205,7 +205,7 @@ export const changeLessonDescription = async (
 
     const { id, description } = validatedFields.data;
 
-    const lesson = await findLessonByIdWithCourseAndChapters(id);
+    const lesson = await findLessonByIdWithCourseAndChaptersAndMuxData(id);
 
     if (lesson?.course.instructorId !== user.id) {
       return {
@@ -254,7 +254,7 @@ export const deleteLesson = async (
     }
 
     const { id, title } = validatedFields.data;
-    const lesson = await findLessonByIdWithCourseAndChapters(id);
+    const lesson = await findLessonByIdWithCourseAndChaptersAndMuxData(id);
     if (!lesson) {
       return { error: "Lesson not found" };
     }

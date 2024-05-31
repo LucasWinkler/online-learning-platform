@@ -81,9 +81,11 @@ export const updateLessonOrders = async (
   );
 };
 
-export const findLessonByIdWithCourseAndChapters = async (id: string) => {
+export const findLessonByIdWithCourseAndChaptersAndMuxData = async (
+  id: string,
+) => {
   return await db.lesson.findUnique({
     where: { id: id },
-    include: { course: true, chapter: true },
+    include: { course: true, chapter: true, muxData: true },
   });
 };

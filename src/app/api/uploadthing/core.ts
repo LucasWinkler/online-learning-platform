@@ -1,20 +1,32 @@
 import type { FileRouter } from "uploadthing/next";
 
+import Mux from "@mux/mux-node";
 import { Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { createUploadthing } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 import { z } from "zod";
 
+import { env } from "~/env";
 import getBase64 from "~/lib/plaiceholder";
 import { auth } from "~/server/auth";
 import { findCourseById, updateCourse } from "~/server/data-access/course";
+import {
+  findLessonByIdWithCourseAndChaptersAndMuxData,
+  updateLesson,
+} from "~/server/data-access/lesson";
+import { db } from "~/server/db";
 import { isAuthorizedForCourseManagement } from "~/server/use-cases/authorization";
 import { updateUserProfile } from "~/server/use-cases/user";
 
 const utapi = new UTApi();
 
 const f = createUploadthing();
+
+const mux = new Mux({
+  tokenId: env.MUX_TOKEN_ID,
+  tokenSecret: env.MUX_TOKEN_SECRET,
+});
 
 export const ourFileRouter = {
   profilePicture: f({
@@ -114,6 +126,107 @@ export const ourFileRouter = {
       }
 
       revalidatePath(`/manage/courses/${metadata.courseSlug}`);
+
+      return { uploadedBy: metadata.userId };
+    }),
+  lessonVideo: f({
+    video: { maxFileSize: "32MB", minFileCount: 1, maxFileCount: 1 },
+  })
+    .input(
+      z.object({
+        courseId: z.string(),
+        lessonId: z.string(),
+      }),
+    )
+    .middleware(async ({ input }) => {
+      const { lessonId, courseId } = input;
+
+      if (!lessonId || !courseId) {
+        throw new UploadThingError("Invalid input");
+      }
+
+      const user = (await auth())?.user;
+
+      if (user?.role !== Role.ADMIN) {
+        throw new UploadThingError("Unauthorized");
+      }
+
+      const isAuthorized = await isAuthorizedForCourseManagement(
+        courseId,
+        user.id,
+      );
+      if (!isAuthorized) {
+        throw new UploadThingError("Unauthorized");
+      }
+
+      const lesson =
+        await findLessonByIdWithCourseAndChaptersAndMuxData(lessonId);
+      if (!lesson) {
+        throw new UploadThingError("Lesson not found");
+      }
+
+      const { course } = lesson;
+      const courseSlug = course.slug;
+      const chapterId = lesson.chapterId;
+
+      const currentVideoKey = lesson.video?.split("/f/")[1];
+
+      return {
+        userId: user.id,
+        courseSlug,
+        chapterId,
+        lessonId,
+        currentVideoKey,
+      };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      const videoUrl = file.url;
+
+      try {
+        const existingMuxData = await db.muxData.findFirst({
+          where: {
+            lessonId: metadata.lessonId,
+          },
+        });
+
+        if (existingMuxData) {
+          await mux.video.assets.delete(existingMuxData.assetId);
+          await db.muxData.delete({
+            where: {
+              id: existingMuxData.id,
+            },
+          });
+        }
+
+        const asset = await mux.video.assets.create({
+          input: [{ url: videoUrl }],
+          playback_policy: ["public"],
+          test: false,
+        });
+
+        await db.muxData.create({
+          data: {
+            lessonId: metadata.lessonId,
+            assetId: asset.id,
+            playbackId: asset.playback_ids?.[0]?.id,
+          },
+        });
+
+        await updateLesson(metadata.lessonId, {
+          video: videoUrl,
+        });
+
+        if (metadata.currentVideoKey) {
+          await utapi.deleteFiles(metadata.currentVideoKey);
+        }
+      } catch (error) {
+        console.error(error);
+        throw new UploadThingError("Error updating course thumbnail");
+      }
+
+      revalidatePath(
+        `/manage/courses/${metadata.courseSlug}/chapter/${metadata.chapterId}/lesson/${metadata.lessonId}`,
+      );
 
       return { uploadedBy: metadata.userId };
     }),

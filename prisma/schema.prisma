@@ -130,17 +130,16 @@ model Chapter {
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  // @@unique([courseId, order])
 }
 
 model Lesson {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
   video       String?
   length      Int? /// Lesson length in seconds
   order       Int /// The order a lesson should be displayed in
+  muxData     MuxData?
 
   course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId  String
@@ -150,6 +149,15 @@ model Lesson {
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model MuxData {
+  id         String  @id @default(cuid())
+  assetId    String
+  playbackId String?
+
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId String @unique
 }
 
 model CourseEnrollment {

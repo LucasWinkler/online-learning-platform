@@ -1,8 +1,15 @@
 "use client";
 
+import type { MuxData } from "@prisma/client";
+
 import { useState } from "react";
-import { CameraIcon, SquarePenIcon, SquarePlusIcon } from "lucide-react";
-import Image from "next/image";
+import MuxPlayer from "@mux/mux-player-react";
+import {
+  Loader2Icon,
+  SquarePenIcon,
+  SquarePlusIcon,
+  VideoIcon,
+} from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -13,26 +20,27 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { CourseThumbnailForm } from "./course-thumbnail-form";
-import { IncompleteFieldIndicator } from "./incomplete-field-indicator";
+import { IncompleteFieldIndicator } from "../../../../_components/incomplete-field-indicator";
+import { LessonVideoForm } from "./lesson-video-form";
 
-type CourseThumbnailCardProps = {
+type LessonVideoCardProps = {
   id: string;
-  image: string | null;
-  blurDataURL: string | null;
-  slug: string;
+  video?: string | null;
+  muxData?: MuxData | null;
+  courseId: string;
   completed: boolean;
 };
 
-export const CourseThumbnailCard = ({
+export const LessonVideoCard = ({
   id,
-  image,
-  blurDataURL,
-  slug,
+  courseId,
+  video,
+  muxData,
   completed,
-}: CourseThumbnailCardProps) => {
+}: LessonVideoCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -46,7 +54,7 @@ export const CourseThumbnailCard = ({
     <Card className="relative border-0 bg-gray-50">
       <IncompleteFieldIndicator completed={completed} />
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle>Course Thumbnail</CardTitle>
+        <CardTitle>Lesson Video</CardTitle>
         {isEditing ? (
           <Button
             size="sm"
@@ -58,14 +66,14 @@ export const CourseThumbnailCard = ({
           </Button>
         ) : (
           <Button onClick={handleEdit} variant="outline" size="icon">
-            {image ? (
+            {video ? (
               <>
-                <span className="sr-only">Edit Thumbnail</span>
+                <span className="sr-only">Edit Video</span>
                 <SquarePenIcon className="size-4" />
               </>
             ) : (
               <>
-                <span className="sr-only">Add Thumbnail</span>
+                <span className="sr-only">Add Video</span>
                 <SquarePlusIcon className="size-4" />
               </>
             )}
@@ -74,38 +82,41 @@ export const CourseThumbnailCard = ({
       </CardHeader>
       <CardContent className="relative">
         {isEditing ? (
-          <CourseThumbnailForm
+          <LessonVideoForm
             id={id}
-            slug={slug}
+            courseId={courseId}
             onCancel={handleCancel}
             onPendingStateChange={setIsPending}
           />
         ) : (
           <div className="h-auto w-full overflow-hidden rounded-md">
-            {image ? (
-              <Image
-                src={
-                  image ??
-                  `https://fakeimg.pl/1280x720?text=${slug}&font_size=72`
-                }
-                {...(blurDataURL ? { placeholder: "blur", blurDataURL } : {})}
-                alt="Course Thumbnail"
-                width={1280}
-                height={720}
-                className="aspect-video rounded-md object-cover"
-              />
+            {video ? (
+              <div className="relative flex aspect-video h-full w-full items-center justify-center rounded-md bg-gray-200">
+                {isLoading ? (
+                  <>
+                    <Loader2Icon className="absolute size-8 animate-spin text-primary" />
+                  </>
+                ) : null}
+                <MuxPlayer
+                  className="aspect-video"
+                  playbackId={muxData?.playbackId ?? ""}
+                  onLoadedData={() => {
+                    setIsLoading(false);
+                  }}
+                />
+              </div>
             ) : (
               <div className="flex aspect-video h-full w-full items-center justify-center rounded-md bg-gray-200">
-                <CameraIcon className="text-gray-500" size={48} />
-                <span className="sr-only">No thumbnail has been set</span>
+                <VideoIcon className="text-gray-500" size={48} />
+                <span className="sr-only">No video has been set</span>
               </div>
             )}
           </div>
         )}
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center gap-2 border-t px-6 py-3 text-sm font-light text-gray-600 md:flex-row md:justify-between">
-        The thumbnail should be 16:9 (e.g. 1280x720) and must not be larger than
-        2MB.
+        The video should be 16:9 (e.g. 1920x1080) and must not be larger than
+        32MB.
       </CardFooter>
     </Card>
   );
