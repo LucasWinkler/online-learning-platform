@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 
+import { DashboardBackLink } from "~/app/(main)/(admin)/_components/dashboard-back-link";
 import { PrimaryHeading } from "~/components/primary-heading";
 import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
@@ -77,50 +78,58 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
       : `${progressPercentage.toFixed(0)}% complete`;
 
   return (
-    <CourseWrapper>
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
-          <PrimaryHeading>Lesson Setup</PrimaryHeading>
-          <div className="flex gap-2 xs:gap-4">
-            <Button
-              variant={isPublished ? "outline" : "default"}
-              disabled={progressPercentage < 100}
-            >
-              {isPublished ? "Unpublish" : "Publish"}
-            </Button>
-            DeleteLessonDialog
-          </div>
-        </div>
+    <>
+      <DashboardBackLink
+        href={`/manage/courses/${lesson.course.slug}/chapter/${lesson.chapter.id}`}
+        title={lesson.chapter.title}
+      />
+      <CourseWrapper>
         <div className="flex flex-col gap-2">
-          <div className="flex justify-between gap-2">
-            <p className="text-sm font-medium text-gray-600">{requiredText}</p>
-            <p className="text-xs text-gray-600">{progressText}</p>
+          <div className="flex flex-col items-start justify-between gap-2 xs:flex-row xs:items-center xs:gap-4">
+            <PrimaryHeading>Lesson Setup</PrimaryHeading>
+            <div className="flex gap-2 xs:gap-4">
+              <Button
+                variant={isPublished ? "outline" : "default"}
+                disabled={progressPercentage < 100}
+              >
+                {isPublished ? "Unpublish" : "Publish"}
+              </Button>
+              DeleteLessonDialog
+            </div>
           </div>
-          <Progress
-            className={cn(
-              "h-4 w-full lg:h-5 [&>*]:bg-yellow-500",
-              progressPercentage < 100 && "[&>*]:animate-pulse",
-              progressPercentage === 100 && "[&>*]:bg-emerald-500",
-              progressPercentage === 100 &&
-                !isPublished &&
-                "[&>*]:animate-pulse",
-            )}
-            value={progressPercentage}
-          />
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between gap-2">
+              <p className="text-sm font-medium text-gray-600">
+                {requiredText}
+              </p>
+              <p className="text-xs text-gray-600">{progressText}</p>
+            </div>
+            <Progress
+              className={cn(
+                "h-4 w-full lg:h-5 [&>*]:bg-yellow-500",
+                progressPercentage < 100 && "[&>*]:animate-pulse",
+                progressPercentage === 100 && "[&>*]:bg-emerald-500",
+                progressPercentage === 100 &&
+                  !isPublished &&
+                  "[&>*]:animate-pulse",
+              )}
+              value={progressPercentage}
+            />
+          </div>
         </div>
-      </div>
-      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
-        <div className="flex flex-col gap-4 xl:gap-9">
-          <LessonTitleCard id={lesson.id} title={lesson.title} />
-          <LessonDescriptionCard
-            id={lesson.id}
-            description={lesson.description}
-            completed={!!lesson.description}
-          />
+        <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:gap-9">
+          <div className="flex flex-col gap-4 xl:gap-9">
+            <LessonTitleCard id={lesson.id} title={lesson.title} />
+            <LessonDescriptionCard
+              id={lesson.id}
+              description={lesson.description}
+              completed={!!lesson.description}
+            />
+          </div>
+          <div className="flex flex-col gap-4 xl:gap-9">LessonVideoCard</div>
         </div>
-        <div className="flex flex-col gap-4 xl:gap-9">LessonVideoCard</div>
-      </div>
-    </CourseWrapper>
+      </CourseWrapper>
+    </>
   );
 };
 

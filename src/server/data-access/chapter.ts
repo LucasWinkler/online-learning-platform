@@ -95,13 +95,7 @@ export const findChapterWithLessonsAndCourseById = async (id: string) => {
   return await db.chapter.findUnique({
     where: { id: id },
     include: {
-      course: {
-        select: {
-          id: true,
-          slug: true,
-          instructorId: true,
-        },
-      },
+      course: true,
       lessons: true,
     },
   });
