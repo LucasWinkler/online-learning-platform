@@ -115,6 +115,7 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
           <LessonDescriptionCard
             id={lesson.id}
             description={lesson.description}
+            completed={!!lesson.description}
           />
         </div>
         <div className="flex flex-col gap-4 xl:gap-9">LessonVideoCard</div>

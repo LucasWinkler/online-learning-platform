@@ -25,7 +25,7 @@ import { changeLessonDescription } from "~/server/actions/lesson";
 
 type LessonDescriptionFormProps = {
   id: string;
-  description: string;
+  description: string | null;
   onCancel: () => void;
   onPendingStateChange: (isPending: boolean) => void;
 };
@@ -52,7 +52,7 @@ export const LessonDescriptionForm = forwardRef(
       resolver: zodResolver(ChangeLessonDescriptionSchema),
       defaultValues: {
         id: id,
-        description: description,
+        description: description ?? "",
       },
     });
 
