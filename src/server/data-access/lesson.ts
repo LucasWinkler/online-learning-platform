@@ -37,6 +37,10 @@ export const findLessonIds = async () => {
   return await db.lesson.findMany({ select: { id: true } });
 };
 
+export const deleteLessonById = async (id: string) => {
+  return await db.lesson.delete({ where: { id: id } });
+};
+
 export const doesLessonExistOnChapter = async (
   title: string,
   chapterId: string,

@@ -10,16 +10,22 @@ import {
   ChangeLessonOrderSchema,
   ChangeLessonTitleSchema,
   CreateLessonSchema,
+  DeleteLessonSchema,
 } from "~/schemas/lesson";
 import { auth } from "~/server/auth";
-import { findCourseWithChaptersAndLessonsById } from "~/server/data-access/course";
 import {
+  countCourseEnrollments,
+  findCourseWithChaptersAndLessonsById,
+} from "~/server/data-access/course";
+import {
+  deleteLessonById,
   doesLessonExistOnChapter,
   findLessonByIdWithCourseAndChapters,
   updateLesson,
   updateLessonOrders,
 } from "~/server/data-access/lesson";
 
+import { isAuthorizedForCourseManagement } from "../use-cases/authorization";
 import { createNewLesson } from "../use-cases/lesson";
 
 export const createLesson = async (
@@ -228,5 +234,66 @@ export const changeLessonDescription = async (
     return {
       error: "An unknown error occurred while changing your description.",
     };
+  }
+};
+
+export const deleteLesson = async (
+  values: z.infer<typeof DeleteLessonSchema>,
+) => {
+  try {
+    const validatedFields = DeleteLessonSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid input" };
+    }
+
+    const session = await auth();
+    const user = session?.user;
+
+    if (user?.role !== Role.ADMIN) {
+      return { error: "You are not authorized" };
+    }
+
+    const { id, title } = validatedFields.data;
+    const lesson = await findLessonByIdWithCourseAndChapters(id);
+    if (!lesson) {
+      return { error: "Lesson not found" };
+    }
+
+    if (title.toLowerCase() !== lesson.title.toLowerCase()) {
+      return { error: "Invalid lesson title" };
+    }
+
+    const courseId = lesson.course.id;
+    const courseSlug = lesson.course.slug;
+
+    const authorized = await isAuthorizedForCourseManagement(courseId, user.id);
+    if (!authorized) {
+      return { error: "You are not authorized" };
+    }
+
+    const enrollmentCount = await countCourseEnrollments(courseId);
+    if (enrollmentCount > 0) {
+      return {
+        error:
+          "You can not delete a lesson with students. You may unpublish the lesson instead, but those students will still have access to the course.",
+      };
+    }
+
+    await deleteLessonById(id);
+    revalidatePath(`/manage/courses/${courseSlug}/chapter/${lesson.chapterId}`);
+
+    return {
+      success: `${lesson.title} has been successfully deleted.`,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.name === "CourseNotFoundError") {
+        return {
+          error: error.message,
+        };
+      }
+    }
+
+    throw error;
   }
 };

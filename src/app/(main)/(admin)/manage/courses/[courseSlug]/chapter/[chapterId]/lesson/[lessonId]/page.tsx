@@ -14,6 +14,7 @@ import {
   findLessonIds,
 } from "~/server/data-access/lesson";
 
+import { DeleteLessonDialog } from "../_components/delete-lesson-dialog";
 import { LessonDescriptionCard } from "../_components/lesson-description-card";
 import { LessonTitleCard } from "../_components/lesson-title-card";
 import { CourseWrapper } from "../../../../../_components/course-wrapper";
@@ -94,7 +95,12 @@ const LessonSetup = async ({ params }: LessonSetupProps) => {
               >
                 {isPublished ? "Unpublish" : "Publish"}
               </Button>
-              DeleteLessonDialog
+              <DeleteLessonDialog
+                courseSlug={lesson.course.slug}
+                chapterId={lesson.chapter.id}
+                lessonId={lesson.id}
+                lessonTitle={lesson.title}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-2">

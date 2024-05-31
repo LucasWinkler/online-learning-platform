@@ -44,3 +44,10 @@ export const ChangeLessonDescriptionSchema = z.object({
       message: "Description must be less than 250 characters",
     }),
 });
+
+export const DeleteLessonSchema = z.object({
+  id: z.string(),
+  title: z.string().trim().min(1, {
+    message: "Lesson Title is required",
+  }),
+});
