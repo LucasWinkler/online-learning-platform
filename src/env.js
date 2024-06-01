@@ -33,11 +33,31 @@ export const env = createEnv({
     UPLOADTHING_SECRET: z.string(),
     MUX_TOKEN_ID: z.string(),
     MUX_TOKEN_SECRET: z.string(),
+    VERCEL_ENV: z.preprocess(
+      (str) => process.env.VERCEL_ENV ?? str,
+      process.env.VERCEL ? z.string() : z.string().optional(),
+    ),
+    PRODUCTION_URL: z.preprocess(
+      (str) => process.env.PRODUCTION_URL ?? str,
+      process.env.VERCEL_ENV === "production"
+        ? z.string()
+        : z.string().optional(),
+    ),
   },
   client: {
     NEXT_PUBLIC_VERCEL_URL: z.preprocess(
       (str) => process.env.VERCEL_URL ?? str,
       process.env.VERCEL ? z.string() : z.string().optional(),
+    ),
+    NEXT_PUBLIC_VERCEL_ENV: z.preprocess(
+      (str) => process.env.VERCEL_ENV ?? str,
+      process.env.VERCEL ? z.string() : z.string().optional(),
+    ),
+    NEXT_PUBLIC_PRODUCTION_URL: z.preprocess(
+      (str) => process.env.PRODUCTION_URL ?? str,
+      process.env.VERCEL_ENV === "production"
+        ? z.string()
+        : z.string().optional(),
     ),
   },
   runtimeEnv: {
@@ -56,6 +76,10 @@ export const env = createEnv({
     MUX_TOKEN_ID: process.env.MUX_TOKEN_ID,
     MUX_TOKEN_SECRET: process.env.MUX_TOKEN_SECRET,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    PRODUCTION_URL: process.env.PRODUCTION_URL,
+    NEXT_PUBLIC_PRODUCTION_URL: process.env.NEXT_PUBLIC_PRODUCTION_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
