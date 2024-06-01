@@ -24,9 +24,11 @@ export const hashPassword = async (password: string) => {
 export const registerUser = async (data: RegisterUser) => {
   const userExists = await isUserEmailTaken(data.email);
   if (userExists) {
-    throw (new Error(
+    const error = new Error(
       `Registration failed: Email (${data.email}) is already in use.`,
-    ).name = "UserExistsError");
+    );
+    error.name = "UserExistsError";
+    throw error;
   }
 
   data.password = await hashPassword(data.password);

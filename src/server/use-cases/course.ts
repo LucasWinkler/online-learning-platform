@@ -9,7 +9,7 @@ import {
   countCourseEnrollments,
   countPublishedLessonsInPublishedChapters,
   createCourse,
-  deleteCourse,
+  deleteCourseById,
   doesCourseExistBySlug,
   findFilteredPublishedCourses,
 } from "~/server/data-access/course";
@@ -21,9 +21,10 @@ export const createNewCourse = async ({
   instructorId,
 }: CourseCreationParams) => {
   const exists = await doesCourseExistBySlug(slug);
-
   if (exists) {
-    throw new Error(`Course already exists with the slug: ${slug}`);
+    const error = new Error(`Course already exists with the title: ${title}.`);
+    error.name = "CourseExistsError";
+    throw error;
   }
 
   return await createCourse({ title, slug, instructorId });
@@ -91,8 +92,10 @@ export const deleteCourseIfAuthorized = async (
 ) => {
   const authorized = await isAuthorizedForCourseManagement(courseId, userId);
   if (!authorized) {
-    throw new Error("Unauthorized access");
+    const error = new Error("Unauthorized access");
+    error.name = "UnauthorizedError";
+    throw error;
   }
 
-  return await deleteCourse(courseId);
+  return await deleteCourseById(courseId);
 };

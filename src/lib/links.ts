@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookMarkedIcon,
   BookOpenIcon,
+  HomeIcon,
   LayoutDashboardIcon,
   LockKeyholeIcon,
   LogInIcon,
@@ -36,9 +37,9 @@ export type CommandMenuGroup = {
 
 export const studentDashboardLinks: DashboardSidebarLinks[] = [
   {
-    title: "Overview",
+    title: "Home",
     href: "/",
-    icon: LayoutDashboardIcon,
+    icon: HomeIcon,
   },
   {
     title: "All Courses",
@@ -54,7 +55,7 @@ export const studentDashboardLinks: DashboardSidebarLinks[] = [
 
 export const instructorDashboardLinks: DashboardSidebarLinks[] = [
   {
-    title: "Overview",
+    title: "Dashboard",
     href: "/manage",
     icon: LayoutDashboardIcon,
   },
@@ -100,9 +101,9 @@ export const publicCommandMenuGroup: CommandMenuGroup = {
   title: "Public Access",
   links: [
     {
-      title: "Overview",
+      title: "Home",
       href: "/",
-      icon: LayoutDashboardIcon,
+      icon: HomeIcon,
     },
     {
       title: "All Courses",
@@ -126,6 +127,11 @@ export const studentCommandMenuGroup: CommandMenuGroup = {
   title: "Learning",
   links: [
     {
+      title: "Home",
+      href: "/",
+      icon: HomeIcon,
+    },
+    {
       title: "All Courses",
       href: "/courses",
       icon: BookOpenIcon,
@@ -141,6 +147,11 @@ export const studentCommandMenuGroup: CommandMenuGroup = {
 export const instructorCommandMenuGroup: CommandMenuGroup = {
   title: "Management",
   links: [
+    {
+      title: "Dashboard",
+      href: "/manage",
+      icon: LayoutDashboardIcon,
+    },
     {
       title: "Courses",
       href: "/manage/courses",

@@ -4,12 +4,14 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { ImageUpIcon, Loader2Icon, UserRoundIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useUploadThing } from "~/lib/uploadthing";
 import { cn } from "~/lib/utils";
+import { updateUserProfileImage } from "~/server/actions/update-user-profile-image";
 
 type AvatarUploadButtonProps = {
   className?: string;
@@ -18,22 +20,26 @@ type AvatarUploadButtonProps = {
 export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
   const [isPending, setIsPending] = useState(false);
   const { data: session, update } = useSession();
+  const router = useRouter();
   const image = session?.user?.image;
 
   const { startUpload, permittedFileInfo } = useUploadThing("profilePicture", {
-    onClientUploadComplete: (res) => {
-      const image = res[0]?.url;
+    onClientUploadComplete: ([uploadedFile]) => {
+      if (!uploadedFile?.url) {
+        toast.error("Profile Picture Change Failed.", {
+          description:
+            "An unknown error occurred while changing your profile picture.",
+        });
+        return;
+      }
 
-      update({
-        user: {
-          ...session?.user,
-          image: image,
-        },
-      })
+      updateUserProfileImage(uploadedFile.url)
         .then(() => {
+          void update({ user: { image: uploadedFile.url } });
           toast.success("Profile Picture Changed.", {
             description: "Your profile picture has been successfully changed.",
           });
+          router.refresh();
         })
         .catch(() => {
           toast.error("Profile Picture Change Failed.", {
@@ -96,23 +102,22 @@ export const AvatarUploadButton = ({ className }: AvatarUploadButtonProps) => {
       {...getRootProps()}
     >
       {isPending ? (
-        <div className="pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 select-none">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-[2] size-6 -translate-x-1/2 -translate-y-1/2 select-none">
           <span className="sr-only">Uploading...</span>
-          <Loader2Icon className="animate-spin text-gray-100 opacity-100" />
+          <Loader2Icon className="animate-spin text-gray-100" />
         </div>
       ) : (
         <>
           <span className="sr-only">
-            Click or drag an image to upload profile picture
+            Click or drag an image to upload a profile picture
           </span>
-          <ImageUpIcon className="pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 select-none text-gray-100 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
+          <ImageUpIcon className="pointer-events-none absolute left-1/2 top-1/2 z-[2] size-6 -translate-x-1/2 -translate-y-1/2 select-none text-gray-100 opacity-100 transition-all duration-300 ease-out group-hover:text-gray-50" />
         </>
       )}
-
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 z-[1] select-none rounded-full bg-black/35 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100",
-          isPending && "opacity-100",
+          "pointer-events-none absolute inset-0 z-[1] m-3.5 select-none rounded-full bg-black/35 opacity-75 backdrop-blur-sm transition-opacity duration-300 ease-out group-hover:opacity-90",
+          isPending && "opacity-90",
         )}
       />
       <Avatar className="pointer-events-none size-[4.5rem] select-none">

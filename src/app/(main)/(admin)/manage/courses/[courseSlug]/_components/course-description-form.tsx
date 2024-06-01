@@ -1,0 +1,118 @@
+"use client";
+
+import type { z } from "zod";
+
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useTransition,
+} from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
+import { Textarea } from "~/components/ui/textarea";
+import { ChangeCourseDescriptionSchema } from "~/schemas/course";
+import { changeCourseDescription } from "~/server/actions/course";
+
+type CourseDescriptionFormProps = {
+  id: string;
+  description: string | null;
+  onCancel: () => void;
+  onPendingStateChange: (isPending: boolean) => void;
+};
+
+export const CourseDescriptionForm = forwardRef(
+  (
+    {
+      id,
+      description,
+      onCancel,
+      onPendingStateChange,
+    }: CourseDescriptionFormProps,
+    ref,
+  ) => {
+    const [isPending, startTransition] = useTransition();
+
+    useEffect(() => {
+      onPendingStateChange(isPending);
+    }, [isPending, onPendingStateChange]);
+
+    const changeCourseDescriptionForm = useForm<
+      z.infer<typeof ChangeCourseDescriptionSchema>
+    >({
+      resolver: zodResolver(ChangeCourseDescriptionSchema),
+      defaultValues: {
+        id: id,
+        description: description ?? "",
+      },
+    });
+
+    const onSubmit = (
+      values: z.infer<typeof ChangeCourseDescriptionSchema>,
+    ) => {
+      startTransition(async () => {
+        await changeCourseDescription(values)
+          .then(async (data) => {
+            if (data?.error) {
+              toast.error("Description Change Failed", {
+                description: data.error,
+              });
+            }
+
+            if (data?.success) {
+              onCancel();
+              toast.success("Description Changed", {
+                description: data.success,
+              });
+            }
+          })
+          .catch(() => {
+            toast.error("Description Change Failed", {
+              description:
+                "An unknown error occurred while changing your description.",
+            });
+          });
+      });
+    };
+
+    useImperativeHandle(ref, () => ({
+      submitForm: () => changeCourseDescriptionForm.handleSubmit(onSubmit)(),
+    }));
+
+    return (
+      <Form {...changeCourseDescriptionForm}>
+        <form onSubmit={changeCourseDescriptionForm.handleSubmit(onSubmit)}>
+          <FormField
+            control={changeCourseDescriptionForm.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-1">
+                <FormControl>
+                  <Textarea
+                    className="bg-background py-2 xxs:text-base xs:py-1 xs:text-sm"
+                    placeholder="Describe your course"
+                    autoComplete="off"
+                    disabled={isPending}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="mt-1 text-sm" />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    );
+  },
+);
+
+CourseDescriptionForm.displayName = "CourseDescriptionForm";

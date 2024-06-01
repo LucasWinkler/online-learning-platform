@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Manage",
-  description: "Course management pages for admin",
+  title: "Dashboard",
+  description: "Manage your courses and view analytics.",
 };
 
-const Admin = () => {
+const Manage = () => {
   return (
     <section>
-      <h1>Admin</h1>
+      <h1>Overview</h1>
     </section>
   );
 };
 
-export default Admin;
+export default Manage;

@@ -3,7 +3,9 @@ type AdminLayoutProps = {
 };
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  return <>{children}</>;
+  return (
+    <section className="mx-auto h-full w-full max-w-5xl">{children}</section>
+  );
 };
 
 export default AdminLayout;
