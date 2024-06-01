@@ -15,6 +15,12 @@ export const findCourses = async () => {
 export const findCourseById = async (id: string) => {
   return await db.course.findUnique({ where: { id: id } });
 };
+export const findCourseWithChaptersAndLessonsById = async (id: string) => {
+  return await db.course.findUnique({
+    where: { id: id },
+    include: { chapters: { include: { lessons: true } } },
+  });
+};
 
 export const findCourseBySlug = async (slug: string) => {
   return await db.course.findUnique({ where: { slug: slug } });
@@ -44,8 +50,38 @@ export const updateCourse = async (
   });
 };
 
-export const deleteCourse = async (id: string) => {
+export const deleteCourseById = async (id: string) => {
   return await db.course.delete({ where: { id: id } });
+};
+
+export const deleteCourseBySlug = async (slug: string) => {
+  return await db.course.delete({ where: { slug: slug } });
+};
+
+export const findCourseSlugs = async () => {
+  return db.course.findMany({
+    select: { slug: true },
+  });
+};
+
+export const findCourseWithChaptersBySlug = async (slug: string) => {
+  return db.course.findUnique({
+    where: { slug: slug },
+    include: {
+      chapters: {
+        orderBy: {
+          order: "asc",
+        },
+        include: {
+          lessons: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      },
+    },
+  });
 };
 
 export const findPublishedCourses = async (select?: Prisma.CourseSelect) => {
@@ -163,6 +199,23 @@ export const findDashboardCourses = async ({
     orderBy: { [sort]: order },
     skip,
     take: limit,
+  });
+};
+
+export const findCoursesForInstructor = async (instructorId: string) => {
+  return db.course.findMany({
+    where: {
+      instructorId,
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      description: true,
+      price: true,
+      publishedAt: true,
+      _count: { select: { courseEnrollments: true } },
+    },
   });
 };
 

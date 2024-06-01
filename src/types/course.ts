@@ -1,9 +1,12 @@
-import type { Course, Prisma } from "@prisma/client";
+import type { Course } from "@prisma/client";
 import type {
+  findCoursesForInstructor,
   findDashboardCourses,
   findFilteredPublishedCourses,
   findUserPurchasedCourses,
 } from "~/server/data-access/course";
+
+import { Prisma } from "@prisma/client";
 
 export type CourseCreationParams = Pick<
   Course,
@@ -21,6 +24,25 @@ export type FilteredPublishedCoursesParams = {
 export type DataAccessFilteredCoursesParams = FilteredPublishedCoursesParams & {
   select?: Prisma.CourseSelect;
 };
+
+export const CourseSelectForInstructor =
+  Prisma.validator<Prisma.CourseSelect>()({
+    id: true,
+    title: true,
+    slug: true,
+    description: true,
+    price: true,
+    publishedAt: true,
+    _count: { select: { courseEnrollments: true } },
+  });
+
+export type CourseForInstructor = Prisma.CourseGetPayload<{
+  select: typeof CourseSelectForInstructor;
+}>;
+
+export type CoursesForInstructorResult = Prisma.PromiseReturnType<
+  typeof findCoursesForInstructor
+>;
 
 export type FilteredPublishedCoursesResult = Prisma.PromiseReturnType<
   typeof findFilteredPublishedCourses
