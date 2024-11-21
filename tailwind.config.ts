@@ -83,11 +83,16 @@ const config = {
           "75%": { transform: "translateX(-0.5rem)" },
           "100%": { transform: "translateX(0rem)" },
         },
+        shine: {
+          from: { backgroundPosition: "200% 0" },
+          to: { backgroundPosition: "-200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         shake: "shake 0.2s ease-in-out 0s 2",
+        shine: "shine 8s ease-in-out infinite",
       },
       fontFamily: {
         interVariable: [

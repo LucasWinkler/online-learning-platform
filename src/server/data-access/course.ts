@@ -84,7 +84,7 @@ export const findCourseWithChaptersBySlug = async (slug: string) => {
   });
 };
 
-export const findPublishedCourses = async (select?: Prisma.CourseSelect) => {
+export const findPublishedCourses = async () => {
   return db.course.findMany({
     where: {
       publishedAt: { not: null },
@@ -95,7 +95,9 @@ export const findPublishedCourses = async (select?: Prisma.CourseSelect) => {
         },
       },
     },
-    select: select,
+    include: {
+      instructor: true,
+    },
   });
 };
 
@@ -216,6 +218,25 @@ export const findCoursesForInstructor = async (instructorId: string) => {
       publishedAt: true,
       _count: { select: { courseEnrollments: true } },
     },
+  });
+};
+
+export const findCoursesByUserId = async (userId: string) => {
+  return db.course.findMany({
+    where: {
+      courseEnrollments: {
+        some: {
+          studentId: userId,
+        },
+      },
+    },
+  });
+};
+
+export const findTop5PopularCourses = async () => {
+  return db.course.findMany({
+    orderBy: { courseEnrollments: { _count: "desc" } },
+    take: 5,
   });
 };
 

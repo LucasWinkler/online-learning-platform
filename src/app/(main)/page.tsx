@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 
 import auth from "~/lib/auth";
+import {
+  findCoursesByUserId,
+  findTop5PopularCourses,
+} from "~/server/data-access/course";
 
-import { Dashboard } from "./(student)/_components/dashboard";
+import { StudentDashboard } from "./(student)/_components/dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -10,30 +14,19 @@ export const metadata: Metadata = {
     "Explore your Dashboard to track your learning progress, access courses, and more.",
 };
 
-// if userId fetch courses for that user
-// if not userId fetch top 5 popular courses
-const fetchCourses = (userId: string | undefined) => {
+const fetchCourses = async (userId: string | undefined) => {
   if (userId) {
-    // fetch courses for that user
-  } else {
-    // fetch top 5 popular courses
+    return await findCoursesByUserId(userId);
   }
 
-  return [];
+  return await findTop5PopularCourses();
 };
 
-// Fetch all data here
-// Pass data to
 const HomePage = async () => {
-  const session = await auth();
-  const user = session?.user;
-  const courses = fetchCourses(user?.id);
+  const user = (await auth())?.user;
+  const courses = await fetchCourses(user?.id);
 
-  return (
-    <div className="">
-      <Dashboard courses={courses} user={user} />
-    </div>
-  );
+  return <StudentDashboard courses={courses} />;
 };
 
 export default HomePage;
