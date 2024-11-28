@@ -10,6 +10,7 @@ export interface CourseLesson {
   title: string;
   description: string | null;
   publishedAt: Date | null;
+  length: number | null;
 }
 
 export interface CourseInstructor {
