@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { DashboardBackLink } from "~/app/(main)/(admin)/_components/dashboard-back-link";
+import { formatDate } from "~/lib/utils";
 import { findPublishedCourseBySlug } from "~/server/data-access/course";
 
 import { CourseChapters } from "./_components/course-chapters";
@@ -52,6 +53,34 @@ const CoursePage = async ({ params }: { params: { courseSlug: string } }) => {
             title={course.title}
             description={course.description ?? "No description available."}
           />
+          <div className="mt-4 flex flex-col gap-4 border-t border-border pt-4">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+              {course.publishedAt && (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-foreground">
+                    Published:
+                  </span>
+                  <time
+                    dateTime={course.publishedAt.toISOString()}
+                    className="text-muted-foreground"
+                  >
+                    {formatDate(course.publishedAt)}
+                  </time>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-foreground">
+                  Last updated:
+                </span>
+                <time
+                  dateTime={course.updatedAt.toISOString()}
+                  className="text-muted-foreground"
+                >
+                  {formatDate(course.updatedAt)}
+                </time>
+              </div>
+            </div>
+          </div>
           <CourseChapters chapters={course.chapters} />
         </div>
         <CourseSidebar

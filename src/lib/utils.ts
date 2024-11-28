@@ -37,3 +37,13 @@ export const redirectUrlFromRole = (role: Role = Role.USER) =>
 export const toTitleCase = (str: string) => {
   return str.replace(/\b\w/g, (l) => l.toUpperCase());
 };
+
+export const formatDate = (date: Date | null) => {
+  if (!date) return "Not available";
+
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+};

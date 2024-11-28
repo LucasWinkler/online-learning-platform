@@ -24,7 +24,7 @@ export const CourseHeader = ({
         priority
       />
     </div>
-    <div className="mt-6">
+    <div className="mt-6 space-y-2">
       <PrimaryHeading>{title}</PrimaryHeading>
       <p className="text-muted-foreground">{description}</p>
     </div>
