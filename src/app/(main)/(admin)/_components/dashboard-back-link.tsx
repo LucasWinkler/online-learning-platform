@@ -7,14 +7,20 @@ import { cn } from "~/lib/utils";
 type DashboardBackLinkProps = {
   href: string;
   title?: string;
+  className?: string;
 };
 
-export const DashboardBackLink = ({ href, title }: DashboardBackLinkProps) => {
+export const DashboardBackLink = ({
+  href,
+  title,
+  className,
+}: DashboardBackLinkProps) => {
   return (
     <Link
       className={cn(
         buttonVariants({ variant: "link", size: "none" }),
         "mb-4 lg:mb-6",
+        className,
       )}
       href={href}
       aria-label={title ? `Back to ${title}` : "Go back"}

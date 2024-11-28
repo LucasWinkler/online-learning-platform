@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -23,8 +23,9 @@ import { ChangeNameSchema } from "~/schemas/auth";
 import { changeName } from "~/server/actions/change-name";
 
 export const ChangeNameForm = () => {
-  const { data: session, update } = useSession();
+  const { data: session, status, update } = useSession();
   const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(true);
 
   const user = session?.user;
 
@@ -34,6 +35,19 @@ export const ChangeNameForm = () => {
       name: user?.name ?? "",
     },
   });
+
+  useEffect(() => {
+    if (status === "loading") {
+      setLoading(true);
+    }
+
+    if (status === "authenticated" && user) {
+      changeNameForm.reset({
+        name: user.name,
+      });
+      setLoading(false);
+    }
+  }, [changeNameForm, status, user]);
 
   const onSubmit = (values: z.infer<typeof ChangeNameSchema>) => {
     startTransition(async () => {
@@ -70,6 +84,7 @@ export const ChangeNameForm = () => {
       <form onSubmit={changeNameForm.handleSubmit(onSubmit)}>
         <CardContent>
           <FormField
+            disabled={loading}
             control={changeNameForm.control}
             name="name"
             render={({ field }) => (
@@ -90,7 +105,7 @@ export const ChangeNameForm = () => {
           />
         </CardContent>
         <CardFooter className="flex items-center justify-center border-t px-6 py-3 text-sm font-light text-gray-600 sm:justify-end">
-          <Button type="submit" disabled={isPending} size="sm">
+          <Button type="submit" disabled={loading || isPending} size="sm">
             {isPending && <Loader2Icon className="mr-1 size-4 animate-spin" />}
             Update Name
           </Button>

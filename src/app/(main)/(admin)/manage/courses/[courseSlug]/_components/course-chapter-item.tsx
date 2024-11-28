@@ -9,6 +9,11 @@ import { GripIcon, SquarePenIcon } from "lucide-react";
 import { Link } from "~/components/link";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
 
 type CourseChapterItemProps = {
@@ -72,12 +77,23 @@ export const CourseChapterItem = ({
           <p className="line-clamp-2 break-words text-sm">{chapter.title}</p>
         </div>
         <div className="flex items-center gap-1 pr-4">
-          <Badge
-            className="hidden xs:flex sm:hidden md:flex"
-            variant={isPublished ? "default" : "outline"}
-          >
-            {isPublished ? "Published" : "Draft"}
-          </Badge>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                className="hidden cursor-default xs:flex"
+                variant={isPublished ? "default" : "outline"}
+              >
+                {isPublished ? "P" : "D"}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent
+              className={cn(
+                !isPublished && "border bg-gray-50 text-foreground",
+              )}
+            >
+              {isPublished ? "Published" : "Draft"}
+            </TooltipContent>
+          </Tooltip>
           <Button
             className="hover:text-neutral-600"
             variant="ghost"
