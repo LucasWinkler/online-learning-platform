@@ -26,7 +26,7 @@ const HomePage = async () => {
   const user = (await auth())?.user;
   const courses = await fetchCourses(user?.id);
 
-  return <StudentDashboard courses={courses} />;
+  return <StudentDashboard user={user} courses={courses} />;
 };
 
 export default HomePage;
