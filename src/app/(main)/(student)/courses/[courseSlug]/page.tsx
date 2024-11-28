@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { DashboardBackLink } from "~/app/(main)/(admin)/_components/dashboard-back-link";
 import { formatDate } from "~/lib/utils";
 import { findPublishedCourseBySlug } from "~/server/data-access/course";
+import { isEnrolledInCourse } from "~/server/data-access/enrollment";
 
 import { CourseChapters } from "./_components/course-chapters";
 import { CourseHeader } from "./_components/course-header";
@@ -36,7 +37,7 @@ const CoursePage = async ({ params }: { params: { courseSlug: string } }) => {
     redirect("/courses");
   }
 
-  const isEnrolled = false;
+  const isEnrolled = await isEnrolledInCourse(course.id);
   const isFree = !course.price || course.price === 0;
 
   return (
@@ -84,11 +85,13 @@ const CoursePage = async ({ params }: { params: { courseSlug: string } }) => {
           <CourseChapters chapters={course.chapters} />
         </div>
         <CourseSidebar
+          courseId={course.id}
           price={course.price}
           chaptersCount={course.chapters.length}
           isEnrolled={isEnrolled}
           isFree={isFree}
           instructor={course.instructor}
+          courseSlug={course.slug}
         />
       </div>
     </div>
