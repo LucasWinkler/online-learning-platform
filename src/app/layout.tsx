@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "~/components/ui/sonner";
+import { TooltipProvider } from "~/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: {
@@ -32,7 +33,9 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       </head>
       <body className="flex h-full min-h-screen flex-col bg-gray-50 leading-relaxed text-foreground antialiased">
         <NextTopLoader showSpinner={false} />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </SessionProvider>
         <Toaster closeButton pauseWhenPageIsHidden richColors />
       </body>
     </html>
