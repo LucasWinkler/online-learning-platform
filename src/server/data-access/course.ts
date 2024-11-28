@@ -80,6 +80,12 @@ export const findCourseWithChaptersBySlug = async (slug: string) => {
           },
         },
       },
+      instructor: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
     },
   });
 };
@@ -97,6 +103,32 @@ export const findPublishedCourses = async () => {
     },
     include: {
       instructor: true,
+    },
+  });
+};
+
+export const findPublishedCourseBySlug = async (slug: string) => {
+  return db.course.findUnique({
+    where: { slug: slug },
+    include: {
+      chapters: {
+        orderBy: {
+          order: "asc",
+        },
+        include: {
+          lessons: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      },
+      instructor: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
     },
   });
 };
